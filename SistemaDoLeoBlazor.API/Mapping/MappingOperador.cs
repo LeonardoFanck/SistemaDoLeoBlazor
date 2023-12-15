@@ -30,18 +30,31 @@ namespace SistemaDoLeoBlazor.API.Mapping
                     }).ToList();
         }
 
-        public static IEnumerable<OperadorTelaDTO> OperadorTelaToDto(this IEnumerable<OperadorTela> operadorTelas)
+        public static OperadorTelaDTO OperadorTelaToDto (this OperadorTela operadorTela)
+        {
+            return new OperadorTelaDTO
+            {
+                id = operadorTela.id,
+                idOperador = operadorTela.operadorId,
+                nome = operadorTela.tela.Nome,
+                ativo = operadorTela.ativo,
+                novo = operadorTela.novo,
+                editar = operadorTela.editar,
+                excluir = operadorTela.excluir
+            };
+        }
+
+        public static IEnumerable<OperadorTelaDTO> OperadorTelasToDto(this IEnumerable<OperadorTela> operadorTelas)
         {
             return (from telas in operadorTelas
                     select new OperadorTelaDTO
                     {
                         id = telas.id,
                         idOperador = telas.operadorId,
-                        idPermissao = telas.operadorPermissoesTela.id,
-                        nome = telas.nome,
-                        editar = telas.operadorPermissoesTela.editar,
-                        excluir = telas.operadorPermissoesTela.excluir,
-                        novo = telas.operadorPermissoesTela.novo
+                        nome = telas.tela.Nome,
+                        editar = telas.editar,
+                        excluir = telas.excluir,
+                        novo = telas.novo
                     }).ToList();
         }
     }

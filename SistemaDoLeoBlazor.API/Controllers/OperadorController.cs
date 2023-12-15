@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using SistemaDoLeoBlazor.API.Mapping;
 using SistemaDoLeoBlazor.API.Repositories.OperadorRepository;
 using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
@@ -12,9 +13,12 @@ namespace SistemaDoLeoBlazor.API.Controllers
     {
         private readonly IOperadorRepository _operadorRepository;
 
-        public OperadorController(IOperadorRepository operadorRepository)
+        private ILogger<OperadorController> logger;
+
+        public OperadorController(IOperadorRepository operadorRepository, ILogger<OperadorController> logger)
         {
             _operadorRepository = operadorRepository;
+            this.logger = logger;
         }
 
         [HttpGet("{id}")]
@@ -34,10 +38,10 @@ namespace SistemaDoLeoBlazor.API.Controllers
                     return Ok(operadorDto);
                 }
             }
-            catch (Exception)
+            catch (Exception ex) 
             {
-                return StatusCode(StatusCodes.Status500InternalServerError,
-                              "Erro ao acessar o banco de dados");
+                logger.LogError("## Erro criar um novo Operador");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
@@ -60,6 +64,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
             }
             catch (Exception ex)
             {
+                logger.LogError("## Erro criar um novo Operador");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
@@ -71,23 +76,73 @@ namespace SistemaDoLeoBlazor.API.Controllers
             try
             {
                 var operador = await _operadorRepository.GetOperadorById(id);
+
                 if (operador is null)
                 {
-                    return NoContent();
+                    return NotFound("Operador não cadastrado!");
                 }
 
                 var telas = await _operadorRepository.GetTelas(id);
-                if (telas == null)
+                if (telas.Count() == 0)
                 {
-                    throw new Exception("Nenhuma tela localizada");
+                    return NotFound("Nenhuma tela localizada");
                 }
 
-                var operadorTelaDto = telas.OperadorTelaToDto();
+                var operadorTelaDto = telas.OperadorTelasToDto();
 
                 return Ok(operadorTelaDto);
             }
             catch (Exception ex)
             {
+                logger.LogError("## Erro criar um novo Operador");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("Operador")]
+        public async Task<ActionResult<OperadorDTO>> PostOperador([FromBody]
+                                        OperadorDTO operadorDTO)
+        {
+            try
+            {
+                var novoOperador = await _operadorRepository.PostOperador(operadorDTO);
+
+                var novoOperadorDto = novoOperador.OperadorToDto();
+
+                return CreatedAtAction(nameof(GetOperador), new {id = novoOperadorDto.id}, novoOperadorDto);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("## Erro criar um novo Operador");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("Telas")]
+        public async Task<ActionResult<OperadorTelaDTO>> PostOperadorTela([FromBody] 
+                                        OperadorTelaDTO operadorTelaDto)
+        {
+            try
+            {
+                var operador = await _operadorRepository.GetOperadorById(operadorTelaDto.idOperador);
+
+                if (operador is null)
+                {
+                    return NotFound("Operador não cadastrado!");
+                }
+
+                var novaTela = await _operadorRepository.PostOperadorTela(operadorTelaDto);
+
+                var novaTelaDto = novaTela.OperadorTelaToDto();
+
+                // ############## AJUSTAR ####################
+                return CreatedAtAction(nameof(GetOperador), new { id = novaTelaDto.id }, novaTelaDto);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("## Erro ao vincular uma nova Tela");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }

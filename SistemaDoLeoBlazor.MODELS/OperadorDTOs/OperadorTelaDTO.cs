@@ -10,8 +10,8 @@ namespace SistemaDoLeoBlazor.MODELS.OperadorDTOs
     {
         public int id { get; set; }
         public int idOperador { get; set; }
-        public int idPermissao { get; set; }
-
+        public int idTela { get; set; }
+        
         public string? nome { get; set; }
         public bool ativo { get; set; }
         public bool novo { get; set; }

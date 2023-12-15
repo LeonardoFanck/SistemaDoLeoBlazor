@@ -7,13 +7,16 @@ namespace SistemaDoLeoBlazor.API.Entities
         public int id { get; set; }
 
         public int operadorId { get; set; }
-
-        [MaxLength(50)]
-        public string nome { get; set; } = string.Empty;
-        public bool ativo { get; set; }
+        public int telaId { get; set; }
 
         
+        public bool ativo { get; set; }
+        public bool novo { get; set; }
+        public bool editar { get; set; }
+        public bool excluir { get; set; }
+
+
         public Operador? operador { get; set; }
-        public OperadorPermissoesTela? operadorPermissoesTela { get; set; }
+        public Tela tela { get; set; }
     }
 }

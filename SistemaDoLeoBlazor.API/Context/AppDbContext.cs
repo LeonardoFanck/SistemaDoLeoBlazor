@@ -9,6 +9,6 @@ namespace SistemaDoLeoBlazor.API.Context
 
         public DbSet<Operador>? Operador { get; set; }
         public DbSet<OperadorTela>? OperadorTela { get; set; }
-        public DbSet<OperadorPermissoesTela>? OperadorPermissoesTela { get; set; }
+        public DbSet<Tela>? Tela { get; set; }
     }
 }

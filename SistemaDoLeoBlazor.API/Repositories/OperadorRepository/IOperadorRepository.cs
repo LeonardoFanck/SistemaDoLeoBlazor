@@ -1,4 +1,5 @@
 ﻿using SistemaDoLeoBlazor.API.Entities;
+using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 
 namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
 {
@@ -9,5 +10,9 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
         Task<IEnumerable<Operador>> GetOperadores();
 
         Task<IEnumerable<OperadorTela>> GetTelas(int Id);
+
+        Task<Operador> PostOperador(OperadorDTO operadorDto);
+        
+        Task<OperadorTela> PostOperadorTela(OperadorTelaDTO operadorTelaDTO);
     }
 }

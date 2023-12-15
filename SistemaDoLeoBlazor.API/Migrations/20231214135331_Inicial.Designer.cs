@@ -11,8 +11,8 @@ using SistemaDoLeoBlazor.API.Context;
 namespace SistemaDoLeoBlazor.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231213234132_inicial")]
-    partial class inicial
+    [Migration("20231214135331_Inicial")]
+    partial class Inicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -53,34 +53,6 @@ namespace SistemaDoLeoBlazor.API.Migrations
                     b.ToTable("Operador");
                 });
 
-            modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.OperadorPermissoesTela", b =>
-                {
-                    b.Property<int>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("id"));
-
-                    b.Property<bool>("editar")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("excluir")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("novo")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("operadorTelaId")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("operadorTelaId")
-                        .IsUnique();
-
-                    b.ToTable("OperadorPermissoesTela");
-                });
-
             modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.OperadorTela", b =>
                 {
                     b.Property<int>("id")
@@ -92,51 +64,75 @@ namespace SistemaDoLeoBlazor.API.Migrations
                     b.Property<bool>("ativo")
                         .HasColumnType("bit");
 
-                    b.Property<string>("nome")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<bool>("editar")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("excluir")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("novo")
+                        .HasColumnType("bit");
 
                     b.Property<int>("operadorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("telaId")
                         .HasColumnType("int");
 
                     b.HasKey("id");
 
                     b.HasIndex("operadorId");
 
+                    b.HasIndex("telaId");
+
                     b.ToTable("OperadorTela");
                 });
 
-            modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.OperadorPermissoesTela", b =>
+            modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.Tela", b =>
                 {
-                    b.HasOne("SistemaDoLeoBlazor.API.Entities.OperadorTela", "operadorTela")
-                        .WithOne("operadorPermissoesTela")
-                        .HasForeignKey("SistemaDoLeoBlazor.API.Entities.OperadorPermissoesTela", "operadorTelaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Navigation("operadorTela");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tela");
                 });
 
             modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.OperadorTela", b =>
                 {
                     b.HasOne("SistemaDoLeoBlazor.API.Entities.Operador", "operador")
-                        .WithMany("telas")
+                        .WithMany("operadorTelas")
                         .HasForeignKey("operadorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SistemaDoLeoBlazor.API.Entities.Tela", "tela")
+                        .WithMany("operadorTelas")
+                        .HasForeignKey("telaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("operador");
+
+                    b.Navigation("tela");
                 });
 
             modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.Operador", b =>
                 {
-                    b.Navigation("telas");
+                    b.Navigation("operadorTelas");
                 });
 
-            modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.OperadorTela", b =>
+            modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.Tela", b =>
                 {
-                    b.Navigation("operadorPermissoesTela");
+                    b.Navigation("operadorTelas");
                 });
 #pragma warning restore 612, 618
         }

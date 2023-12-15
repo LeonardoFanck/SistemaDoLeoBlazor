@@ -14,6 +14,7 @@ namespace SistemaDoLeoBlazor.API.Entities
         public bool admin {  get; set; }
         public bool inativo { get; set; }
 
-        public ICollection<OperadorTela> telas { get; set; } = new List<OperadorTela>();
+
+        public ICollection<OperadorTela> operadorTelas { get; set; } = new List<OperadorTela>();
     }
 }
