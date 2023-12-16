@@ -17,6 +17,6 @@ namespace SistemaDoLeoBlazor.API.Entities
 
 
         public Operador? operador { get; set; }
-        public Tela tela { get; set; }
+        public Tela? tela { get; set; }
     }
 }

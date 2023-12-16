@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SistemaDoLeoBlazor.API.Context;
 using SistemaDoLeoBlazor.API.Entities;
 using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
@@ -30,7 +31,7 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
         {
             return await _context.OperadorTela
                             .Include(o => o.tela)
-                            .Where(o => o.operador.id == id)
+                            .Where(o => o.operadorId == id)
                             .ToListAsync();
         }
 
@@ -49,25 +50,51 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
             return resultado.Result.Entity;
         }
 
-        public async Task<OperadorTela> PostOperadorTela(OperadorTelaDTO operadorTelaDTO)
+        public async Task PostOperadorTela(OperadorDTO operadorDTO)
         {
-            var tela = await _context.Tela
-                        .FirstOrDefaultAsync(t => t.Id ==  operadorTelaDTO.idTela);
+            //var tela = await _context.Tela
+            //            .FirstOrDefaultAsync(t => t.Id == operadorTelaDTO.idTela);
 
-            var telaOperador = new OperadorTela
+
+            var teste =  await _context.Tela
+                                .Where(t => !_context.OperadorTela.Any(ot => ot.telaId == t.Id && ot.operadorId == operadorDTO.id))
+                                .ToListAsync();
+                  
+            if (teste.Count == 0)
             {
-                operadorId = operadorTelaDTO.idOperador,
-                telaId = operadorTelaDTO.idTela,
-                ativo = operadorTelaDTO.ativo,
-                novo = operadorTelaDTO.novo,
-                editar = operadorTelaDTO.editar,
-                excluir = operadorTelaDTO.excluir,
-                tela = tela
-            };
+                throw new Exception("Operador Já possuí todas as telas disponiveis");
+            }
 
-            var resultado = _context.OperadorTela.AddAsync(telaOperador);
+            foreach (var tela in teste)
+            {
+                var novoOperadorTela = new OperadorTela
+                {
+                    operadorId = operadorDTO.id,
+                    telaId = tela.Id,
+                    ativo = true,
+                    novo = true,
+                    editar = true,
+                    excluir = true,
+                };
+
+                await _context.OperadorTela.AddAsync(novoOperadorTela);
+            }
+            
             await _context.SaveChangesAsync();
-            return resultado.Result.Entity;
+            //return resultado.Result.Entity;
+        }
+
+        public async Task<Operador> DeleteOperador(int id)
+        {
+            var operador = _context.Operador.FindAsync(id);
+
+            if (operador is not null)
+            {
+                _context.Operador.Remove(operador);
+                await _context.SaveChangesAsync();
+            }
+
+            return operador;
         }
     }
 }

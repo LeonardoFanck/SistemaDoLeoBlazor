@@ -13,6 +13,8 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
 
         Task<Operador> PostOperador(OperadorDTO operadorDto);
         
-        Task<OperadorTela> PostOperadorTela(OperadorTelaDTO operadorTelaDTO);
+        Task PostOperadorTela(OperadorDTO operadorDto);
+
+        Task<Operador> DeleteOperador(int id);
     }
 }

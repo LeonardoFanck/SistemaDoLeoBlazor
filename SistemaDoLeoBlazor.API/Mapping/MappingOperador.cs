@@ -36,6 +36,7 @@ namespace SistemaDoLeoBlazor.API.Mapping
             {
                 id = operadorTela.id,
                 idOperador = operadorTela.operadorId,
+                idTela = operadorTela.telaId,
                 nome = operadorTela.tela.Nome,
                 ativo = operadorTela.ativo,
                 novo = operadorTela.novo,

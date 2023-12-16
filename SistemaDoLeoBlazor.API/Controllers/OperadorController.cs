@@ -122,23 +122,23 @@ namespace SistemaDoLeoBlazor.API.Controllers
         [HttpPost]
         [Route("Telas")]
         public async Task<ActionResult<OperadorTelaDTO>> PostOperadorTela([FromBody] 
-                                        OperadorTelaDTO operadorTelaDto)
+                                        OperadorDTO operadorDto)
         {
             try
             {
-                var operador = await _operadorRepository.GetOperadorById(operadorTelaDto.idOperador);
+                var operador = await _operadorRepository.GetOperadorById(operadorDto.id);
 
                 if (operador is null)
                 {
                     return NotFound("Operador não cadastrado!");
                 }
 
-                var novaTela = await _operadorRepository.PostOperadorTela(operadorTelaDto);
+                await _operadorRepository.PostOperadorTela(operadorDto);
 
-                var novaTelaDto = novaTela.OperadorTelaToDto();
+                //var novaTelaDto = novaTela.OperadorTelaToDto();
 
                 // ############## AJUSTAR ####################
-                return CreatedAtAction(nameof(GetOperador), new { id = novaTelaDto.id }, novaTelaDto);
+                return CreatedAtAction(nameof(GetOperador), new { id = operador.id }, operador);
             }
             catch (Exception ex)
             {
