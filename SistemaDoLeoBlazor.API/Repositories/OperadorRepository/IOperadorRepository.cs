@@ -16,5 +16,7 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
         Task PostOperadorTela(OperadorDTO operadorDto);
 
         Task<Operador> DeleteOperador(int id);
+
+        Task<Operador> PatchOperador(OperadorDTO operadorDto);
     }
 }

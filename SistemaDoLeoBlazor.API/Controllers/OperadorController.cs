@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SistemaDoLeoBlazor.API.Entities;
 using SistemaDoLeoBlazor.API.Mapping;
 using SistemaDoLeoBlazor.API.Repositories.OperadorRepository;
 using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
@@ -143,6 +144,43 @@ namespace SistemaDoLeoBlazor.API.Controllers
             catch (Exception ex)
             {
                 logger.LogError("## Erro ao vincular uma nova Tela");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<OperadorDTO>> DeleteOperador(int id)
+        {
+            try
+            {
+                var operador = await _operadorRepository.DeleteOperador(id);
+
+                if (operador is null)
+                {
+                    return NotFound("Operador não Localizado");
+                }
+
+                var operadorDto = operador.OperadorToDto();
+
+                return operadorDto;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("## Erro ao excluir o Operador");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult<Operador>> PatchOperador(int id, OperadorDTO operadorDTO)
+        {
+            try
+            {
+                
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("## Erro ao excluir o Operador");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }

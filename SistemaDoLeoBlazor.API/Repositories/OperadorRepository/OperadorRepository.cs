@@ -86,12 +86,29 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
 
         public async Task<Operador> DeleteOperador(int id)
         {
-            var operador = _context.Operador.FindAsync(id);
+            var operador = await _context.Operador.FindAsync(id);
 
             if (operador is not null)
             {
                 _context.Operador.Remove(operador);
                 await _context.SaveChangesAsync();
+            }
+
+            return operador;
+        }
+
+        public async Task<Operador> PatchOperador(OperadorDTO operadorDto)
+        {
+            var operador = await _context.Operador.FindAsync(operadorDto.id);
+
+            if (operador is not null){
+                operador.nome = operadorDto.nome;
+                operador.senha = operadorDto.senha;
+                operador.admin = operadorDto.admin;
+                operador.inativo = operadorDto.inativo;
+
+                await _context.SaveChangesAsync();
+                return operador;
             }
 
             return operador;
