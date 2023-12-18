@@ -97,9 +97,9 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
             return operador;
         }
 
-        public async Task<Operador> PatchOperador(OperadorDTO operadorDto)
+        public async Task<Operador> PatchOperador(int id, OperadorDTO operadorDto)
         {
-            var operador = await _context.Operador.FindAsync(operadorDto.id);
+            var operador = await _context.Operador.FindAsync(id);
 
             if (operador is not null){
                 operador.nome = operadorDto.nome;

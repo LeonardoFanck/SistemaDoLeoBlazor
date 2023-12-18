@@ -17,6 +17,6 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
 
         Task<Operador> DeleteOperador(int id);
 
-        Task<Operador> PatchOperador(OperadorDTO operadorDto);
+        Task<Operador> PatchOperador(int id, OperadorDTO operadorDto);
     }
 }

@@ -172,11 +172,20 @@ namespace SistemaDoLeoBlazor.API.Controllers
         }
 
         [HttpPatch("{id:int}")]
-        public async Task<ActionResult<Operador>> PatchOperador(int id, OperadorDTO operadorDTO)
+        public async Task<ActionResult<OperadorDTO>> PatchOperador(int id, OperadorDTO operadorDTO)
         {
             try
             {
-                
+                var operador = await _operadorRepository.PatchOperador(id, operadorDTO);
+
+                if (operador is null)
+                {
+                    return NotFound();
+                }
+
+                var operadorDto = operador.OperadorToDto();
+
+                return operadorDto;
             }
             catch (Exception ex)
             {
