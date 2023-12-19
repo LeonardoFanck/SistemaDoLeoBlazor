@@ -171,6 +171,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
             }
         }
 
+        
         [HttpPatch("{id:int}")]
         public async Task<ActionResult<OperadorDTO>> PatchOperador(int id, OperadorDTO operadorDTO)
         {
@@ -189,9 +190,34 @@ namespace SistemaDoLeoBlazor.API.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError("## Erro ao excluir o Operador");
+                logger.LogError("## Erro ao alterar o Operador");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
+        
+        
+        [HttpPatch("Tela/{id}")]
+        public async Task<ActionResult<OperadorTelaDTO>> PatchOperadorTela(int id, OperadorTelaDTO operadorTelaDto)
+        {
+            try
+            {
+                var operadorTela = await _operadorRepository.PatchOperadorTela(id, operadorTelaDto);
+
+                if (operadorTela is null)
+                {
+                    return NotFound();
+                }
+
+                var telaDto = operadorTela.OperadorTelaToDto();
+                
+                return telaDto;
+            }
+            catch (Exception ex)
+            {
+                logger.LogError("## Erro ao alterar a tela do Operador");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+        
     }
 }

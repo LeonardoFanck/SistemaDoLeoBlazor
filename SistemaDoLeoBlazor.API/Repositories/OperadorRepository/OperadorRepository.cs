@@ -113,5 +113,31 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
 
             return operador;
         }
+
+        public async Task<OperadorTela> PatchOperadorTela(int id, OperadorTelaDTO operadorTelaDto)
+        {
+            var tela = await _context.OperadorTela.FindAsync(id);
+
+            tela.tela = await _context.Tela.FindAsync(operadorTelaDto.idTela);
+
+            if (tela.tela is null)
+            {
+                return null;
+            }
+
+            if (tela is not null)
+            {
+                tela.ativo = operadorTelaDto.ativo;
+                tela.novo = operadorTelaDto.novo;
+                tela.editar = operadorTelaDto.editar;
+                tela.excluir = operadorTelaDto.excluir;
+
+                await _context.SaveChangesAsync();
+
+                return tela;
+            }
+
+            return tela;
+        }
     }
 }
