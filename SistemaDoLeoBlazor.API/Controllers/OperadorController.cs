@@ -47,8 +47,8 @@ namespace SistemaDoLeoBlazor.API.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
-        public async Task<ActionResult<IEnumerable<OperadorDTO>>> GetOperadores()
+        [Route("GetAll/{filtro}")]
+        public async Task<ActionResult<IEnumerable<OperadorDTO>>> GetOperadores(string filtro)
         {
             try
             {
