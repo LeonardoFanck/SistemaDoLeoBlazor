@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Sistema do Leo Versão 3.0</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=cd822b7fd22c8a95a68470c795adea69">
+    <link rel="stylesheet" href="assets/css/animate.min.css?h=5512c3e92e3931978c9ddcc7dbeed22b">
+    <link rel="stylesheet" href="assets/css/Elegant-Registration-Form.css?h=b0dc555b51f71f93a50326a1d8d6e613">
+    <link rel="stylesheet" href="assets/css/Floating-Button.css?h=291f3e0b9e9d95361f682863935b0449">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.5/css/buttons.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+        <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
+            <div class="p-5">
+                <div class="text-center">
+                    <h4 class="text-dark mb-4">Cadastro de Cliente</h4>
+                </div><!-- Start: Register Form -->
+                <form class="user" method="post">
+                    <!-- Start: Cod Prod e Inativo -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-md-4" style="width: 326.516px;">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Cod. Cliente</h4><!-- Start: 1 Row 2 Columns -->
+                                        <div class="container">
+                                            <div class="row">
+                                                <div class="col-md-6 col-xxl-5" style="width: 156.797px;"><input class="form-control" type="number" required=""></div>
+                                                <div class="col-md-6" style="width: 109.75px;"><button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button></div>
+                                            </div>
+                                        </div><!-- End: 1 Row 2 Columns -->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="width: 194.516px;">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Tipo</h4>
+                                        <div class="form-check" style="width: 96.25px;"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Cliente</label></div>
+                                        <div class="form-check" style="width: 127.406px;"><input class="form-check-input" type="checkbox" id="formCheck-3"><label class="form-check-label" for="formCheck-3">Fornecedor</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4" style="width: 195.516px;">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Config</h4>
+                                        <div class="form-check" style="width: 94.5px;margin-top: -2px;"><input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" name="ChkSenha" tabindex="-1"><label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End: Cod Prod e Inativo -->
+                    <!-- Start: Nome -->
+                    <div class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Nome</h4><input class="form-control" type="text" placeholder="Nome" required="" maxlength="50">
+                            </div>
+                        </div>
+                    </div><!-- End: Nome -->
+                    <!-- Start: Documento -->
+                    <div class="row mb-3" style="margin-left: 0px;">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Documento</h4><!-- Start: 1 Row 2 Columns -->
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6" style="width: 153.406px;"><select class="form-select" style="width: 123.062px;margin-bottom: 5px;" required="">
+                                                <option value="">Selecione</option>
+                                                <option value="">CPF</option>
+                                                <option value="">CNPJ</option>
+                                            </select></div>
+                                        <div class="col-md-6"><input class="form-control" type="text" placeholder="Documento" required=""></div>
+                                    </div>
+                                </div><!-- End: 1 Row 2 Columns -->
+                            </div>
+                        </div>
+                    </div><!-- End: Documento -->
+                    <!-- Start: Endereço -->
+                    <div class="row mb-3">
+                        <!-- Start: CEP - UF - Cidade -->
+                        <div class="container" style="margin-bottom: 15px;">
+                            <div class="row">
+                                <div class="col-md-4 col-xxl-3">
+                                    <div class="card">
+                                        <div class="card-body" style="height: 86px;border-style: none;border-color: var(--bs-secondary-color);">
+                                            <h4 class="card-title" style="height: 19px;margin-top: -8px;">CEP</h4><input class="form-control form-control-user" type="number" placeholder="CEP" style="width: 129px;" name="CEP" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="width: 135.109px;">
+                                    <div class="card" style="width: 114.109px;">
+                                        <div class="card-body" style="height: 86px;width: 109.078px;">
+                                            <h4 class="card-title" style="margin-top: -8px;height: 19px;">UF</h4><select class="form-select" style="width: 74.062px;" required="">
+                                                <optgroup label="This is a group">
+                                                    <option value="14">RS</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" style="width: 61%;">
+                                    <div class="card">
+                                        <div class="card-body" style="height: 86px;">
+                                            <h4 class="card-title" style="margin-top: -8px;height: 19px;">Cidade</h4><input class="form-control" type="text" placeholder="Cidade" required="" maxlength="50">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End: CEP - UF - Cidade -->
+                        <!-- Start: Bairro - Endereco -->
+                        <div class="container" style="margin-bottom: 15px;">
+                            <div class="row">
+                                <div class="col-md-6 col-xxl-4">
+                                    <div class="card">
+                                        <div class="card-body" style="height: 86px;border-style: none;border-color: var(--bs-secondary-color);">
+                                            <h4 class="card-title" style="height: 19px;margin-top: -8px;">Bairro</h4><input class="form-control" type="text" placeholder="Bairro" required="" maxlength="50">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-xxl-7">
+                                    <div class="card">
+                                        <div class="card-body" style="height: 86px;border-style: none;border-color: var(--bs-secondary-color);">
+                                            <h4 class="card-title" style="height: 19px;margin-top: -8px;">Endereço</h4><input class="form-control" type="text" placeholder="Endereço" required="" maxlength="50">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End: Bairro - Endereco -->
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body" style="height: 86px;border-style: none;border-color: var(--bs-secondary-color);">
+                                        <h4 class="card-title" style="height: 19px;margin-top: -8px;">Número</h4><input class="form-control" type="text" placeholder="Número" required="" maxlength="5">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body" style="height: 86px;border-style: none;border-color: var(--bs-secondary-color);">
+                                        <h4 class="card-title" style="height: 19px;margin-top: -8px;">Complemento</h4><input class="form-control" type="text" placeholder="Complemento" required="" maxlength="20">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End: Endereço -->
+                    <hr><!-- Start: Botões -->
+                    <div class="row">
+                        <!-- Start: Novo -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Novo --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" type="button" style="height: 39px;background: rgb(74,170,15);">Novo</button><!-- End: Novo -->
+                        </div><!-- End: Novo -->
+                        <!-- Start: Editar -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Editar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" type="button" style="height: 39px;background: var(--bs-btn-bg);">Editar</button><!-- End: Editar -->
+                        </div><!-- End: Editar -->
+                        <!-- Start: Excluir -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Excluir --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" type="button" style="height: 39px;background: rgb(203,30,19);">Excluir</button><!-- End: Excluir -->
+                        </div><!-- End: Excluir -->
+                        <!-- Start: Cancelar -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Cancelar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" type="button" style="height: 39px;background: rgb(228,185,34);">Cancelar</button><!-- End: Cancelar -->
+                        </div><!-- End: Cancelar -->
+                    </div><!-- End: Botões -->
+                    <hr><button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" style="padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-left: 45%;">Salvar</button>
+                </form><!-- End: Register Form -->
+            </div>
+        </div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js?h=e55bde7d6e36ebf17ba0b8c1e80e4065"></script>
+    <script src="assets/js/bs-init.js?h=ec5d4df3c798a2943b2ecbac76ebfde0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.6.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.flash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.6.5/js/buttons.print.min.js"></script>
+    <script src="assets/js/DataTable---Fully-BSS-Editable-style.js?h=cdd88ce626f2ca8a1e3c5200a86a08ae"></script>
+</body>
+
+</html>

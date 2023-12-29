@@ -1,0 +1,170 @@
+﻿@page "/CadOperador"
+@inject IOperadorService operadorService
+
+<PageTitle>Cadastro Operador</PageTitle>
+
+@*
+<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=cd822b7fd22c8a95a68470c795adea69">
+<link rel="stylesheet" href="assets/css/animate.min.css?h=5512c3e92e3931978c9ddcc7dbeed22b">
+<link rel="stylesheet" href="assets/css/Elegant-Registration-Form.css?h=b0dc555b51f71f93a50326a1d8d6e613">
+<link rel="stylesheet" href="assets/css/Floating-Button.css?h=291f3e0b9e9d95361f682863935b0449">
+*@
+
+<div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+    <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
+        <div class="p-5">
+            <div class="text-center">
+                <h4 class="text-dark mb-4">Cadastro de Operador</h4>
+            </div><!-- Start: Register Form -->
+            <form class="user">
+                <!-- Start: Cod Operador -->
+                <div style="margin-bottom: 15px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Cod. Operador</h4><!-- Start: 1 Row 2 Columns -->
+                            <div class="container">
+                                <div class="row">
+                                    @if(teste == CADASTRAR || teste == EDITAR)
+                                    {
+                                        <div class="col-md-6" style="width: 154.281px;"><input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;" name="Cod Operador"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="col-md-6" style="width: 154.281px;"><input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;" name="Cod Operador" disabled></div>
+                                    }
+                                    <div class="col-md-6"><button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button></div>
+                                </div>
+                            </div><!-- End: 1 Row 2 Columns -->
+                        </div>
+                    </div>
+                </div><!-- End: Cod Operador -->
+                <!-- Start: Nome -->
+                <div class="mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Nome</h4><input class="form-control form-control-user" type="text" id="email" placeholder="Nome" required="" name="Nome" maxlength="50">
+                        </div>
+                    </div>
+                </div><!-- End: Nome -->
+                <!-- Start: Senha e Opções -->
+                <div class="row mb-3">
+                    <!-- Start: 1 Row 2 Columns -->
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Senha</h4><input class="form-control form-control-user" type="password" id="password" placeholder="Senha" required="" name="Senha" maxlength="4">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Opções</h4>
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-top: 12px;" name="ChkSenha"><label class="form-check-label" for="formCheck-1" style="margin-top: 8px;">Exibir Senha</label></div>
+                                        <div class="form-check" style="width: 140.25px;"><input class="form-check-input" type="checkbox" id="formCheck-3" style="margin-top: 12px;" name="ChkSenha"><label class="form-check-label" for="formCheck-3" style="margin-top: 8px;">Adminstrador</label></div>
+                                        <div class="form-check" style="width: 94.5px;"><input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" name="ChkSenha"><label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End: 1 Row 2 Columns -->
+                </div><!-- End: Senha e Opções -->
+                <hr><!-- Start: Botões -->
+                <div class="row">
+                    <!-- Start: Novo -->
+                    <div class="col-md-3" style="height: 45px;">
+                        <!-- Start: Novo --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" type="button" style="height: 39px;background: rgb(74,170,15);">Novo</button><!-- End: Novo -->
+                    </div><!-- End: Novo -->
+                    <!-- Start: Editar -->
+                    <div class="col-md-3" style="height: 45px;">
+                        <!-- Start: Editar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" type="button" style="height: 39px;background: rgb(0,100,200);">Editar</button><!-- End: Editar -->
+                    </div><!-- End: Editar -->
+                    <!-- Start: Excluir -->
+                    <div class="col-md-3" style="height: 45px;">
+                        <!-- Start: Excluir --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" type="button" style="height: 39px;background: rgb(203,30,19);">Excluir</button><!-- End: Excluir -->
+                    </div><!-- End: Excluir -->
+                    <!-- Start: Cancelar -->
+                    <div class="col-md-3" style="height: 45px;">
+                        <!-- Start: Cancelar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" type="button" style="height: 39px;background: rgb(228,185,34);">Cancelar</button><!-- End: Cancelar -->
+                    </div><!-- End: Cancelar -->
+                </div><!-- End: Botões -->
+                <hr><!-- Start: crud-Table -->
+                <div class="row justify-content-center">
+                    <div class="col-xl-10 col-xxl-9" style="width: 789.5px;">
+                        <div class="card shadow">
+                            <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
+                                <h5 class="display-6 text-nowrap text-capitalize mb-0">Telas</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <!-- Start: Tela -->
+                                                <th style="width: 239.5px;">Tela</th><!-- End: Tela -->
+                                                <!-- Start: Ativo -->
+                                                <th class="text-center" style="width: 55px;">Ativo</th><!-- End: Ativo -->
+                                                <!-- Start: Novo -->
+                                                <th class="text-center" style="width: 55px;">Editar</th><!-- End: Novo -->
+                                                <!-- Start: Excluir -->
+                                                <th class="text-center" style="width: 55px;">Excluir</th><!-- End: Excluir -->
+                                                <!-- Start: Novo -->
+                                                <th class="text-center" style="width: 55px;">Novo</th><!-- End: Novo -->
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-truncate" style="max-width: 200px;width: 239.5px;">Pedidos</td><!-- Start: Ativo -->
+                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Ativo -->
+                                                <!-- Start: Editar -->
+                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Editar -->
+                                                <!-- Start: Excluir -->
+                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Excluir -->
+                                                <!-- Start: Novo -->
+                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Novo -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End: crud-Table --><button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" style="margin: -3px;margin-left: 45%;margin-bottom: -32px;padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-top: 24px;">Salvar</button>
+            </form><!-- End: Register Form -->
+        </div>
+    </div>
+</div>
+
+@if (@Operador is not null)
+{
+    <p> ID: @Operador.id</p>
+    <p> Nome: @Operador.nome</p>
+    <p> Inativo: @Operador.inativo</p>
+    <p> Senha: @Operador.senha</p>
+    <p> Admin: @Operador.admin</p>
+}
+
+
+    
+@code{
+    public OperadorDTO? Operador { get; set; }
+
+    private int teste;
+    private int CADASTRAR = 0;
+    private int VISUALIZAR = 1;
+    private int EDITAR = 2;
+
+    protected override async Task OnInitializedAsync()
+    {
+        teste = CADASTRAR;
+
+        Operador = await operadorService.GetOperadorById(4);
+    }
+
+    private void Status (int status)
+    {
+        
+    }
+}

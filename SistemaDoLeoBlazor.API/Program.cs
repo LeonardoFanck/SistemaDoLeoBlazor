@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Net.Http.Headers;
 using SistemaDoLeoBlazor.API.Context;
 using SistemaDoLeoBlazor.API.Repositories.OperadorRepository;
 
@@ -21,6 +22,13 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IOperadorRepository, OperadorRepository>();
 
 var app = builder.Build();
+
+app.UseCors(policy =>
+    policy.WithOrigins("https://localhost:7161", "https://localhost:7161")
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .WithHeaders(HeaderNames.ContentType)
+);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

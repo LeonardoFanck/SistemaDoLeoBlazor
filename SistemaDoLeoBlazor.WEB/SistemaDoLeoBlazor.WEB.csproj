@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\bootstrap\**" />
+    <Compile Remove="wwwroot\js\**" />
+    <Compile Remove="wwwroot\resources\**" />
+    <Content Remove="wwwroot\bootstrap\**" />
+    <Content Remove="wwwroot\js\**" />
+    <Content Remove="wwwroot\resources\**" />
+    <EmbeddedResource Remove="wwwroot\bootstrap\**" />
+    <EmbeddedResource Remove="wwwroot\js\**" />
+    <EmbeddedResource Remove="wwwroot\resources\**" />
+    <None Remove="wwwroot\bootstrap\**" />
+    <None Remove="wwwroot\js\**" />
+    <None Remove="wwwroot\resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\css\animate.min.css" />
+    <Content Remove="wwwroot\css\Elegant-Registration-Form.css" />
+    <Content Remove="wwwroot\css\Floating-Button.css" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Pages\CadOperador.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Pages\CadCategoria.html" />
+    <Content Include="Pages\CadCliente.html" />
+    <Content Include="Pages\CadFromaPgto.html" />
+    <Content Include="Pages\CadProduto.html" />
+    <Content Include="Pages\Consulta.html" />
+    <Content Include="Pages\Pedido.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\css\bootstrap\bootstrap.min.css.map" />
+    <None Include="wwwroot\css\open-iconic\FONT-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\font\fonts\open-iconic.svg" />
+    <None Include="wwwroot\css\open-iconic\ICON-LICENSE" />
+    <None Include="wwwroot\css\open-iconic\README.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.10" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SistemaDoLeoBlazor.MODELS\SistemaDoLeoBlazor.MODELS.csproj" />
+  </ItemGroup>
+
+</Project>
