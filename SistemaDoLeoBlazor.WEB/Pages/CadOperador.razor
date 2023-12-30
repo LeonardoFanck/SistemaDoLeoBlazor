@@ -3,139 +3,130 @@
 
 <PageTitle>Cadastro Operador</PageTitle>
 
-@*
-<link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css?h=cd822b7fd22c8a95a68470c795adea69">
-<link rel="stylesheet" href="assets/css/animate.min.css?h=5512c3e92e3931978c9ddcc7dbeed22b">
-<link rel="stylesheet" href="assets/css/Elegant-Registration-Form.css?h=b0dc555b51f71f93a50326a1d8d6e613">
-<link rel="stylesheet" href="assets/css/Floating-Button.css?h=291f3e0b9e9d95361f682863935b0449">
-*@
-
-<div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
-    <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
-        <div class="p-5">
-            <div class="text-center">
-                <h4 class="text-dark mb-4">Cadastro de Operador</h4>
-            </div><!-- Start: Register Form -->
-            <form class="user">
-                <!-- Start: Cod Operador -->
-                <div style="margin-bottom: 15px;">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Cod. Operador</h4><!-- Start: 1 Row 2 Columns -->
-                            <div class="container">
-                                <div class="row">
-                                    @if(teste == CADASTRAR || teste == EDITAR)
-                                    {
-                                        <div class="col-md-6" style="width: 154.281px;"><input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;" name="Cod Operador"></div>
-                                    }
-                                    else
-                                    {
-                                        <div class="col-md-6" style="width: 154.281px;"><input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;" name="Cod Operador" disabled></div>
-                                    }
-                                    <div class="col-md-6"><button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button></div>
-                                </div>
-                            </div><!-- End: 1 Row 2 Columns -->
-                        </div>
-                    </div>
-                </div><!-- End: Cod Operador -->
-                <!-- Start: Nome -->
-                <div class="mb-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <h4 class="card-title">Nome</h4><input class="form-control form-control-user" type="text" id="email" placeholder="Nome" required="" name="Nome" maxlength="50">
-                        </div>
-                    </div>
-                </div><!-- End: Nome -->
-                <!-- Start: Senha e Opções -->
-                <div class="row mb-3">
-                    <!-- Start: 1 Row 2 Columns -->
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Senha</h4><input class="form-control form-control-user" type="password" id="password" placeholder="Senha" required="" name="Senha" maxlength="4">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <h4 class="card-title">Opções</h4>
-                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-top: 12px;" name="ChkSenha"><label class="form-check-label" for="formCheck-1" style="margin-top: 8px;">Exibir Senha</label></div>
-                                        <div class="form-check" style="width: 140.25px;"><input class="form-check-input" type="checkbox" id="formCheck-3" style="margin-top: 12px;" name="ChkSenha"><label class="form-check-label" for="formCheck-3" style="margin-top: 8px;">Adminstrador</label></div>
-                                        <div class="form-check" style="width: 94.5px;"><input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" name="ChkSenha"><label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div><!-- End: 1 Row 2 Columns -->
-                </div><!-- End: Senha e Opções -->
-                <hr><!-- Start: Botões -->
-                <div class="row">
-                    <!-- Start: Novo -->
-                    <div class="col-md-3" style="height: 45px;">
-                        <!-- Start: Novo --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" type="button" style="height: 39px;background: rgb(74,170,15);">Novo</button><!-- End: Novo -->
-                    </div><!-- End: Novo -->
-                    <!-- Start: Editar -->
-                    <div class="col-md-3" style="height: 45px;">
-                        <!-- Start: Editar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" type="button" style="height: 39px;background: rgb(0,100,200);">Editar</button><!-- End: Editar -->
-                    </div><!-- End: Editar -->
-                    <!-- Start: Excluir -->
-                    <div class="col-md-3" style="height: 45px;">
-                        <!-- Start: Excluir --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" type="button" style="height: 39px;background: rgb(203,30,19);">Excluir</button><!-- End: Excluir -->
-                    </div><!-- End: Excluir -->
-                    <!-- Start: Cancelar -->
-                    <div class="col-md-3" style="height: 45px;">
-                        <!-- Start: Cancelar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" type="button" style="height: 39px;background: rgb(228,185,34);">Cancelar</button><!-- End: Cancelar -->
-                    </div><!-- End: Cancelar -->
-                </div><!-- End: Botões -->
-                <hr><!-- Start: crud-Table -->
-                <div class="row justify-content-center">
-                    <div class="col-xl-10 col-xxl-9" style="width: 789.5px;">
-                        <div class="card shadow">
-                            <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
-                                <h5 class="display-6 text-nowrap text-capitalize mb-0">Telas</h5>
-                            </div>
+@if (Operador is not null)
+{
+    <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+        <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
+            <div class="p-5">
+                <div class="text-center">
+                    <h4 class="text-dark mb-4">Cadastro de Operador</h4>
+                </div><!-- Start: Register Form -->
+                <form class="user">
+                    <!-- Start: Cod Operador -->
+                    <div style="margin-bottom: 15px;">
+                        <div class="card">
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-hover">
-                                        <thead>
-                                            <tr>
-                                                <!-- Start: Tela -->
-                                                <th style="width: 239.5px;">Tela</th><!-- End: Tela -->
-                                                <!-- Start: Ativo -->
-                                                <th class="text-center" style="width: 55px;">Ativo</th><!-- End: Ativo -->
-                                                <!-- Start: Novo -->
-                                                <th class="text-center" style="width: 55px;">Editar</th><!-- End: Novo -->
-                                                <!-- Start: Excluir -->
-                                                <th class="text-center" style="width: 55px;">Excluir</th><!-- End: Excluir -->
-                                                <!-- Start: Novo -->
-                                                <th class="text-center" style="width: 55px;">Novo</th><!-- End: Novo -->
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-truncate" style="max-width: 200px;width: 239.5px;">Pedidos</td><!-- Start: Ativo -->
-                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Ativo -->
-                                                <!-- Start: Editar -->
-                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Editar -->
-                                                <!-- Start: Excluir -->
-                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Excluir -->
-                                                <!-- Start: Novo -->
-                                                <td class="text-center" style="width: 55px;"><input type="checkbox"></td><!-- End: Novo -->
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                <h4 class="card-title">Cod. Operador</h4><!-- Start: 1 Row 2 Columns -->
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-6" style="width: 154.281px;"><input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;" name="Cod Operador" oninput="validity.valid||(value='');" disabled="@stsCodOperador" @bind="@Operador.id" @onkeydown="Enter"></div>
+                                        <div class="col-md-6"><button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsPesquisa">Pesquisar</button></div>
+                                    </div>
+                                </div><!-- End: 1 Row 2 Columns -->
+                            </div>
+                        </div>
+                    </div><!-- End: Cod Operador -->
+                    <!-- Start: Nome -->
+                    <div class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Nome</h4><input class="form-control form-control-user" type="text" id="email" placeholder="Nome" required="" name="Nome" maxlength="50" disabled="@stsNome" @bind="@Operador.nome">
+                            </div>
+                        </div>
+                    </div><!-- End: Nome -->
+                    <!-- Start: Senha e Opções -->
+                    <div class="row mb-3">
+                        <!-- Start: 1 Row 2 Columns -->
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Senha</h4><input class="form-control form-control-user" type="@typeSenha" id="password" placeholder="Senha" required="" name="Senha" maxlength="4" disabled="@stsSenha" @bind="@Operador.senha">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Opções</h4>
+                                            <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-top: 12px;" name="ChkSenha" @onchange="(() => mostrarEsconderSenha())" disabled="@stsChkSenha" checked="@chkSenha"><label class="form-check-label" for="formCheck-1" style="margin-top: 8px;">Exibir Senha</label></div>
+                                            <div class="form-check" style="width: 140.25px;"><input class="form-check-input" type="checkbox" id="formCheck-3" style="margin-top: 12px;" name="ChkSenha" disabled="@stsChkAdmin"><label class="form-check-label" for="formCheck-3" style="margin-top: 8px;">Adminstrador</label></div>
+                                            <div class="form-check" style="width: 94.5px;"><input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" name="ChkSenha" disabled="@stsChkInativo"><label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- End: 1 Row 2 Columns -->
+                    </div><!-- End: Senha e Opções -->
+                    <hr><!-- Start: Botões -->
+                    <div class="row">
+                        <!-- Start: Novo -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Novo --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" type="button" style="height: 39px;background: rgb(74,170,15);" @onclick="(() => validaStatus(CADASTRAR))" disabled="@stsBtnNovo">Novo</button><!-- End: Novo -->
+                        </div><!-- End: Novo -->
+                        <!-- Start: Editar -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Editar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" type="button" style="height: 39px;background: rgb(0,100,200);" @onclick="(() => validaStatus(EDITAR))" disabled="@stsBtnEditar">Editar</button><!-- End: Editar -->
+                        </div><!-- End: Editar -->
+                        <!-- Start: Excluir -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Excluir --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" type="button" style="height: 39px;background: rgb(203,30,19);" disabled="@stsBtnExcluir">Excluir</button><!-- End: Excluir -->
+                        </div><!-- End: Excluir -->
+                        <!-- Start: Cancelar -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Cancelar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" type="button" style="height: 39px;background: rgb(228,185,34);" @onclick="(() => validaStatus(VISUALIZAR))" disabled="@stsBtnCancelar">Cancelar</button><!-- End: Cancelar -->
+                        </div><!-- End: Cancelar -->
+                    </div><!-- End: Botões -->
+                    <hr><!-- Start: crud-Table -->
+                    <div class="row justify-content-center">
+                        <div class="col-xl-10 col-xxl-9" style="width: 789.5px;">
+                            <div class="card shadow">
+                                <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
+                                    <h5 class="display-6 text-nowrap text-capitalize mb-0">Telas</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <!-- Start: Tela -->
+                                                    <th style="width: 239.5px;">Tela</th><!-- End: Tela -->
+                                                    <!-- Start: Ativo -->
+                                                    <th class="text-center" style="width: 55px;">Ativo</th><!-- End: Ativo -->
+                                                    <!-- Start: Novo -->
+                                                    <th class="text-center" style="width: 55px;">Editar</th><!-- End: Novo -->
+                                                    <!-- Start: Excluir -->
+                                                    <th class="text-center" style="width: 55px;">Excluir</th><!-- End: Excluir -->
+                                                    <!-- Start: Novo -->
+                                                    <th class="text-center" style="width: 55px;">Novo</th><!-- End: Novo -->
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-truncate" style="max-width: 200px;width: 239.5px;">Pedidos</td><!-- Start: Ativo -->
+                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemAtivo"></td><!-- End: Ativo -->
+                                                    <!-- Start: Editar -->
+                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemEditar"></td><!-- End: Editar -->
+                                                    <!-- Start: Excluir -->
+                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemExcluir"></td><!-- End: Excluir -->
+                                                    <!-- Start: Novo -->
+                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemNovo"></td><!-- End: Novo -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div><!-- End: crud-Table --><button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" style="margin: -3px;margin-left: 45%;margin-bottom: -32px;padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-top: 24px;">Salvar</button>
-            </form><!-- End: Register Form -->
+                    </div><!-- End: crud-Table --><button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" style="margin: -3px;margin-left: 45%;margin-bottom: -32px;padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-top: 24px;" disabled="@stsBtnSalvar">Salvar</button>
+                </form><!-- End: Register Form -->
+            </div>
         </div>
     </div>
-</div>
+}
+
+
 
 @if (@Operador is not null)
 {
@@ -149,22 +140,149 @@
 
     
 @code{
-    public OperadorDTO? Operador { get; set; }
+    public OperadorDTO Operador { get; set; }
 
-    private int teste;
+    // STATUS CADASTRO
+    private bool stsCodOperador { get; set; }
+    private bool stsPesquisa { get; set; }
+    private bool stsNome { get; set; }
+    private bool stsSenha { get; set; }
+    private bool stsChkSenha { get; set; }
+    private bool stsChkAdmin { get; set; }
+    private bool stsChkInativo { get; set; }
+    private bool stsBtnNovo { get; set; }
+    private bool stsBtnEditar { get; set; }
+    private bool stsBtnExcluir { get; set; }
+    private bool stsBtnCancelar { get; set; }
+    private bool stsBtnSalvar { get; set; }
+
+    // STATUS TELAS
+    private bool stsChkItemAtivo { get; set; }
+    private bool stsChkItemEditar { get; set; }
+    private bool stsChkItemExcluir { get; set; }
+    private bool stsChkItemNovo { get; set; }
+
+    // STATUS
+    private int status;
     private int CADASTRAR = 0;
     private int VISUALIZAR = 1;
     private int EDITAR = 2;
 
+    // VISUALIZAR SENHA
+    private bool chkSenha { get; set; }
+    private string typeSenha { get; set; } = "password";
+
     protected override async Task OnInitializedAsync()
     {
-        teste = CADASTRAR;
+        validaStatus(VISUALIZAR);
 
         Operador = await operadorService.GetOperadorById(4);
     }
 
-    private void Status (int status)
+    private void validaStatus(int status)
     {
-        
+        if (status == CADASTRAR)
+        {
+            // false -> ATIVO | true -> INATIVO
+
+            this.status = status;
+
+            stsCodOperador = true;
+            stsPesquisa = true;
+            stsNome = false;
+            stsSenha = false;
+            stsChkSenha = false;
+            stsChkAdmin = false;
+            stsChkInativo = false;
+            stsBtnNovo = true;
+            stsBtnEditar = true;
+            stsBtnExcluir = true;
+            stsBtnCancelar = false;
+            stsBtnSalvar = false;
+
+            // TELAS
+            stsChkItemAtivo = false;
+            stsChkItemEditar = false;
+            stsChkItemExcluir = false;
+            stsChkItemNovo = false;
+        }
+        else if (status == EDITAR)
+        {
+            // false -> ATIVO | true -> INATIVO
+
+            this.status = status;
+
+            stsCodOperador = true;
+            stsPesquisa = true;
+            stsNome = false;
+            stsSenha = false;
+            stsChkSenha = false;
+            stsChkAdmin = false;
+            stsChkInativo = false;
+            stsBtnNovo = true;
+            stsBtnEditar = true;
+            stsBtnExcluir = true;
+            stsBtnCancelar = false;
+            stsBtnSalvar = false;
+
+            // TELAS
+            stsChkItemAtivo = false;
+            stsChkItemEditar = false;
+            stsChkItemExcluir = false;
+            stsChkItemNovo = false;
+        }
+        else if (status == VISUALIZAR)
+        {
+            // false -> ATIVO | true -> INATIVO
+
+            this.status = status;
+
+            stsCodOperador = false;
+            stsPesquisa = false;
+            stsNome = true;
+            stsSenha = true;
+            stsChkSenha = true;
+            stsChkAdmin = true;
+            stsChkInativo = true;
+            stsBtnNovo = false;
+            stsBtnEditar = false;
+            stsBtnExcluir = false;
+            stsBtnCancelar = true;
+            stsBtnSalvar = true;
+
+            // TELAS
+            stsChkItemAtivo = true;
+            stsChkItemEditar = true;
+            stsChkItemExcluir = true;
+            stsChkItemNovo = true;
+
+            // ESCONDE NOVAMENTE A SENHA
+            if (chkSenha == true)
+            {
+                mostrarEsconderSenha();
+            }
+        }
+    }
+
+    private void mostrarEsconderSenha()
+    {
+        if (typeSenha.Equals("password"))
+        {
+            typeSenha = "text";
+            chkSenha = true;
+        }
+        else
+        {
+            typeSenha = "password";
+            chkSenha = false;
+        }
+    }
+
+    private async void Enter(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            Operador = await operadorService.GetOperadorById(Operador.id);
+        }
     }
 }

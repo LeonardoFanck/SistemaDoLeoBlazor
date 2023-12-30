@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaDoLeoBlazor.API", "S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaDoLeoBlazor.MODELS", "SistemaDoLeoBlazor.MODELS\SistemaDoLeoBlazor.MODELS.csproj", "{73C1AEEC-5F9F-41DD-AD1B-1F8C955FF44C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SistemaDoLeoBlazor.WEB", "SistemaDoLeoBlazor.WEB\SistemaDoLeoBlazor.WEB.csproj", "{21CC1108-DA43-4153-B5E9-EAA2FD9B84C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SistemaDoLeoBlazor.WEB", "SistemaDoLeoBlazor.WEB\SistemaDoLeoBlazor.WEB.csproj", "{21CC1108-DA43-4153-B5E9-EAA2FD9B84C6}"
 	ProjectSection(ProjectDependencies) = postProject
 		{73C1AEEC-5F9F-41DD-AD1B-1F8C955FF44C} = {73C1AEEC-5F9F-41DD-AD1B-1F8C955FF44C}
 	EndProjectSection
