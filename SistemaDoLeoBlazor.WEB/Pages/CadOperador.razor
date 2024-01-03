@@ -19,7 +19,7 @@ else if (Operador is not null)
                 <div class="text-center">
                     <h4 class="text-dark mb-4">Cadastro de Operador</h4>
                 </div><!-- Start: Register Form -->
-                <form class="user">
+                <form class="user" method="post" @onsubmit="salvarCadastro">
                     <!-- Start: Cod Operador -->
                     <div style="margin-bottom: 15px;">
                         <div class="card">
@@ -178,7 +178,8 @@ else if (Operador is not null)
                                 </div>
                             </div>
                         </div>
-                    </div><!-- End: crud-Table --><button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" style="margin: -3px;margin-left: 45%;margin-bottom: -32px;padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-top: 24px;" disabled="@stsBtnSalvar">Salvar</button>
+                    </div><!-- End: crud-Table -->
+                    <button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" style="margin: -3px;margin-left: 45%;margin-bottom: -32px;padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-top: 24px;" disabled="@stsBtnSalvar">Salvar</button>
                 </form><!-- End: Register Form -->
             </div>
         </div>

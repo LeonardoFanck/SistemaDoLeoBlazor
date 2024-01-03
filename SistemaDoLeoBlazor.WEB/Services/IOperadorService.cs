@@ -6,5 +6,8 @@ namespace SistemaDoLeoBlazor.WEB.Services
     {
         Task<OperadorDTO> GetOperadorById(int id);
         Task<IEnumerable<OperadorTelaDTO>> GetTelasByOperador(int id);
+        Task<OperadorDTO> PostOperador(OperadorDTO operadorDTO);
+        Task<OperadorDTO> PostOperadorTelas(OperadorDTO operadorDTO);
+        Task<OperadorTelaDTO> PatchOperadorTelas(OperadorTelaDTO operadorTelaDTO);
     }
 }

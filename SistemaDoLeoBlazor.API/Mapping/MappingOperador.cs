@@ -52,6 +52,7 @@ namespace SistemaDoLeoBlazor.API.Mapping
                     {
                         id = telas.id,
                         idOperador = telas.operadorId,
+                        idTela = telas.telaId,
                         nome = telas.tela.Nome,
                         ativo = telas.ativo,
                         editar = telas.editar,

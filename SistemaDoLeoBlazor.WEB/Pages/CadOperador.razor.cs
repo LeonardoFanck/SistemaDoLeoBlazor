@@ -47,27 +47,10 @@ public partial class CadOperador
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            OperadorAtual = await operadorService.GetOperadorById(4);
+        // DEPOIS VAI TER UM SELECT AONDE VAI PEGAR O PRIMEIRO REGISTRO
+        getOperador(4); //   <-- ALTERAR DEPOIS
 
-            Operador = new OperadorDTO
-            {
-                id = OperadorAtual.id,
-                nome = OperadorAtual.nome,
-                senha = OperadorAtual.senha,
-                admin = OperadorAtual.admin,
-                inativo = OperadorAtual.inativo
-            };
-
-            OperadorTelas = await operadorService.GetTelasByOperador(4);
-
-            validaStatus(VISUALIZAR);
-        }
-        catch (Exception e)
-        {
-            erro = $"{e.Message} - {e.GetType}";
-        }
+        validaStatus(VISUALIZAR);        
     }
 
     private void validaStatus(int status)
@@ -98,6 +81,7 @@ public partial class CadOperador
             stsChkItemNovo = false;
 
             // LIMPA OS VALORES DO OPERADOR
+            Operador.id = 99999;
             Operador.nome = string.Empty;
             Operador.senha = string.Empty;
             Operador.admin = false;
@@ -135,6 +119,9 @@ public partial class CadOperador
             stsChkItemEditar = false;
             stsChkItemExcluir = false;
             stsChkItemNovo = false;
+
+            // RESTAURA AS INFORMAÇÕES DO OPERADOR
+            resetarOperador();
         }
         else if (status == VISUALIZAR)
         {
@@ -167,10 +154,14 @@ public partial class CadOperador
                 mostrarEsconderSenha();
             }
 
-            // RESETA OS VALORES DO OPERADOR
-            resetarOperador();
+            // SE FOR NULO É PORQUE É O PRIMEIRO SELECT
+            if (OperadorAtual is not null)
+            {
+                // RESETA OS VALORES DO OPERADOR
+                resetarOperador();
 
-            resetarTelas(OperadorAtual.id);
+                resetarTelas(OperadorAtual.id);
+            }
         }
     }
 
@@ -188,33 +179,41 @@ public partial class CadOperador
         }
     }
 
-    private async void OnKeyDownTxtID(KeyboardEventArgs e)
+    private void OnKeyDownTxtID(KeyboardEventArgs e)
+    {
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            getOperador(Operador.id);
+        }
+    }
+
+    private async void getOperador(int id)
     {
         try
         {
-            if (e.Code == "Enter" || e.Code == "NumpadEnter")
+            OperadorAtual = await operadorService.GetOperadorById(id);
+
+            Operador = new OperadorDTO
             {
-                OperadorAtual = await operadorService.GetOperadorById(Operador.id);
+                id = OperadorAtual.id,
+                nome = OperadorAtual.nome,
+                senha = OperadorAtual.senha,
+                admin = OperadorAtual.admin,
+                inativo = OperadorAtual.inativo
+            };
 
-                Operador = new OperadorDTO
-                {
-                    id = OperadorAtual.id,
-                    nome = OperadorAtual.nome,
-                    senha = OperadorAtual.senha,
-                    admin = OperadorAtual.admin,
-                    inativo = OperadorAtual.inativo
-                };
+            // PEGA AS TELAS DO OPERAODR
+            OperadorTelas = await operadorService.GetTelasByOperador(id);
 
-                // RENDERIZA NOVAMENTE O COMPONENTE
-                _ = InvokeAsync(StateHasChanged);
-            }
+            // RENDERIZA NOVAMENTE O COMPONENTE
+            _ = InvokeAsync(StateHasChanged);
         }
         catch (HttpRequestException ex)
         {
             if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 _toasterService.AddToast(Toast.NewToast("Operador inválido", $"Operador {Operador.id} não cadastrado", MessageColour.Danger, 8));
-                
+
                 resetarOperador();
 
                 // RENDERIZA NOVAMENTE O COMPONENTE
@@ -238,5 +237,46 @@ public partial class CadOperador
 
         // RENDERIZA NOVAMENTE O COMPONENTE
         _ = InvokeAsync(StateHasChanged);
+    }
+
+    private async void salvarCadastro()
+    {
+        if(status == CADASTRAR)
+        {
+            try
+            {
+                // ADD OPERADOR
+                OperadorAtual = await operadorService.PostOperador(Operador);
+
+                // ADD TELAS
+                OperadorAtual = await operadorService.PostOperadorTelas(OperadorAtual);
+
+                // PEGA O OPERADOR CADASTRADO PARA ATUALIZAR OS OBJETOS OPERADOR E TELA
+                getOperador(OperadorAtual.id);
+
+                foreach (var tela in OperadorTelas)
+                {
+                    await operadorService.PatchOperadorTelas(tela);
+                }
+
+                // MENSAGEM DE SUCESSO
+                _toasterService.AddToast(Toast.NewToast("Cadastro Operador", $"Cadastro Realizdo com sucesso!", MessageColour.Success, 8));
+                
+                // ALTERA O STATUS
+                validaStatus(VISUALIZAR);
+            }
+            catch (HttpRequestException ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar o Operador: {ex.Message}", MessageColour.Danger, 8));
+            }
+            catch (Exception ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar o Operador: {ex.Message}", MessageColour.Danger, 8));
+            }
+        }
+        else if (status == EDITAR)
+        {
+
+        }
     }
 }

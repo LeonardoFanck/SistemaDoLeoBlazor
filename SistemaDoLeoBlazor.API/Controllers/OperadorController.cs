@@ -86,7 +86,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
                 var telas = await _operadorRepository.GetTelas(id);
                 if (telas.Count() == 0)
                 {
-                    return NotFound("Nenhuma tela localizada");
+                    return NoContent();
                 }
 
                 var operadorTelaDto = telas.OperadorTelasToDto();
