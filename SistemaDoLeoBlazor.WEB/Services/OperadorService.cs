@@ -29,5 +29,20 @@ namespace SistemaDoLeoBlazor.WEB.Services
                 throw;
             }
         }
+
+        public async Task<IEnumerable<OperadorTelaDTO>> GetTelasByOperador(int id)
+        {
+            try
+            {
+                var operadorTelaDto = await _httpClient.GetFromJsonAsync<IEnumerable<OperadorTelaDTO>>($"api/Operador/{id}/getTelas");
+
+                return operadorTelaDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao acessar api/Operador/{id}/GetTelas");
+                throw;
+            }
+        }
     }
 }

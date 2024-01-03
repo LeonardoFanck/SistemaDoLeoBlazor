@@ -19,8 +19,13 @@
                                 <h4 class="card-title">Cod. Operador</h4><!-- Start: 1 Row 2 Columns -->
                                 <div class="container">
                                     <div class="row">
-                                        <div class="col-md-6" style="width: 154.281px;"><input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;" name="Cod Operador" oninput="validity.valid||(value='');" disabled="@stsCodOperador" @bind="@Operador.id" @onkeydown="Enter"></div>
-                                        <div class="col-md-6"><button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsPesquisa">Pesquisar</button></div>
+                                        <div class="col-md-6" style="width: 154.281px;">
+                                            <input class="form-control form-control-user" type="number" placeholder="Cod Operador" required="" style="width: 141px;"
+                                                   name="Cod Operador" disabled="@stsCodOperador" @bind-value="@Operador.id" @bind-value:event="oninput" @onkeydown="OnKeyDownTxtID">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsPesquisa">Pesquisar</button>
+                                        </div>
                                     </div>
                                 </div><!-- End: 1 Row 2 Columns -->
                             </div>
@@ -30,7 +35,9 @@
                     <div class="mb-3">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Nome</h4><input class="form-control form-control-user" type="text" id="email" placeholder="Nome" required="" name="Nome" maxlength="50" disabled="@stsNome" @bind="@Operador.nome">
+                                <h4 class="card-title">Nome</h4>
+                                <input class="form-control form-control-user" type="text" id="email" 
+                                       placeholder="Nome" required="" name="Nome" maxlength="50" disabled="@stsNome" @bind="@Operador.nome">
                             </div>
                         </div>
                     </div><!-- End: Nome -->
@@ -42,7 +49,9 @@
                                 <div class="col-md-6">
                                     <div class="card">
                                         <div class="card-body">
-                                            <h4 class="card-title">Senha</h4><input class="form-control form-control-user" type="@typeSenha" id="password" placeholder="Senha" required="" name="Senha" maxlength="4" disabled="@stsSenha" @bind="@Operador.senha">
+                                            <h4 class="card-title">Senha</h4>
+                                            <input class="form-control form-control-user" type="@typeSenha" id="password" 
+                                                   placeholder="Senha" required="" name="Senha" maxlength="4" disabled="@stsSenha" @bind="@Operador.senha">
                                         </div>
                                     </div>
                                 </div>
@@ -50,9 +59,21 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Opções</h4>
-                                            <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-top: 12px;" name="ChkSenha" @onchange="(() => mostrarEsconderSenha())" disabled="@stsChkSenha" checked="@chkSenha"><label class="form-check-label" for="formCheck-1" style="margin-top: 8px;">Exibir Senha</label></div>
-                                            <div class="form-check" style="width: 140.25px;"><input class="form-check-input" type="checkbox" id="formCheck-3" style="margin-top: 12px;" name="ChkSenha" disabled="@stsChkAdmin"><label class="form-check-label" for="formCheck-3" style="margin-top: 8px;">Adminstrador</label></div>
-                                            <div class="form-check" style="width: 94.5px;"><input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" name="ChkSenha" disabled="@stsChkInativo"><label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label></div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck-1" style="margin-top: 12px;" 
+                                                           name="ChkSenha" @onchange="(() => mostrarEsconderSenha())" disabled="@stsChkSenha" checked="@chkSenha">
+                                                    <label class="form-check-label" for="formCheck-1" style="margin-top: 8px;">Exibir Senha</label>
+                                                </div>
+                                                <div class="form-check" style="width: 140.25px;">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck-3" style="margin-top: 12px;" 
+                                                           name="ChkSenha" disabled="@stsChkAdmin" checked="@Operador.admin">
+                                                    <label class="form-check-label" for="formCheck-3" style="margin-top: 8px;">Adminstrador</label>
+                                                </div>
+                                                <div class="form-check" style="width: 94.5px;">
+                                                    <input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" 
+                                                           name="ChkSenha" disabled="@stsChkInativo" checked="@Operador.inativo">
+                                                    <label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -63,19 +84,31 @@
                     <div class="row">
                         <!-- Start: Novo -->
                         <div class="col-md-3" style="height: 45px;">
-                            <!-- Start: Novo --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" type="button" style="height: 39px;background: rgb(74,170,15);" @onclick="(() => validaStatus(CADASTRAR))" disabled="@stsBtnNovo">Novo</button><!-- End: Novo -->
+                            <!-- Start: Novo -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" 
+                            type="button" style="height: 39px;background: rgb(74,170,15);" @onclick="(() => validaStatus(CADASTRAR))" 
+                            disabled="@stsBtnNovo">Novo</button><!-- End: Novo -->
                         </div><!-- End: Novo -->
                         <!-- Start: Editar -->
                         <div class="col-md-3" style="height: 45px;">
-                            <!-- Start: Editar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" type="button" style="height: 39px;background: rgb(0,100,200);" @onclick="(() => validaStatus(EDITAR))" disabled="@stsBtnEditar">Editar</button><!-- End: Editar -->
+                            <!-- Start: Editar -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" 
+                                    type="button" style="height: 39px;background: rgb(0,100,200);" @onclick="(() => validaStatus(EDITAR))" 
+                                    disabled="@stsBtnEditar">Editar</button><!-- End: Editar -->
                         </div><!-- End: Editar -->
                         <!-- Start: Excluir -->
                         <div class="col-md-3" style="height: 45px;">
-                            <!-- Start: Excluir --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" type="button" style="height: 39px;background: rgb(203,30,19);" disabled="@stsBtnExcluir">Excluir</button><!-- End: Excluir -->
+                            <!-- Start: Excluir -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" 
+                                    type="button" style="height: 39px;background: rgb(203,30,19);" 
+                                    disabled="@stsBtnExcluir">Excluir</button><!-- End: Excluir -->
                         </div><!-- End: Excluir -->
                         <!-- Start: Cancelar -->
                         <div class="col-md-3" style="height: 45px;">
-                            <!-- Start: Cancelar --><button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" type="button" style="height: 39px;background: rgb(228,185,34);" @onclick="(() => validaStatus(VISUALIZAR))" disabled="@stsBtnCancelar">Cancelar</button><!-- End: Cancelar -->
+                            <!-- Start: Cancelar -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" 
+                                    type="button" style="height: 39px;background: rgb(228,185,34);" @onclick="(() => validaStatus(VISUALIZAR))" 
+                                    disabled="@stsBtnCancelar">Cancelar</button><!-- End: Cancelar -->
                         </div><!-- End: Cancelar -->
                     </div><!-- End: Botões -->
                     <hr><!-- Start: crud-Table -->
@@ -103,16 +136,35 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td class="text-truncate" style="max-width: 200px;width: 239.5px;">Pedidos</td><!-- Start: Ativo -->
-                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemAtivo"></td><!-- End: Ativo -->
-                                                    <!-- Start: Editar -->
-                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemEditar"></td><!-- End: Editar -->
-                                                    <!-- Start: Excluir -->
-                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemExcluir"></td><!-- End: Excluir -->
-                                                    <!-- Start: Novo -->
-                                                    <td class="text-center" style="width: 55px;"><input type="checkbox" disabled="@stsChkItemNovo"></td><!-- End: Novo -->
-                                                </tr>
+                                                @if (OperadorTelas is not null)
+                                                {
+                                                    @foreach (var tela in OperadorTelas)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-truncate" style="max-width: 200px;width: 239.5px;">@tela.nome</td><!-- Start: Ativo -->
+                                                            <td class="text-center" style="width: 55px;">
+                                                                <input type="checkbox" disabled="@stsChkItemAtivo" @bind="tela.ativo">
+                                                            </td><!-- End: Ativo -->
+                                                            <!-- Start: Editar -->
+                                                            <td class="text-center" style="width: 55px;">
+                                                                <input type="checkbox" disabled="@stsChkItemEditar" @bind="tela.editar">
+                                                            </td><!-- End: Editar -->
+                                                            <!-- Start: Excluir -->
+                                                            <td class="text-center" style="width: 55px;">
+                                                                <input type="checkbox" disabled="@stsChkItemExcluir" @bind="tela.excluir">
+                                                            </td><!-- End: Excluir -->
+                                                            <!-- Start: Novo -->
+                                                            <td class="text-center" style="width: 55px;">
+                                                                <input type="checkbox" disabled="@stsChkItemNovo" @bind="tela.novo">
+                                                            </td><!-- End: Novo -->
+                                                        </tr>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    <p>Nenhuma Tela Localizada</p>
+                                                }
+                                                
                                             </tbody>
                                         </table>
                                     </div>
@@ -126,8 +178,6 @@
     </div>
 }
 
-
-
 @if (@Operador is not null)
 {
     <p> ID: @Operador.id</p>
@@ -137,152 +187,19 @@
     <p> Admin: @Operador.admin</p>
 }
 
-
-    
-@code{
-    public OperadorDTO Operador { get; set; }
-
-    // STATUS CADASTRO
-    private bool stsCodOperador { get; set; }
-    private bool stsPesquisa { get; set; }
-    private bool stsNome { get; set; }
-    private bool stsSenha { get; set; }
-    private bool stsChkSenha { get; set; }
-    private bool stsChkAdmin { get; set; }
-    private bool stsChkInativo { get; set; }
-    private bool stsBtnNovo { get; set; }
-    private bool stsBtnEditar { get; set; }
-    private bool stsBtnExcluir { get; set; }
-    private bool stsBtnCancelar { get; set; }
-    private bool stsBtnSalvar { get; set; }
-
-    // STATUS TELAS
-    private bool stsChkItemAtivo { get; set; }
-    private bool stsChkItemEditar { get; set; }
-    private bool stsChkItemExcluir { get; set; }
-    private bool stsChkItemNovo { get; set; }
-
-    // STATUS
-    private int status;
-    private int CADASTRAR = 0;
-    private int VISUALIZAR = 1;
-    private int EDITAR = 2;
-
-    // VISUALIZAR SENHA
-    private bool chkSenha { get; set; }
-    private string typeSenha { get; set; } = "password";
-
-    protected override async Task OnInitializedAsync()
+@if (OperadorTelas is not null)
+{
+    @foreach (var tela in OperadorTelas)
     {
-        validaStatus(VISUALIZAR);
-
-        Operador = await operadorService.GetOperadorById(4);
+        <p>@tela.nome</p>
+        <p>@tela.ativo</p>
+        <p>@tela.novo</p>
+        <p>@tela.editar</p>
+        <p>@tela.excluir</p>
     }
+}
 
-    private void validaStatus(int status)
-    {
-        if (status == CADASTRAR)
-        {
-            // false -> ATIVO | true -> INATIVO
-
-            this.status = status;
-
-            stsCodOperador = true;
-            stsPesquisa = true;
-            stsNome = false;
-            stsSenha = false;
-            stsChkSenha = false;
-            stsChkAdmin = false;
-            stsChkInativo = false;
-            stsBtnNovo = true;
-            stsBtnEditar = true;
-            stsBtnExcluir = true;
-            stsBtnCancelar = false;
-            stsBtnSalvar = false;
-
-            // TELAS
-            stsChkItemAtivo = false;
-            stsChkItemEditar = false;
-            stsChkItemExcluir = false;
-            stsChkItemNovo = false;
-        }
-        else if (status == EDITAR)
-        {
-            // false -> ATIVO | true -> INATIVO
-
-            this.status = status;
-
-            stsCodOperador = true;
-            stsPesquisa = true;
-            stsNome = false;
-            stsSenha = false;
-            stsChkSenha = false;
-            stsChkAdmin = false;
-            stsChkInativo = false;
-            stsBtnNovo = true;
-            stsBtnEditar = true;
-            stsBtnExcluir = true;
-            stsBtnCancelar = false;
-            stsBtnSalvar = false;
-
-            // TELAS
-            stsChkItemAtivo = false;
-            stsChkItemEditar = false;
-            stsChkItemExcluir = false;
-            stsChkItemNovo = false;
-        }
-        else if (status == VISUALIZAR)
-        {
-            // false -> ATIVO | true -> INATIVO
-
-            this.status = status;
-
-            stsCodOperador = false;
-            stsPesquisa = false;
-            stsNome = true;
-            stsSenha = true;
-            stsChkSenha = true;
-            stsChkAdmin = true;
-            stsChkInativo = true;
-            stsBtnNovo = false;
-            stsBtnEditar = false;
-            stsBtnExcluir = false;
-            stsBtnCancelar = true;
-            stsBtnSalvar = true;
-
-            // TELAS
-            stsChkItemAtivo = true;
-            stsChkItemEditar = true;
-            stsChkItemExcluir = true;
-            stsChkItemNovo = true;
-
-            // ESCONDE NOVAMENTE A SENHA
-            if (chkSenha == true)
-            {
-                mostrarEsconderSenha();
-            }
-        }
-    }
-
-    private void mostrarEsconderSenha()
-    {
-        if (typeSenha.Equals("password"))
-        {
-            typeSenha = "text";
-            chkSenha = true;
-        }
-        else
-        {
-            typeSenha = "password";
-            chkSenha = false;
-        }
-    }
-
-    private async void Enter(KeyboardEventArgs e)
-    {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter")
-        {
-            Operador = await operadorService.GetOperadorById(Operador.id);
-        }
-    }
+@if (erro != "")
+{
+    <p>@erro</p>
 }

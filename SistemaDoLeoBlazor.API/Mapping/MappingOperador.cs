@@ -53,6 +53,7 @@ namespace SistemaDoLeoBlazor.API.Mapping
                         id = telas.id,
                         idOperador = telas.operadorId,
                         nome = telas.tela.Nome,
+                        ativo = telas.ativo,
                         editar = telas.editar,
                         excluir = telas.excluir,
                         novo = telas.novo
