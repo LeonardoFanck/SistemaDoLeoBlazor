@@ -13,7 +13,7 @@ public partial class CadOperador
     private OperadorDTO? Operador { get; set; }
     private IEnumerable<OperadorTelaDTO>? OperadorTelas { get; set; }
     private OperadorDTO? OperadorAtual { get; set; }
-    
+    private string erro { get; set; } = string.Empty;
 
     // STATUS CADASTRO
     private bool stsCodOperador { get; set; }
@@ -44,9 +44,6 @@ public partial class CadOperador
     // VISUALIZAR SENHA
     private bool chkSenha { get; set; }
     private string typeSenha { get; set; } = "password";
-
-    // ERRO MENSAGEM
-    private string erro = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -105,6 +102,14 @@ public partial class CadOperador
             Operador.senha = string.Empty;
             Operador.admin = false;
             Operador.inativo = false;
+
+            foreach(var tela in OperadorTelas)
+            {
+                tela.ativo = false;
+                tela.novo = false;
+                tela.excluir = false;
+                tela.editar = false;
+            }
         }
         else if (status == EDITAR)
         {
@@ -164,6 +169,8 @@ public partial class CadOperador
 
             // RESETA OS VALORES DO OPERADOR
             resetarOperador();
+
+            resetarTelas(OperadorAtual.id);
         }
     }
 
@@ -206,7 +213,7 @@ public partial class CadOperador
         {
             if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
-                _toasterService.AddToast(Toast.NewToast("Operador inválido", $"Operador {Operador.id} não cadastrado", MessageColour.Danger, 6));
+                _toasterService.AddToast(Toast.NewToast("Operador inválido", $"Operador {Operador.id} não cadastrado", MessageColour.Danger, 8));
                 
                 resetarOperador();
 
@@ -223,5 +230,13 @@ public partial class CadOperador
         Operador.senha = OperadorAtual.senha;
         Operador.admin = OperadorAtual.admin;
         Operador.inativo = OperadorAtual.inativo;
+    }
+
+    private async void resetarTelas(int id)
+    {
+        OperadorTelas = await operadorService.GetTelasByOperador(id);
+
+        // RENDERIZA NOVAMENTE O COMPONENTE
+        _ = InvokeAsync(StateHasChanged);
     }
 }

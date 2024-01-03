@@ -3,7 +3,15 @@
 
 <PageTitle>Cadastro Operador</PageTitle>
 
-@if (Operador is not null)
+@if (Operador is null && erro.Equals(""))
+{
+    <LoadingComponent />   
+}
+else if (!erro.Equals(""))
+{
+    
+}
+else if (Operador is not null)
 {
     <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
         <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
@@ -164,7 +172,6 @@
                                                 {
                                                     <p>Nenhuma Tela Localizada</p>
                                                 }
-                                                
                                             </tbody>
                                         </table>
                                     </div>
