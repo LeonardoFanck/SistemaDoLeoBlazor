@@ -108,8 +108,9 @@ else if (Operador is not null)
                         <div class="col-md-3" style="height: 45px;">
                             <!-- Start: Excluir -->
                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" 
-                                    type="button" style="height: 39px;background: rgb(203,30,19);" 
-                                    disabled="@stsBtnExcluir">Excluir</button><!-- End: Excluir -->
+                                    type="button" style="height: 39px;background: rgb(203,30,19);"
+                                    disabled="@stsBtnExcluir" @onclick="(() => OpenDeleteDialog())">Excluir
+                            </button><!-- End: Excluir -->
                         </div><!-- End: Excluir -->
                         <!-- Start: Cancelar -->
                         <div class="col-md-3" style="height: 45px;">
@@ -184,6 +185,11 @@ else if (Operador is not null)
             </div>
         </div>
     </div>
+
+    @if (DeleteDialogOpen)
+    {
+        <ConfirmModal Titulo="Exlusão de Operador" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
+    }
 }
 
 @if (@Operador is not null)

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Components;
 using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 using SistemaDoLeoBlazor.WEB.Toaster;
 using SistemaDoLeoBlazor.WEB.Services;
+using SistemaDoLeoBlazor.WEB.Shared;
 
 namespace SistemaDoLeoBlazor.WEB.Pages;
 
@@ -45,10 +46,14 @@ public partial class CadOperador
     private bool chkSenha { get; set; }
     private string typeSenha { get; set; } = "password";
 
+    // VALIDAÇÃO DELETE
+    private bool DeleteDialogOpen {get; set; }
+    private string mensagem = "";
+
     protected override async Task OnInitializedAsync()
     {
         // DEPOIS VAI TER UM SELECT AONDE VAI PEGAR O PRIMEIRO REGISTRO
-        getOperador(4); //   <-- ALTERAR DEPOIS
+        getOperador(5); //   <-- ALTERAR DEPOIS
 
         validaStatus(VISUALIZAR);        
     }
@@ -251,17 +256,33 @@ public partial class CadOperador
                 // ADD TELAS
                 OperadorAtual = await operadorService.PostOperadorTelas(OperadorAtual);
 
-                // PEGA O OPERADOR CADASTRADO PARA ATUALIZAR OS OBJETOS OPERADOR E TELA
-                getOperador(OperadorAtual.id);
+                // PEGA AS INFORMAÇÕES DAS TELAS QUE FORAM CADASTRADAS ACIMA
+                var novasTela = await operadorService.GetTelasByOperador(OperadorAtual.id);
 
-                foreach (var tela in OperadorTelas)
+                // JUNTA AS 2 LISTAS EM UMAS SÓ PARA ATUALIZAR
+                var telas = from novasTelas in novasTela
+                                join config in OperadorTelas on novasTelas.idTela equals config.idTela
+                                select new OperadorTelaDTO
+                                {
+                                    id = novasTelas.id,
+                                    idOperador = novasTelas.idOperador,
+                                    idTela = novasTelas.idTela,
+                                    nome = novasTelas.nome,
+                                    ativo = config.ativo,
+                                    novo = config.novo,
+                                    editar = config.editar,
+                                    excluir = config.excluir
+                                };
+
+                // ATUALIZA AS TELAS 
+                foreach (var tela in telas)
                 {
                     await operadorService.PatchOperadorTelas(tela);
                 }
 
                 // MENSAGEM DE SUCESSO
                 _toasterService.AddToast(Toast.NewToast("Cadastro Operador", $"Cadastro Realizdo com sucesso!", MessageColour.Success, 8));
-                
+
                 // ALTERA O STATUS
                 validaStatus(VISUALIZAR);
             }
@@ -276,7 +297,71 @@ public partial class CadOperador
         }
         else if (status == EDITAR)
         {
+            try
+            {
+                // ATUALIZA O OPERADOR
+                await operadorService.PatchOperador(Operador);
 
+                // ATUALIZA AS TELAS;
+                foreach(var tela in OperadorTelas)
+                {
+                    await operadorService.PatchOperadorTelas(tela);
+                }
+
+                // MENSAGEM DE SUCESSO
+                _toasterService.AddToast(Toast.NewToast("Atualizar Operador", $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
+
+                // BUSCA AS NOVA INFORMAÇÕES
+                getOperador(Operador.id);
+
+                // ALTERA O STATUS
+                validaStatus(VISUALIZAR);
+            }
+            catch (HttpRequestException ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar o Operador: {ex.Message}", MessageColour.Danger, 8));
+            }
+            catch (Exception ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar o Operador: {ex.Message}", MessageColour.Danger, 8));
+            }
         }
+    }
+
+    private async void OnDeleteDialogClose(bool accepted)
+    {
+        try
+        {
+            if (accepted)
+            {
+                await operadorService.DeleteOperador(Operador.id);
+
+                // MENSAGEM DE SUCESSO
+                _toasterService.AddToast(Toast.NewToast("Operador Deletado", $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
+            }
+
+            DeleteDialogOpen = false;
+            StateHasChanged();
+
+            // BUSCA AS NOVA INFORMAÇÕES
+            getOperador(5); //   <-- alterar
+        }
+        catch (HttpRequestException ex)
+        {
+            _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar o Operador: {ex.Message}", MessageColour.Danger, 8));
+        }
+        catch (Exception ex)
+        {
+            _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar o Operador: {ex.Message}", MessageColour.Danger, 8));
+        }
+
+    }
+
+    private void OpenDeleteDialog()
+    {
+        mensagem = $"Deseja realmente excluir o Operador {Operador.id} - {Operador.nome}";
+
+        DeleteDialogOpen = true;
+        StateHasChanged();
     }
 }

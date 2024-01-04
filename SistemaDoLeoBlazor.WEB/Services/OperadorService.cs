@@ -105,7 +105,32 @@ namespace SistemaDoLeoBlazor.WEB.Services
                 throw;
             }
         }
-        
+
+        public async Task<OperadorDTO> PatchOperador(OperadorDTO operadorDTO)
+        {
+            try
+            {
+                var jsonRequest = JsonSerializer.Serialize(operadorDTO);
+
+                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json-patch+json");
+
+                var response = await _httpClient.PatchAsync($"api/Operador/{operadorDTO.id}", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<OperadorDTO>();
+                }
+
+                return null;
+
+            }
+            catch (Exception)
+            {
+                _logger.LogError($"Erro ao acessar api/Operador/{operadorDTO.id}");
+                throw;
+            }
+        }
+
         public async Task<OperadorTelaDTO> PatchOperadorTelas(OperadorTelaDTO operadorTelaDTO)
         {
             try
@@ -127,6 +152,24 @@ namespace SistemaDoLeoBlazor.WEB.Services
             catch (Exception)
             {
                 _logger.LogError($"Erro ao acessar api/Operador/Tela/{operadorTelaDTO.id}");
+                throw;
+            }
+        }
+
+        public async Task<OperadorDTO> DeleteOperador(int id)
+        {
+            try
+            {
+                var response = await _httpClient.DeleteAsync($"api/Operador/{id}");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return await response.Content.ReadFromJsonAsync<OperadorDTO>();
+                }
+                return default(OperadorDTO);
+            }
+            catch (Exception)
+            {
                 throw;
             }
         }
