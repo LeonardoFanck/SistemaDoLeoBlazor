@@ -173,5 +173,20 @@ namespace SistemaDoLeoBlazor.WEB.Services
                 throw;
             }
         }
+
+        public async Task<IEnumerable<OperadorDTO>> GetAllOperadores()
+        {
+            try
+            {
+                var listaOperadorDto = await _httpClient.GetFromJsonAsync<IEnumerable<OperadorDTO>>($"api/Operador/GetAll");
+
+                return listaOperadorDto;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Erro ao acessar api/Operador/GetAll");
+                throw;
+            }
+        }
     }
 }

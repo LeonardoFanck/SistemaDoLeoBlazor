@@ -41,14 +41,14 @@ namespace SistemaDoLeoBlazor.API.Controllers
             }
             catch (Exception ex) 
             {
-                logger.LogError("## Erro criar um novo Operador");
+                logger.LogError($"## Erro buscar o Operador {id}");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }
 
         [HttpGet]
-        [Route("GetAll/{filtro}")]
-        public async Task<ActionResult<IEnumerable<OperadorDTO>>> GetOperadores(string filtro)
+        [Route("GetAll")]
+        public async Task<ActionResult<IEnumerable<OperadorDTO>>> GetOperadores()
         {
             try
             {
@@ -65,7 +65,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
             }
             catch (Exception ex)
             {
-                logger.LogError("## Erro criar um novo Operador");
+                logger.LogError("## Erro ao buscar todos os Operadores");
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
             }
         }

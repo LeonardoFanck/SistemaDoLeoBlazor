@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SistemaDoLeoBlazor.API.Context;
+using SistemaDoLeoBlazor.API.Repositories.CategoriaRepository;
 using SistemaDoLeoBlazor.API.Repositories.OperadorRepository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 });
 
 builder.Services.AddScoped<IOperadorRepository, OperadorRepository>();
+builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
 
 var app = builder.Build();
 

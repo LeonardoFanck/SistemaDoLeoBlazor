@@ -11,5 +11,6 @@ namespace SistemaDoLeoBlazor.WEB.Services
         Task<OperadorDTO> PatchOperador(OperadorDTO operadorDTO);
         Task<OperadorTelaDTO> PatchOperadorTelas(OperadorTelaDTO operadorTelaDTO);
         Task<OperadorDTO> DeleteOperador (int id);
+        Task<IEnumerable<OperadorDTO>> GetAllOperadores();
     }
 }

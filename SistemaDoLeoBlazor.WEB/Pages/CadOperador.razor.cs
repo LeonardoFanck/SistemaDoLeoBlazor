@@ -4,6 +4,7 @@ using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 using SistemaDoLeoBlazor.WEB.Toaster;
 using SistemaDoLeoBlazor.WEB.Services;
 using SistemaDoLeoBlazor.WEB.Shared;
+using System.ComponentModel;
 
 namespace SistemaDoLeoBlazor.WEB.Pages;
 
@@ -52,13 +53,17 @@ public partial class CadOperador
 
     protected override async Task OnInitializedAsync()
     {
-        // DEPOIS VAI TER UM SELECT AONDE VAI PEGAR O PRIMEIRO REGISTRO
-        getOperador(5); //   <-- ALTERAR DEPOIS
+        // PEGA O ID DO ULTIMO OPERADOR CADASTRADO
+        var ultimoId = await getLastOperador();
 
+        // PEGA AS INFORMAÇÕES DO ULTIMO OPERADOR
+        getOperador(ultimoId);
+
+        // ALTERA O STATUS
         validaStatus(VISUALIZAR);        
     }
 
-    private void validaStatus(int status)
+    private async void validaStatus(int status)
     {
         if (status == CADASTRAR)
         {
@@ -192,6 +197,23 @@ public partial class CadOperador
         }
     }
 
+    private async Task<int> getLastOperador()
+    {
+        try
+        {
+            var listaOperadores = await operadorService.GetAllOperadores();
+
+            var operador = listaOperadores.Last();
+
+            return operador.id;
+        }
+        catch (HttpRequestException ex)
+        {
+            _toasterService.AddToast(Toast.NewToast("ERRO", $"Ocorreu um erro: {ex.Message}", MessageColour.Danger, 8));
+            throw;
+        }
+    }
+
     private async void getOperador(int id)
     {
         try
@@ -206,6 +228,9 @@ public partial class CadOperador
                 admin = OperadorAtual.admin,
                 inativo = OperadorAtual.inativo
             };
+
+            // ADICIONA AS TELAS AO OPERADOR CASO NÃO TENHA TODAS
+            await AddTelasOperador();
 
             // PEGA AS TELAS DO OPERAODR
             OperadorTelas = await operadorService.GetTelasByOperador(id);
@@ -244,6 +269,11 @@ public partial class CadOperador
         _ = InvokeAsync(StateHasChanged);
     }
 
+    private async Task<OperadorDTO> AddTelasOperador()
+    {
+        return await operadorService.PostOperadorTelas(OperadorAtual);
+    }
+
     private async void salvarCadastro()
     {
         if(status == CADASTRAR)
@@ -254,7 +284,7 @@ public partial class CadOperador
                 OperadorAtual = await operadorService.PostOperador(Operador);
 
                 // ADD TELAS
-                OperadorAtual = await operadorService.PostOperadorTelas(OperadorAtual);
+                OperadorAtual = await AddTelasOperador();
 
                 // PEGA AS INFORMAÇÕES DAS TELAS QUE FORAM CADASTRADAS ACIMA
                 var novasTela = await operadorService.GetTelasByOperador(OperadorAtual.id);
@@ -343,8 +373,11 @@ public partial class CadOperador
             DeleteDialogOpen = false;
             StateHasChanged();
 
-            // BUSCA AS NOVA INFORMAÇÕES
-            getOperador(5); //   <-- alterar
+            // PEGA O ID DO ULTIMO OPERADOR CADASTRADO
+            var ultimoId = await getLastOperador();
+
+            // BUSCA AS INFORMAÇÕES DO ULTIMO OPERADOR CADASTRADO
+            getOperador(ultimoId); 
         }
         catch (HttpRequestException ex)
         {

@@ -57,30 +57,32 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
 
 
             var teste =  await _context.Tela
-                                .Where(t => !_context.OperadorTela.Any(ot => ot.telaId == t.Id && ot.operadorId == operadorDTO.id))
+                                .Where(t => !_context.OperadorTela.Any(ot => ot.telaId == t.id && ot.operadorId == operadorDTO.id))
                                 .ToListAsync();
                   
-            if (teste.Count == 0)
+            if (teste.Count != 0)
             {
-                throw new Exception("Operador Já possuí todas as telas disponiveis");
-            }
+                //throw new Exception("Operador Já possuí todas as telas disponiveis");
 
-            foreach (var tela in teste)
-            {
-                var novoOperadorTela = new OperadorTela
+                foreach (var tela in teste)
                 {
-                    operadorId = operadorDTO.id,
-                    telaId = tela.Id,
-                    ativo = true,
-                    novo = true,
-                    editar = true,
-                    excluir = true,
-                };
+                    var novoOperadorTela = new OperadorTela
+                    {
+                        operadorId = operadorDTO.id,
+                        telaId = tela.id,
+                        ativo = false,
+                        novo = false,
+                        editar = false,
+                        excluir = false,
+                    };
 
-                await _context.OperadorTela.AddAsync(novoOperadorTela);
+                    await _context.OperadorTela.AddAsync(novoOperadorTela);
+                }
+
+                await _context.SaveChangesAsync();
             }
-            
-            await _context.SaveChangesAsync();
+
+           
             //return resultado.Result.Entity;
         }
 
@@ -91,6 +93,20 @@ namespace SistemaDoLeoBlazor.API.Repositories.OperadorRepository
             if (operador is not null)
             {
                 _context.Operador.Remove(operador);
+                await _context.SaveChangesAsync();
+            }
+
+            var telas = await _context.OperadorTela
+                                .Where(t => t.operadorId == id) 
+                                .ToListAsync();
+
+            if (telas is not null)
+            {
+                foreach (var tela in telas)
+                {
+                    _context.OperadorTela.Remove(tela);
+                }
+
                 await _context.SaveChangesAsync();
             }
 

@@ -191,29 +191,3 @@ else if (Operador is not null)
         <ConfirmModal Titulo="Exlusão de Operador" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
     }
 }
-
-@if (@Operador is not null)
-{
-    <p> ID: @Operador.id</p>
-    <p> Nome: @Operador.nome</p>
-    <p> Inativo: @Operador.inativo</p>
-    <p> Senha: @Operador.senha</p>
-    <p> Admin: @Operador.admin</p>
-}
-
-@if (OperadorTelas is not null)
-{
-    @foreach (var tela in OperadorTelas)
-    {
-        <p>@tela.nome</p>
-        <p>@tela.ativo</p>
-        <p>@tela.novo</p>
-        <p>@tela.editar</p>
-        <p>@tela.excluir</p>
-    }
-}
-
-@if (erro != "")
-{
-    <p>@erro</p>
-}
