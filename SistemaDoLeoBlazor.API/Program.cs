@@ -2,7 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Net.Http.Headers;
 using SistemaDoLeoBlazor.API.Context;
 using SistemaDoLeoBlazor.API.Repositories.CategoriaRepository;
+using SistemaDoLeoBlazor.API.Repositories.ClienteRepository;
+using SistemaDoLeoBlazor.API.Repositories.FormaPgtoRepository;
 using SistemaDoLeoBlazor.API.Repositories.OperadorRepository;
+using SistemaDoLeoBlazor.API.Repositories.PedidoRepository;
+using SistemaDoLeoBlazor.API.Repositories.ProdutoRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +26,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 builder.Services.AddScoped<IOperadorRepository, OperadorRepository>();
 builder.Services.AddScoped<ICategoriaRepository, CategoriaRepository>();
+builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
+builder.Services.AddScoped<IFormaPgtoRepository, FormaPgtoRepository>();
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
 
 var app = builder.Build();
 

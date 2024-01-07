@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SistemaDoLeoBlazor.MODELS.Produto
+namespace SistemaDoLeoBlazor.MODELS.ProdutoDTO
 {
     public class ProdutoDTO
     {
