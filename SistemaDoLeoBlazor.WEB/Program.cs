@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SistemaDoLeoBlazor.WEB;
-using SistemaDoLeoBlazor.WEB.Services;
+using SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService;
+using SistemaDoLeoBlazor.WEB.Services.ProximoRegistroService;
 using SistemaDoLeoBlazor.WEB.Toaster;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -16,6 +17,7 @@ builder.Services.AddScoped(sp => new HttpClient
 });
 
 builder.Services.AddScoped<IOperadorService, OperadorService>();
+builder.Services.AddScoped<IProximoRegistroService, ProximoRegistroService>();
 builder.Services.AddScoped<ToasterService>();
 
 await builder.Build().RunAsync();

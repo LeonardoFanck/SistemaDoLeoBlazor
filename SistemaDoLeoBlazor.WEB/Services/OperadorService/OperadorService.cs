@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Unicode;
 
-namespace SistemaDoLeoBlazor.WEB.Services
+namespace SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService
 {
     public class OperadorService : IOperadorService
     {
@@ -52,13 +52,13 @@ namespace SistemaDoLeoBlazor.WEB.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync<OperadorDTO>("api/Operador/Operador", operadorDTO);
+                var response = await _httpClient.PostAsJsonAsync("api/Operador/Operador", operadorDTO);
 
                 if (response.IsSuccessStatusCode)
                 {
-                    if(response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                    if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
-                        return default(OperadorDTO);
+                        return default;
                     }
 
                     return await response.Content.ReadFromJsonAsync<OperadorDTO>();
@@ -68,7 +68,7 @@ namespace SistemaDoLeoBlazor.WEB.Services
                     var message = await response.Content.ReadAsStringAsync();
                     throw new Exception($"{response.StatusCode} Message -{message}");
                 }
-                
+
             }
             catch (Exception)
             {
@@ -81,13 +81,13 @@ namespace SistemaDoLeoBlazor.WEB.Services
         {
             try
             {
-                var response = await _httpClient.PostAsJsonAsync<OperadorDTO>("api/Operador/Telas", operadorDTO);
+                var response = await _httpClient.PostAsJsonAsync("api/Operador/Telas", operadorDTO);
 
                 if (response.IsSuccessStatusCode)
                 {
                     if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
                     {
-                        return default(OperadorDTO);
+                        return default;
                     }
 
                     return await response.Content.ReadFromJsonAsync<OperadorDTO>();
@@ -166,7 +166,7 @@ namespace SistemaDoLeoBlazor.WEB.Services
                 {
                     return await response.Content.ReadFromJsonAsync<OperadorDTO>();
                 }
-                return default(OperadorDTO);
+                return default;
             }
             catch (Exception)
             {

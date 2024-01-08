@@ -1,6 +1,6 @@
 ﻿using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 
-namespace SistemaDoLeoBlazor.WEB.Services
+namespace SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService
 {
     public interface IOperadorService
     {
@@ -10,7 +10,7 @@ namespace SistemaDoLeoBlazor.WEB.Services
         Task<OperadorDTO> PostOperadorTelas(OperadorDTO operadorDTO);
         Task<OperadorDTO> PatchOperador(OperadorDTO operadorDTO);
         Task<OperadorTelaDTO> PatchOperadorTelas(OperadorTelaDTO operadorTelaDTO);
-        Task<OperadorDTO> DeleteOperador (int id);
+        Task<OperadorDTO> DeleteOperador(int id);
         Task<IEnumerable<OperadorDTO>> GetAllOperadores();
     }
 }

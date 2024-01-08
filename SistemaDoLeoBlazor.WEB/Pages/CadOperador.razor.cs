@@ -5,6 +5,7 @@ using SistemaDoLeoBlazor.WEB.Toaster;
 using SistemaDoLeoBlazor.WEB.Services;
 using SistemaDoLeoBlazor.WEB.Shared;
 using System.ComponentModel;
+using SistemaDoLeoBlazor.MODELS.ProximoRegistroDTO;
 
 namespace SistemaDoLeoBlazor.WEB.Pages;
 
@@ -51,6 +52,9 @@ public partial class CadOperador
     private bool DeleteDialogOpen {get; set; }
     private string mensagem = "";
 
+    // PROXIMO REGISTRO
+    private ProximoRegistroDTO? registro { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         // PEGA O ID DO ULTIMO OPERADOR CADASTRADO
@@ -90,8 +94,10 @@ public partial class CadOperador
             stsChkItemExcluir = false;
             stsChkItemNovo = false;
 
+            await pegarProximoRegistro();
+
             // LIMPA OS VALORES DO OPERADOR
-            Operador.id = 99999;
+            Operador.id = registro.operador;
             Operador.nome = string.Empty;
             Operador.senha = string.Empty;
             Operador.admin = false;
@@ -104,6 +110,8 @@ public partial class CadOperador
                 tela.excluir = false;
                 tela.editar = false;
             }
+
+            StateHasChanged();
         }
         else if (status == EDITAR)
         {
@@ -172,6 +180,21 @@ public partial class CadOperador
 
                 resetarTelas(OperadorAtual.id);
             }
+        }
+    }
+
+    private async Task pegarProximoRegistro()
+    {
+        try
+        {
+            registro = await registroService.GetProximoRegistro();
+
+            registro.operador = registro.operador + 1;
+        }
+        catch (Exception ex)
+        {
+            _toasterService.AddToast(Toast.NewToast("ERRO", $"Ocorreu um erro: {ex.Message}", MessageColour.Danger, 8));
+            throw;
         }
     }
 
@@ -310,6 +333,9 @@ public partial class CadOperador
                     await operadorService.PatchOperadorTelas(tela);
                 }
 
+                // ATUALIZA O ULTIMO REGISTRO CADASTRADO
+                await registroService.PatchProximoRegistro(registro);
+                
                 // MENSAGEM DE SUCESSO
                 _toasterService.AddToast(Toast.NewToast("Cadastro Operador", $"Cadastro Realizdo com sucesso!", MessageColour.Success, 8));
 
