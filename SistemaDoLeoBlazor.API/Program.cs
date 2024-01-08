@@ -7,6 +7,7 @@ using SistemaDoLeoBlazor.API.Repositories.FormaPgtoRepository;
 using SistemaDoLeoBlazor.API.Repositories.OperadorRepository;
 using SistemaDoLeoBlazor.API.Repositories.PedidoRepository;
 using SistemaDoLeoBlazor.API.Repositories.ProdutoRepository;
+using SistemaDoLeoBlazor.API.Repositories.ProximoRegistroRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,7 @@ builder.Services.AddScoped<IProdutoRepository, ProdutoRepository>();
 builder.Services.AddScoped<IFormaPgtoRepository, FormaPgtoRepository>();
 builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
 builder.Services.AddScoped<IPedidoRepository, PedidoRepository>();
+builder.Services.AddScoped<IProximoRegistroRepository, ProximoRegistroRepository>();
 
 var app = builder.Build();
 
