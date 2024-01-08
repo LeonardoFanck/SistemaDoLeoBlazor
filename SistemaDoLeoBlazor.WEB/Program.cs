@@ -1,6 +1,8 @@
+using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SistemaDoLeoBlazor.WEB;
+using SistemaDoLeoBlazor.WEB.Services.OperadorLocalStorageService;
 using SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService;
 using SistemaDoLeoBlazor.WEB.Services.ProximoRegistroService;
 using SistemaDoLeoBlazor.WEB.Toaster;
@@ -19,5 +21,7 @@ builder.Services.AddScoped(sp => new HttpClient
 builder.Services.AddScoped<IOperadorService, OperadorService>();
 builder.Services.AddScoped<IProximoRegistroService, ProximoRegistroService>();
 builder.Services.AddScoped<ToasterService>();
+builder.Services.AddScoped<IOperadorLocalService, OperadorLocalService>();
+builder.Services.AddBlazoredSessionStorage();
 
 await builder.Build().RunAsync();

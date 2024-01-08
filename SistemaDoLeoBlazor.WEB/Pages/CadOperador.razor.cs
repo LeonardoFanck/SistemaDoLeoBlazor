@@ -6,6 +6,7 @@ using SistemaDoLeoBlazor.WEB.Services;
 using SistemaDoLeoBlazor.WEB.Shared;
 using System.ComponentModel;
 using SistemaDoLeoBlazor.MODELS.ProximoRegistroDTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace SistemaDoLeoBlazor.WEB.Pages;
 
@@ -16,6 +17,11 @@ public partial class CadOperador
     private OperadorDTO? Operador { get; set; }
     private IEnumerable<OperadorTelaDTO>? OperadorTelas { get; set; }
     private OperadorDTO? OperadorAtual { get; set; }
+
+    // OPERADOR LOGADO NO MOMENTO
+    private OperadorDTO? OperadorLogado { get; set; }
+    private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+
     private string erro { get; set; } = string.Empty;
 
     // STATUS CADASTRO
@@ -44,6 +50,9 @@ public partial class CadOperador
     private int VISUALIZAR = 1;
     private int EDITAR = 2;
 
+    [Inject]
+    public NavigationManager? NavigationManager { get; set; }
+
     // VISUALIZAR SENHA
     private bool chkSenha { get; set; }
     private string typeSenha { get; set; } = "password";
@@ -57,6 +66,10 @@ public partial class CadOperador
 
     protected override async Task OnInitializedAsync()
     {
+        // VERIFICA A SESSÃO DO OPERADOR LOGADO
+        await getOperadorSession();
+        await validarAcesso();
+
         // PEGA O ID DO ULTIMO OPERADOR CADASTRADO
         var ultimoId = await getLastOperador();
 
@@ -65,6 +78,37 @@ public partial class CadOperador
 
         // ALTERA O STATUS
         validaStatus(VISUALIZAR);        
+    }
+
+    private async Task getOperadorSession()
+    {
+        try
+        {
+            OperadorLogado = await session.GetSessaoOperador();
+
+            OperadorLogadoTelas = await session.GetSessaoTelas();
+        }
+        catch (Exception ex)
+        {
+            _toasterService.AddToast(Toast.NewToast("ERRO", $"Ocorreu um erro: {ex.Message}", MessageColour.Danger, 8));
+        }
+    }
+
+    private async Task validarAcesso()
+    {
+        if (OperadorLogado == null || OperadorLogadoTelas.Count() == 0)
+        {
+            NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
+        }
+        else
+        {
+            var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Operador"));
+
+            if (tela is not null && tela.ativo == false)
+            {
+                NavigationManager.NavigateTo("/");
+            }
+        }
     }
 
     private async void validaStatus(int status)
