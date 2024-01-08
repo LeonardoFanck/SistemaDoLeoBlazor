@@ -31,7 +31,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
                 }
                 else
                 {
-                    var pedidoDTO = pedido.PedidoToDto();
+                    var pedidoDTO = pedido.PedidoToDtoGet();
                     return Ok(pedidoDTO);
                 }
             }
@@ -55,7 +55,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
                     return NoContent();
                 }
 
-                var pedidoDTO = pedido.PedidosToDto();
+                var pedidoDTO = pedido.PedidosToDtoGet();
 
                 return Ok(pedidoDTO);
             }
@@ -74,7 +74,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
             {
                 var novoPedido = await _repository.PostPedido(pedidoDTO);
 
-                var novoPedidoDTO = novoPedido.PedidoToDto();
+                var novoPedidoDTO = novoPedido.PedidoToDtoSet();
 
                 return CreatedAtAction(nameof(GetPedido), new { id = novoPedidoDTO.id }, novoPedidoDTO);
             }
@@ -97,7 +97,7 @@ namespace SistemaDoLeoBlazor.API.Controllers
                     return NotFound();
                 }
 
-                var pedidoDto = pedido.PedidoToDto();
+                var pedidoDto = pedido.PedidoToDtoSet();
 
                 return Ok(pedidoDto);
             }
@@ -120,9 +120,101 @@ namespace SistemaDoLeoBlazor.API.Controllers
                     return NotFound("Registro não localizado");
                 }
 
-                var pedidoDto = pedido.PedidoToDto();
+                var pedidoDto = pedido.PedidoToDtoSet();
 
                 return Ok(pedidoDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("## Erro ao excluir o registro");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        // ITENS
+
+        [HttpGet]
+        [Route("{id:int}/GetAllItem")]
+        public async Task<ActionResult<IEnumerable<PedidoItemDTO>>> GetAllItens(int id)
+        {
+            try
+            {
+                var item = await _repository.GetAllItens(id);
+
+                if (item is null)
+                {
+                    return NoContent();
+                }
+
+                var itemDto = item.PedidoItensToDtoGet();
+
+                return Ok(itemDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("## Erro ao buscar os registros");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPost]
+        [Route("Item")]
+        public async Task<ActionResult<PedidoItemDTO>> PostItem([FromBody]
+                                        PedidoItemDTO pedidoItemDTO)
+        {
+            try
+            {
+                var novoItem = await _repository.PostItem(pedidoItemDTO);
+
+                var novoItemDto = novoItem.PedidoItemToDtoSet();
+
+                return Ok(novoItemDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("## Erro criar uma novo Registro");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpPatch("Item/{id:int}")]
+        public async Task<ActionResult<PedidoItemDTO>> PatchItem(int id, PedidoItemDTO pedidoItemDTO)
+        {
+            try
+            {
+                var item = await _repository.PatchItem(id, pedidoItemDTO);
+
+                if (item is null)
+                {
+                    return NotFound();
+                }
+
+                var itemDto = item.PedidoItemToDtoSet();
+
+                return Ok(itemDto);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("## Erro ao alterar o registro");
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.Message);
+            }
+        }
+
+        [HttpDelete("Item/{id:int}")]
+        public async Task<ActionResult<PedidoItemDTO>> DeleteItem(int id)
+        {
+            try
+            {
+                var item = await _repository.DeleteItem(id);
+
+                if (item is null)
+                {
+                    return NotFound("Registro não localizado");
+                }
+
+                var itemDto = item.PedidoItemToDtoSet();
+
+                return Ok(itemDto);
             }
             catch (Exception ex)
             {

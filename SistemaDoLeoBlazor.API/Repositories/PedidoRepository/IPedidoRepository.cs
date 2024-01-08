@@ -10,5 +10,12 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
         Task<Pedido> PostPedido(PedidoDTO pedidoDTO);
         Task<Pedido> PatchPedido(int id, PedidoDTO pedidoDTO);
         Task<Pedido> DeletePedido(int id);
+
+        // ITENS
+
+        Task<IEnumerable<PedidoItem>> GetAllItens(int id);
+        Task<PedidoItem> PostItem(PedidoItemDTO itemDto);
+        Task<PedidoItem> PatchItem(int id, PedidoItemDTO itemDto);
+        Task<PedidoItem> DeleteItem(int id);
     }
 }
