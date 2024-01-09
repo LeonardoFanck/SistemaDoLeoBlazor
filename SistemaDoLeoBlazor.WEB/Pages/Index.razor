@@ -68,19 +68,7 @@ Welcome to your new app.
 
     private async void IniciarSessao()
     {
-        // var operador = new OperadorDTO
-        // {
-        //     admin = true,
-        //     id = 1,
-        //     inativo = false,
-        //     nome = "Leo",
-        //     senha = "1234"
-        // };
         await service.SetSessao(1);
-        // var telas = await operadorService.GetTelasByOperador(1);
-
-        // sessao.SetItemAsync("OperadorAtual", operador);
-        // sessao.SetItemAsync("OperadorTelas", telas);
 
         AddToast("Sessão", "Sessão Criada com sucesso");
     }

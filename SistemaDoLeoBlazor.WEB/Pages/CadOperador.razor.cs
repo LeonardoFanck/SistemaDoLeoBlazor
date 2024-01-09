@@ -22,8 +22,6 @@ public partial class CadOperador
     private OperadorDTO? OperadorLogado { get; set; }
     private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
 
-    private string erro { get; set; } = string.Empty;
-
     // STATUS CADASTRO
     private bool stsCodOperador { get; set; }
     private bool stsPesquisa { get; set; }

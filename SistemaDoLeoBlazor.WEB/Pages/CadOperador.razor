@@ -1,17 +1,13 @@
-﻿@page "/CadOperador"
+﻿@page "/Operador"
 @inject IOperadorService operadorService
 @inject IProximoRegistroService registroService
 @inject IOperadorLocalService session
 
 <PageTitle>Cadastro Operador</PageTitle>
 
-@if (Operador is null && erro.Equals(""))
+@if (Operador is null)
 {
     <LoadingComponent />   
-}
-else if (!erro.Equals(""))
-{
-    
 }
 else if (Operador is not null)
 {

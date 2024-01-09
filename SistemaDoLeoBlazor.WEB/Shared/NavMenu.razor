@@ -1,4 +1,6 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@inject IOperadorLocalService session
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">SistemaDoLeoBlazor.WEB</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -9,7 +11,29 @@
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+
         <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        @if(OperadorLogadoTelas is not null)
+        {
+            @foreach (var tela in OperadorLogadoTelas)
+            {
+                @if (tela.ativo == true)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="@tela.nome">
+                            <span class="oi oi-list-rich" aria-hidden="true"></span> @tela.nome
+                        </NavLink>
+                    </div>
+                }
+            }
+        }
+        
+
+        @* <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="oi oi-home" aria-hidden="true"></span> Home
             </NavLink>
@@ -31,9 +55,9 @@
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="CadCategoria">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Operador
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Categoria
             </NavLink>
-        </div>
+        </div> *@
     </nav>
 </div>
 
@@ -42,8 +66,21 @@
 
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
+    private IEnumerable<OperadorTelaDTO> telas { get; set; }
+
+    // OPERADOR LOGADO NO MOMENTO
+    private OperadorDTO? OperadorLogado { get; set; }
+    private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        OperadorLogado = await session.GetSessaoOperador();
+
+        OperadorLogadoTelas = await session.GetSessaoTelas();
     }
 }
