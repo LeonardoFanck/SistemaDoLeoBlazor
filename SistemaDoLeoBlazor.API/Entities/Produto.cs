@@ -14,6 +14,8 @@ namespace SistemaDoLeoBlazor.API.Entities
         public required decimal preco { get; set; } = decimal.Zero;
         [Column(TypeName = "decimal(10, 2)")]
         public required decimal custo { get; set; } = decimal.Zero;
+        [MaxLength(4)]
+        public required string unidade { get; set; } = string.Empty;
         public long estoque { get; set; } = 0;
         public bool inativo { get; set; } = false;
 

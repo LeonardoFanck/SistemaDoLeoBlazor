@@ -13,6 +13,7 @@ namespace SistemaDoLeoBlazor.MODELS.ProdutoDTO
         public string? nome { get; set; }
         public decimal preco { get; set; }
         public decimal custo { get; set; }
+        public string? unidade { get; set; }
         public long estoque { get; set; }
         public bool inativo { get; set; }
 

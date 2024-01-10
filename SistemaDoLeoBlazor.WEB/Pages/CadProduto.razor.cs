@@ -1,31 +1,39 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Win32;
-using SistemaDoLeoBlazor.MODELS.CategoriaDTO;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components;
 using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 using SistemaDoLeoBlazor.MODELS.ProximoRegistroDTO;
-using SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService;
 using SistemaDoLeoBlazor.WEB.Toaster;
+using SistemaDoLeoBlazor.MODELS.ProdutoDTO;
+using SistemaDoLeoBlazor.MODELS.CategoriaDTO;
+using System.Runtime.InteropServices;
 
 namespace SistemaDoLeoBlazor.WEB.Pages
 {
-    public partial class CadCategoria
+    public partial class CadProduto
     {
         [Inject] private ToasterService? _toasterService { get; set; }
         [Inject] private NavigationManager? NavigationManager { get; set; }
 
+        private ProdutoDTO? produto { get; set; }
+        private ProdutoDTO? produtoAtual { get; set; }
+        private IEnumerable<CategoriaDTO>? categorias { get; set; }
         private CategoriaDTO? categoria { get; set; }
-        private CategoriaDTO? categoriaAtual { get; set; }
+        private int categoriaId { get; set; }
 
         // OPERADOR LOGADO NO MOMENTO
-        private OperadorDTO? OperadorLogado { get; set; }
-        private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+        private OperadorDTO? operadorLogado { get; set; }
+        private IEnumerable<OperadorTelaDTO>? operadorLogadoTelas { get; set; }
 
         // STATUS
-        private bool stsCodCategoria { get; set; }
+        private bool stsCodProduto { get; set; }
         private bool stsBtnPesquisa { get; set; }
-        private bool stsNome { get; set; }
         private bool stsInativo { get; set; }
+        private bool stsNome { get; set; }
+        private bool stsCategoria { get; set; }
+        private bool stsPreco { get; set; }
+        private bool stsCusto { get; set; }
+        private bool stsEstoque { get; set; } = true;
+        private bool stsUnidade { get; set; }
 
         private bool stsBtnNovo { get; set; }
         private bool stsBtnEditar { get; set; }
@@ -46,18 +54,24 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
 
+        // TOAST
+        private string toastTitulo { get; set; } = "Produto";
+
+
         protected async override Task OnInitializedAsync()
         {
             // VERIFICA A SESSÃO DO OPERADOR LOGADO
             await getOperadorSession();
             await validarAcesso();
 
+            await getCategorias();
+
             // PEGA O ID DO ULTIMO OPERADOR CADASTRADO
             var ultimoId = await getLastRegistro();
 
             if (ultimoId == -1)
             {
-                categoria = new CategoriaDTO();
+                produto = new ProdutoDTO();
 
                 validaStatus(CADASTRAR);
             }
@@ -71,13 +85,39 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
+        private async Task getCategorias()
+        {
+            try
+            {
+                var listCategoria = await categoriaService.GetAll();
+
+                categorias = from categoria in listCategoria
+                             where (categoria.inativo == false)
+                             select new CategoriaDTO
+                             {
+                                 id = categoria.id,
+                                 inativo = categoria.inativo,
+                                 nome = categoria.nome
+                             };
+
+                if (categorias.Count() == 0)
+                {
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Nenhuma Categoria cadastrada! Necessário ter ao menos um cadastro", MessageColour.Warning, 30));
+                }
+            }
+            catch(Exception ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("ERRO", $"Ocorreu um erro: {ex.Message}", MessageColour.Danger, 8));
+            }
+        }
+
         private async Task getOperadorSession()
         {
             try
             {
-                OperadorLogado = await session.GetSessaoOperador();
+                operadorLogado = await session.GetSessaoOperador();
 
-                OperadorLogadoTelas = await session.GetSessaoTelas();
+                operadorLogadoTelas = await session.GetSessaoTelas();
             }
             catch (Exception ex)
             {
@@ -87,13 +127,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async Task validarAcesso()
         {
-            if (OperadorLogado == null || OperadorLogadoTelas.Count() == 0)
+            if (operadorLogado == null || operadorLogadoTelas.Count() == 0)
             {
                 NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
             }
             else
             {
-                var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Categoria"));
+                var tela = operadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Produto"));
 
                 if (tela is not null && tela.ativo == false)
                 {
@@ -106,9 +146,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                var lista = await categoriaService.GetAll();
+                var lista = await produtoService.GetAll();
 
-                if(lista.Count() == 0)
+                if (lista.Count() == 0)
                 {
                     return -1;
                 }
@@ -128,13 +168,20 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                categoriaAtual = await categoriaService.GetById(id);
+                produtoAtual = await produtoService.GetById(id);
 
-                categoria = new CategoriaDTO
+                categoria = categorias.FirstOrDefault(c => c.id.Equals(produtoAtual.categoriaId));
+
+                produto = new ProdutoDTO
                 {
-                    id = categoriaAtual.id,
-                    nome = categoriaAtual.nome,
-                    inativo = categoriaAtual.inativo
+                    id = produtoAtual.id,
+                    nome = produtoAtual.nome,
+                    inativo = produtoAtual.inativo,
+                    categoriaId = produtoAtual.categoriaId,
+                    custo = produtoAtual.custo,
+                    estoque = produtoAtual.estoque,
+                    preco = produtoAtual.preco,
+                    unidade = produtoAtual.unidade
                 };
 
                 StateHasChanged();
@@ -143,7 +190,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Categoria inválida", $"Categoria {categoria.id} não cadastrado", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Produto {produto.id} não cadastrado", MessageColour.Danger, 8));
 
                     resetaRegistro();
 
@@ -161,10 +208,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 this.status = status;
 
-                stsCodCategoria = true;
+                stsCodProduto = true;
                 stsBtnPesquisa = true;
                 stsInativo = false;
                 stsNome = false;
+                stsCategoria = false;
+                stsPreco = false;
+                stsCusto = false;
+                stsUnidade = false;
+
                 stsBtnNovo = true;
                 stsBtnEditar = true;
                 stsBtnExcluir = true;
@@ -174,9 +226,14 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 await pegarProximoRegistro();
 
                 // LIMPA OS VALORES DO OPERADOR
-                categoria.id = nextRegistro.categoria;
-                categoria.nome = string.Empty;
-                categoria.inativo = false;
+                produto.id = nextRegistro.produto;
+                produto.nome = string.Empty;
+                produto.inativo = false;
+                produto.categoriaId = 0;
+                produto.preco = decimal.Zero;
+                produto.custo = decimal.Zero;
+                produto.estoque = 0;
+                produto.unidade = string.Empty;
 
                 StateHasChanged();
             }
@@ -186,10 +243,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 this.status = status;
 
-                stsCodCategoria = true;
+                stsCodProduto = true;
                 stsBtnPesquisa = true;
                 stsInativo = false;
                 stsNome = false;
+                stsCategoria = false;
+                stsPreco = false;
+                stsCusto = false;
+                stsUnidade = false;
+
                 stsBtnNovo = true;
                 stsBtnEditar = true;
                 stsBtnExcluir = true;
@@ -205,10 +267,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 this.status = status;
 
-                stsCodCategoria = false;
+                stsCodProduto = false;
                 stsBtnPesquisa = false;
                 stsInativo = true;
                 stsNome = true;
+                stsCategoria = true;
+                stsPreco = true;
+                stsCusto = true;
+                stsUnidade = true;
+
                 stsBtnNovo = false;
                 stsBtnEditar = false;
                 stsBtnExcluir = false;
@@ -216,7 +283,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnSalvar = true;
 
                 // SE FOR NULO É O PRIMEIRO REGISTRO
-                if(categoriaAtual is not null)
+                if (produtoAtual is not null)
                 {
                     resetaRegistro();
                 }
@@ -229,7 +296,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 nextRegistro = await registroService.GetProximoRegistro();
 
-                nextRegistro.categoria += 1;
+                nextRegistro.produto += 1;
             }
             catch (Exception ex)
             {
@@ -240,17 +307,29 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private void resetaRegistro()
         {
-            if (categoriaAtual is not null)
+            if (produtoAtual is not null)
             {
-                categoria.id = categoriaAtual.id;
-                categoria.nome = categoriaAtual.nome;
-                categoria.inativo = categoriaAtual.inativo;
+                produto.id = produtoAtual.id;
+                produto.nome = produtoAtual.nome;
+                produto.inativo = produtoAtual.inativo;
+                produto.categoriaId = produtoAtual.categoriaId;
+                produto.preco = produtoAtual.preco;
+                produto.custo = produtoAtual.custo;
+                produto.estoque = produtoAtual.estoque;
+                produto.unidade = produtoAtual.unidade;
+
+                categoria = categorias.FirstOrDefault(c => c.id.Equals(produtoAtual.categoriaId));
             }
             else
             {
-                categoria.id = 1;
-                categoria.nome = string.Empty;
-                categoria.inativo = false;
+                produto.id = nextRegistro.produto;
+                produto.nome = string.Empty;
+                produto.inativo = false;
+                produto.categoriaId = 0;
+                produto.preco = decimal.Zero;
+                produto.custo = decimal.Zero;
+                produto.estoque = 0;
+                produto.unidade = string.Empty;
             }
         }
 
@@ -258,7 +337,17 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             if (e.Code == "Enter" || e.Code == "NumpadEnter")
             {
-                getRegistro(categoria.id);
+                getRegistro(produto.id);
+            }
+        }
+
+        private void alterarCategoria(ChangeEventArgs e)
+        {
+            var id = e.Value;
+
+            if (!id.Equals(""))
+            {
+                categoriaId = Convert.ToInt32(id);
             }
         }
 
@@ -268,11 +357,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 try
                 {
+                    produto.categoriaId = categoriaId;
+
                     // ADD OPERADOR
-                    categoriaAtual = await categoriaService.Insert(categoria);
+                    produtoAtual = await produtoService.Insert(produto);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast("Cadastro Categoria", $"Cadastro Realizdo com sucesso!", MessageColour.Success, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Realizado com sucesso!", MessageColour.Success, 8));
 
                     // ATUALIZA O ULTIMO REGISTRO CADASTRADO
                     await registroService.PatchProximoRegistro(nextRegistro);
@@ -282,11 +373,11 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 }
                 catch (HttpRequestException ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
                 catch (Exception ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
             }
             else if (status == EDITAR)
@@ -294,24 +385,24 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 try
                 {
                     // ATUALIZA O OPERADOR
-                    await categoriaService.Update(categoria);
+                    await produtoService.Update(produto);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast("Atualizar Categoria", $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
 
                     // BUSCA AS NOVA INFORMAÇÕES
-                    getRegistro(categoria.id);
+                    getRegistro(produto.id);
 
                     // ALTERA O STATUS
                     validaStatus(VISUALIZAR);
                 }
                 catch (HttpRequestException ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
                 catch (Exception ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
             }
 
@@ -324,10 +415,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 if (accepted)
                 {
-                    await categoriaService.Delete(categoria.id);
+                    await produtoService.Delete(produto.id);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast("Categoria Deletada", $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
                 }
 
                 DeleteDialogOpen = false;
@@ -341,38 +432,20 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
             catch (HttpRequestException ex)
             {
-                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
             }
             catch (Exception ex)
             {
-                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
             }
         }
 
         private void OpenDeleteDialog()
         {
-            mensagem = $"Deseja realmente excluir a Categoria {categoria.id} - {categoria.nome} ?";
+            mensagem = $"Deseja realmente excluir o Produto {produto.id} - {produto.nome} ?";
 
             DeleteDialogOpen = true;
             StateHasChanged();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

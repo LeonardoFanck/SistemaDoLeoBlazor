@@ -49,6 +49,7 @@ namespace SistemaDoLeoBlazor.API.Repositories.ProdutoRepository
                 produto.estoque = produtoDTO.estoque;
                 produto.preco = produtoDTO.preco;
                 produto.inativo = produtoDTO.inativo;
+                produto.unidade = produtoDTO.unidade;
 
                 await _context.SaveChangesAsync();
             }
@@ -65,7 +66,8 @@ namespace SistemaDoLeoBlazor.API.Repositories.ProdutoRepository
                 inativo = produtoDTO.inativo,
                 custo = produtoDTO.custo,
                 estoque = produtoDTO.estoque,
-                preco = produtoDTO.preco
+                preco = produtoDTO.preco,
+                unidade = produtoDTO.unidade
             };
 
             var resultado = _context.Produto.AddAsync(produto);

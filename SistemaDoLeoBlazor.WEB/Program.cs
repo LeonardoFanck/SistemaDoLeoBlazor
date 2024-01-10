@@ -3,8 +3,10 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SistemaDoLeoBlazor.WEB;
 using SistemaDoLeoBlazor.WEB.Services.CategoriaService;
+using SistemaDoLeoBlazor.WEB.Services.FormaPgtoService;
 using SistemaDoLeoBlazor.WEB.Services.OperadorLocalStorageService;
 using SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService;
+using SistemaDoLeoBlazor.WEB.Services.ProdutoService;
 using SistemaDoLeoBlazor.WEB.Services.ProximoRegistroService;
 using SistemaDoLeoBlazor.WEB.Toaster;
 
@@ -24,6 +26,8 @@ builder.Services.AddScoped<IProximoRegistroService, ProximoRegistroService>();
 builder.Services.AddScoped<ToasterService>();
 builder.Services.AddScoped<IOperadorLocalService, OperadorLocalService>();
 builder.Services.AddScoped<ICategoriaService, CategoriaService>();
+builder.Services.AddScoped<IFormaPgtoService, FormaPgtoService>();
+builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddBlazoredSessionStorage();
 
 await builder.Build().RunAsync();

@@ -36,7 +36,6 @@
     <Content Include="Pages\CadCategoria.html" />
     <Content Include="Pages\CadCliente.html" />
     <Content Include="Pages\CadFromaPgto.html" />
-    <Content Include="Pages\CadProduto.html" />
     <Content Include="Pages\Consulta.html" />
     <Content Include="Pages\Pedido.html" />
   </ItemGroup>

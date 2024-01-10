@@ -15,7 +15,8 @@ namespace SistemaDoLeoBlazor.API.Mapping
                 inativo = produto.inativo,
                 custo = produto.custo,
                 estoque = produto.estoque,
-                preco = produto.preco
+                preco = produto.preco,
+                unidade = produto.unidade
             };
         }
 
@@ -30,7 +31,8 @@ namespace SistemaDoLeoBlazor.API.Mapping
                         custo = produto.custo,
                         estoque = produto.estoque,
                         preco = produto.preco,
-                        inativo = produto.inativo
+                        inativo = produto.inativo,
+                        unidade = produto.unidade
                     }).ToList();
         }
     }

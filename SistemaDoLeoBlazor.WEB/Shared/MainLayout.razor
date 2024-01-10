@@ -1,4 +1,6 @@
 ﻿@inherits LayoutComponentBase
+@inject IOperadorLocalService session
+@inject NavigationManager navigationManager
 
 <div class="page">
     <div class="sidebar">
@@ -7,7 +9,7 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <a @onclick="finalizarESair">Sair</a>
         </div>
 
         <article class="content px-4">
@@ -15,3 +17,12 @@
         </article>
     </main>
 </div>
+
+@code{
+    private void finalizarESair()
+    {
+        session.LimparSessao();
+
+        navigationManager.NavigateTo("/");
+    }
+}

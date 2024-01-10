@@ -1,28 +1,29 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.Win32;
+﻿using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components;
 using SistemaDoLeoBlazor.MODELS.CategoriaDTO;
 using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 using SistemaDoLeoBlazor.MODELS.ProximoRegistroDTO;
-using SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService;
+using SistemaDoLeoBlazor.WEB.Services.CategoriaService;
 using SistemaDoLeoBlazor.WEB.Toaster;
+using SistemaDoLeoBlazor.MODELS.FormaPgtoDTO;
+using Blazored.SessionStorage.JsonConverters;
 
 namespace SistemaDoLeoBlazor.WEB.Pages
 {
-    public partial class CadCategoria
+    public partial class CadFormaPgto
     {
         [Inject] private ToasterService? _toasterService { get; set; }
         [Inject] private NavigationManager? NavigationManager { get; set; }
 
-        private CategoriaDTO? categoria { get; set; }
-        private CategoriaDTO? categoriaAtual { get; set; }
+        private FormaPgtoDTO? formaPgto { get; set; }
+        private FormaPgtoDTO? formaPgtoAtual { get; set; }
 
         // OPERADOR LOGADO NO MOMENTO
         private OperadorDTO? OperadorLogado { get; set; }
         private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
 
         // STATUS
-        private bool stsCodCategoria { get; set; }
+        private bool stsCodFormaPgto { get; set; }
         private bool stsBtnPesquisa { get; set; }
         private bool stsNome { get; set; }
         private bool stsInativo { get; set; }
@@ -46,6 +47,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
 
+        // TOAST
+        private string toastTitulo { get; set; } = "Categoria";
+
         protected async override Task OnInitializedAsync()
         {
             // VERIFICA A SESSÃO DO OPERADOR LOGADO
@@ -57,7 +61,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
             if (ultimoId == -1)
             {
-                categoria = new CategoriaDTO();
+                formaPgto = new FormaPgtoDTO();
 
                 validaStatus(CADASTRAR);
             }
@@ -93,7 +97,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
             else
             {
-                var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Categoria"));
+                var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Forma Pagamento"));
 
                 if (tela is not null && tela.ativo == false)
                 {
@@ -106,7 +110,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                var lista = await categoriaService.GetAll();
+                var lista = await formaPgtoService.GetAll();
 
                 if(lista.Count() == 0)
                 {
@@ -128,13 +132,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                categoriaAtual = await categoriaService.GetById(id);
+                formaPgtoAtual = await formaPgtoService.GetById(id);
 
-                categoria = new CategoriaDTO
+                formaPgto = new FormaPgtoDTO
                 {
-                    id = categoriaAtual.id,
-                    nome = categoriaAtual.nome,
-                    inativo = categoriaAtual.inativo
+                    id = formaPgtoAtual.id,
+                    nome = formaPgtoAtual.nome,
+                    inativo = formaPgtoAtual.inativo
                 };
 
                 StateHasChanged();
@@ -143,7 +147,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Categoria inválida", $"Categoria {categoria.id} não cadastrado", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Forma de Pagamento {formaPgto.id} não cadastrado", MessageColour.Danger, 8));
 
                     resetaRegistro();
 
@@ -161,7 +165,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 this.status = status;
 
-                stsCodCategoria = true;
+                stsCodFormaPgto = true;
                 stsBtnPesquisa = true;
                 stsInativo = false;
                 stsNome = false;
@@ -174,9 +178,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 await pegarProximoRegistro();
 
                 // LIMPA OS VALORES DO OPERADOR
-                categoria.id = nextRegistro.categoria;
-                categoria.nome = string.Empty;
-                categoria.inativo = false;
+                formaPgto.id = nextRegistro.formaPgto;
+                formaPgto.nome = string.Empty;
+                formaPgto.inativo = false;
 
                 StateHasChanged();
             }
@@ -186,7 +190,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 this.status = status;
 
-                stsCodCategoria = true;
+                stsCodFormaPgto = true;
                 stsBtnPesquisa = true;
                 stsInativo = false;
                 stsNome = false;
@@ -205,7 +209,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 this.status = status;
 
-                stsCodCategoria = false;
+                stsCodFormaPgto = false;
                 stsBtnPesquisa = false;
                 stsInativo = true;
                 stsNome = true;
@@ -216,7 +220,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnSalvar = true;
 
                 // SE FOR NULO É O PRIMEIRO REGISTRO
-                if(categoriaAtual is not null)
+                if (formaPgtoAtual is not null)
                 {
                     resetaRegistro();
                 }
@@ -229,7 +233,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 nextRegistro = await registroService.GetProximoRegistro();
 
-                nextRegistro.categoria += 1;
+                nextRegistro.formaPgto += 1;
             }
             catch (Exception ex)
             {
@@ -240,17 +244,17 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private void resetaRegistro()
         {
-            if (categoriaAtual is not null)
+            if (formaPgtoAtual is not null)
             {
-                categoria.id = categoriaAtual.id;
-                categoria.nome = categoriaAtual.nome;
-                categoria.inativo = categoriaAtual.inativo;
+                formaPgto.id = formaPgtoAtual.id;
+                formaPgto.nome = formaPgtoAtual.nome;
+                formaPgto.inativo = formaPgtoAtual.inativo;
             }
             else
             {
-                categoria.id = 1;
-                categoria.nome = string.Empty;
-                categoria.inativo = false;
+                formaPgto.id = 1;
+                formaPgto.nome = string.Empty;
+                formaPgto.inativo = false;
             }
         }
 
@@ -258,7 +262,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             if (e.Code == "Enter" || e.Code == "NumpadEnter")
             {
-                getRegistro(categoria.id);
+                getRegistro(formaPgto.id);
             }
         }
 
@@ -269,10 +273,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 try
                 {
                     // ADD OPERADOR
-                    categoriaAtual = await categoriaService.Insert(categoria);
+                    formaPgtoAtual = await formaPgtoService.Insert(formaPgto);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast("Cadastro Categoria", $"Cadastro Realizdo com sucesso!", MessageColour.Success, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Realizdo com sucesso!", MessageColour.Success, 8));
 
                     // ATUALIZA O ULTIMO REGISTRO CADASTRADO
                     await registroService.PatchProximoRegistro(nextRegistro);
@@ -282,11 +286,11 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 }
                 catch (HttpRequestException ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
                 catch (Exception ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
             }
             else if (status == EDITAR)
@@ -294,24 +298,24 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 try
                 {
                     // ATUALIZA O OPERADOR
-                    await categoriaService.Update(categoria);
+                    await formaPgtoService.Update(formaPgto);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast("Atualizar Categoria", $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
 
                     // BUSCA AS NOVA INFORMAÇÕES
-                    getRegistro(categoria.id);
+                    getRegistro(formaPgto.id);
 
                     // ALTERA O STATUS
                     validaStatus(VISUALIZAR);
                 }
                 catch (HttpRequestException ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
                 catch (Exception ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
                 }
             }
 
@@ -324,10 +328,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 if (accepted)
                 {
-                    await categoriaService.Delete(categoria.id);
+                    await formaPgtoService.Delete(formaPgto.id);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast("Categoria Deletada", $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
                 }
 
                 DeleteDialogOpen = false;
@@ -341,38 +345,20 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
             catch (HttpRequestException ex)
             {
-                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
             }
             catch (Exception ex)
             {
-                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar a Categoria: {ex.Message}", MessageColour.Danger, 8));
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
             }
         }
 
         private void OpenDeleteDialog()
         {
-            mensagem = $"Deseja realmente excluir a Categoria {categoria.id} - {categoria.nome} ?";
+            mensagem = $"Deseja realmente excluir a Forma de Pagamento[ {formaPgto.id} - {formaPgto.nome} ] ?";
 
             DeleteDialogOpen = true;
             StateHasChanged();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

@@ -1,0 +1,104 @@
+﻿@page "/Forma Pagamento"
+@inject IFormaPgtoService formaPgtoService
+@inject IProximoRegistroService registroService
+@inject IOperadorLocalService session
+
+@if (formaPgto is null)
+{
+    <LoadingComponent />
+}
+else
+{
+    <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+        <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
+            <div class="p-5">
+                <div class="text-center">
+                    <h4 class="text-dark mb-4">Cadastro de Forma de Pagamento</h4>
+                </div><!-- Start: Register Form -->
+                <form class="user" @onsubmit="salvarCadastro">
+                    <!-- Start: Cod + Opções -->
+                    <div style="margin-bottom: 15px;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Cod. Forma PGTO</h4>
+                                        <div class="row">
+                                            <div class="col-md-6" style="width: 154.281px;">
+                                                <input class="form-control form-control-user" type="number" placeholder="Cod" required="" style="width: 141px;" 
+                                                       name="Cod" disabled="@stsCodFormaPgto" @bind-value="@formaPgto.id" @bind-value:event="oninput" @onkeydown="OnKeyDownTxtID">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa">Pesquisar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h4 class="card-title">Opções</h4>
+                                        <div class="form-check" style="width: 94.5px;">
+                                            <input class="form-check-input" type="checkbox" id="formCheck-2" style="margin-top: 12px;" name="ChkInativo" 
+                                                   tabindex="-1" disabled="@stsInativo" @bind="@formaPgto.inativo">
+                                            <label class="form-check-label" for="formCheck-2" style="margin-top: 8px;">Inativo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End: Cod + Opções -->
+                    <!-- Start: Nome -->
+                    <div class="mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Nome</h4>
+                                <input class="form-control form-control-user" type="text" id="Nome" placeholder="Nome" required="" name="Nome" 
+                                       maxlength="50" disabled="@stsNome" @bind="@formaPgto.nome">
+                            </div>
+                        </div>
+                    </div><!-- End: Nome -->
+                    <hr><!-- Start: Botões -->
+                    <div class="row">
+                        <!-- Start: Novo -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Novo -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="BtnNovo" type="button" 
+                                    style="height: 39px;background: rgb(74,170,15);" disabled="@stsBtnNovo" @onclick="(() => validaStatus(CADASTRAR))">Novo</button><!-- End: Novo -->
+                        </div><!-- End: Novo -->
+                        <!-- Start: Editar -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Editar -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="BtnEditar" type="button"
+                                    style="height: 39px;background: rgb(0,100,200);" disabled="@stsBtnEditar" @onclick="(() => validaStatus(EDITAR))">
+                                Editar
+                            </button><!-- End: Editar -->
+                        </div><!-- End: Editar -->
+                        <!-- Start: Excluir -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Excluir -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="BtnExcluir" type="button" 
+                                    style="height: 39px;background: rgb(203,30,19);" disabled="@stsBtnExcluir" @onclick="(() => OpenDeleteDialog())">Excluir</button><!-- End: Excluir -->
+                        </div><!-- End: Excluir -->
+                        <!-- Start: Cancelar -->
+                        <div class="col-md-3" style="height: 45px;">
+                            <!-- Start: Cancelar -->
+                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="BtnCancelar" type="button" 
+                                    style="height: 39px;background: rgb(228,185,34);" disabled="@stsBtnCancelar" @onclick="(() => validaStatus(VISUALIZAR))">Cancelar</button><!-- End: Cancelar -->
+                        </div><!-- End: Cancelar -->
+                    </div><!-- End: Botões -->
+                    <hr>
+                    <button class="btn btn-primary" data-bss-hover-animate="pulse" type="submit" 
+                            style="margin: -3px;margin-left: 45%;margin-bottom: -32px;padding: 6px 12px;border-radius: 293px;height: 66px;text-align: center;margin-top: 24px;"
+                            disabled="@stsBtnSalvar">Salvar</button>
+                </form><!-- End: Register Form -->
+            </div>
+        </div>
+    </div>
+
+    @if (DeleteDialogOpen)
+    {
+        <ConfirmModal Titulo="Exlusão de Categoria" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
+    }
+}

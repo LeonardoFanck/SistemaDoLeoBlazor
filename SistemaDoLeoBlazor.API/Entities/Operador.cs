@@ -9,7 +9,7 @@ namespace SistemaDoLeoBlazor.API.Entities
         [MaxLength(50)]
         public required string nome { get; set; } = string.Empty;
 
-        [MaxLength(4)]
+        [MaxLength(20)]
         public required string senha { get; set; } = string.Empty;
         public bool admin {  get; set; }
         public bool inativo { get; set; }
