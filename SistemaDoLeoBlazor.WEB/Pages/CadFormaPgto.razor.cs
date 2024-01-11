@@ -20,7 +20,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         // OPERADOR LOGADO NO MOMENTO
         private OperadorDTO? OperadorLogado { get; set; }
-        private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+        private OperadorTelaDTO? OperadorLogadoTela { get; set; }
 
         // STATUS
         private bool stsCodFormaPgto { get; set; }
@@ -81,7 +81,12 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 OperadorLogado = await session.GetSessaoOperador();
 
-                OperadorLogadoTelas = await session.GetSessaoTelas();
+                var OperadorLogadoTelas = await session.GetSessaoTelas();
+
+                if (OperadorLogadoTelas is not null)
+                {
+                    OperadorLogadoTela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Forma Pagamento"));
+                }
             }
             catch (Exception ex)
             {
@@ -91,15 +96,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async Task validarAcesso()
         {
-            if (OperadorLogado == null || OperadorLogadoTelas.Count() == 0)
+            if (OperadorLogado == null || OperadorLogadoTela is null)
             {
                 NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
             }
             else
             {
-                var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Forma Pagamento"));
-
-                if (tela is not null && tela.ativo == false)
+                if (OperadorLogadoTela is not null && OperadorLogadoTela.ativo == false)
                 {
                     NavigationManager.NavigateTo("/");
                 }
@@ -213,9 +216,21 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnPesquisa = false;
                 stsInativo = true;
                 stsNome = true;
-                stsBtnNovo = false;
-                stsBtnEditar = false;
-                stsBtnExcluir = false;
+
+                if (OperadorLogadoTela.novo || OperadorLogado.admin)
+                {
+                    stsBtnNovo = false;
+                }
+
+                if (OperadorLogadoTela.editar || OperadorLogado.admin)
+                {
+                    stsBtnEditar = false;
+                }
+
+                if (OperadorLogadoTela.excluir || OperadorLogado.admin)
+                {
+                    stsBtnExcluir = false;
+                }
                 stsBtnCancelar = true;
                 stsBtnSalvar = true;
 

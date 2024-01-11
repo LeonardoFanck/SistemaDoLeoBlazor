@@ -147,7 +147,7 @@ else if (Operador is not null)
                                                 {
                                                     @foreach (var tela in OperadorTelas)
                                                     {
-                                                        <tr>
+                                                        <tr id="configTelas">
                                                             <td class="text-truncate" style="max-width: 200px;width: 239.5px;">@tela.nome</td><!-- Start: Ativo -->
                                                             <td class="text-center" style="width: 55px;">
                                                                 <input type="checkbox" disabled="@stsChkItemAtivo" @bind="tela.ativo">

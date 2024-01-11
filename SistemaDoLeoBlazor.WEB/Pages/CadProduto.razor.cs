@@ -22,7 +22,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         // OPERADOR LOGADO NO MOMENTO
         private OperadorDTO? operadorLogado { get; set; }
-        private IEnumerable<OperadorTelaDTO>? operadorLogadoTelas { get; set; }
+        private OperadorTelaDTO? operadorLogadoTela { get; set; }
 
         // STATUS
         private bool stsCodProduto { get; set; }
@@ -35,9 +35,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool stsEstoque { get; set; } = true;
         private bool stsUnidade { get; set; }
 
-        private bool stsBtnNovo { get; set; }
-        private bool stsBtnEditar { get; set; }
-        private bool stsBtnExcluir { get; set; }
+        private bool stsBtnNovo { get; set; } = true;
+        private bool stsBtnEditar { get; set; } = true;
+        private bool stsBtnExcluir { get; set; } = true;
         private bool stsBtnCancelar { get; set; }
         private bool stsBtnSalvar { get; set; }
 
@@ -117,7 +117,11 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 operadorLogado = await session.GetSessaoOperador();
 
-                operadorLogadoTelas = await session.GetSessaoTelas();
+                var operadorLogadoTelas = await session.GetSessaoTelas();
+
+                if(operadorLogadoTelas is not null) {
+                    operadorLogadoTela = operadorLogadoTelas.First(o => o.nome.Equals("Produto"));
+                }
             }
             catch (Exception ex)
             {
@@ -127,15 +131,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async Task validarAcesso()
         {
-            if (operadorLogado == null || operadorLogadoTelas.Count() == 0)
+            if (operadorLogado == null || operadorLogadoTela is null)
             {
                 NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
             }
             else
             {
-                var tela = operadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Produto"));
-
-                if (tela is not null && tela.ativo == false)
+                if (operadorLogadoTela is not null && operadorLogadoTela.ativo == false)
                 {
                     NavigationManager.NavigateTo("/");
                 }
@@ -276,9 +278,21 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsCusto = true;
                 stsUnidade = true;
 
-                stsBtnNovo = false;
-                stsBtnEditar = false;
-                stsBtnExcluir = false;
+                if (operadorLogadoTela.novo || operadorLogado.admin)
+                {
+                    stsBtnNovo = false;
+                }
+
+                if (operadorLogadoTela.editar || operadorLogado.admin)
+                {
+                    stsBtnEditar = false;
+                }
+
+                if (operadorLogadoTela.excluir || operadorLogado.admin)
+                {
+                    stsBtnExcluir = false;
+                }
+                
                 stsBtnCancelar = true;
                 stsBtnSalvar = true;
 

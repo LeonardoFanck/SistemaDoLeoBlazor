@@ -18,8 +18,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private CategoriaDTO? categoriaAtual { get; set; }
 
         // OPERADOR LOGADO NO MOMENTO
-        private OperadorDTO? OperadorLogado { get; set; }
-        private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+        private OperadorDTO? operadorLogado { get; set; }
+        private OperadorTelaDTO? operadorLogadoTela { get; set; }
 
         // STATUS
         private bool stsCodCategoria { get; set; }
@@ -27,9 +27,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool stsNome { get; set; }
         private bool stsInativo { get; set; }
 
-        private bool stsBtnNovo { get; set; }
-        private bool stsBtnEditar { get; set; }
-        private bool stsBtnExcluir { get; set; }
+        private bool stsBtnNovo { get; set; } = true;
+        private bool stsBtnEditar { get; set; } = true;
+        private bool stsBtnExcluir { get; set; } = true;
         private bool stsBtnCancelar { get; set; }
         private bool stsBtnSalvar { get; set; }
 
@@ -75,9 +75,14 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                OperadorLogado = await session.GetSessaoOperador();
+                operadorLogado = await session.GetSessaoOperador();
 
-                OperadorLogadoTelas = await session.GetSessaoTelas();
+                var operadorLogadoTelas = await session.GetSessaoTelas();
+            
+                if (operadorLogadoTelas is not null)
+                {
+                    operadorLogadoTela = operadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Categoria"));
+                }
             }
             catch (Exception ex)
             {
@@ -87,15 +92,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async Task validarAcesso()
         {
-            if (OperadorLogado == null || OperadorLogadoTelas.Count() == 0)
+            if (operadorLogado == null || operadorLogadoTela is null)
             {
                 NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
             }
             else
             {
-                var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Categoria"));
-
-                if (tela is not null && tela.ativo == false)
+                if (operadorLogadoTela is not null && operadorLogadoTela.ativo == false)
                 {
                     NavigationManager.NavigateTo("/");
                 }
@@ -209,9 +212,20 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnPesquisa = false;
                 stsInativo = true;
                 stsNome = true;
-                stsBtnNovo = false;
-                stsBtnEditar = false;
-                stsBtnExcluir = false;
+                if (operadorLogadoTela.novo || operadorLogado.admin)
+                {
+                    stsBtnNovo = false;
+                }
+
+                if (operadorLogadoTela.editar || operadorLogado.admin)
+                {
+                    stsBtnEditar = false;
+                }
+
+                if (operadorLogadoTela.excluir || operadorLogado.admin)
+                {
+                    stsBtnExcluir = false;
+                }
                 stsBtnCancelar = true;
                 stsBtnSalvar = true;
 
@@ -356,23 +370,5 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             DeleteDialogOpen = true;
             StateHasChanged();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 }

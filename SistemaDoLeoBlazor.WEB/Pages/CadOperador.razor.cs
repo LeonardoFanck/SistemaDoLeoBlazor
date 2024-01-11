@@ -20,7 +20,7 @@ public partial class CadOperador
 
     // OPERADOR LOGADO NO MOMENTO
     private OperadorDTO? OperadorLogado { get; set; }
-    private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+    private OperadorTelaDTO? OperadorLogadoTela { get; set; }
 
     // STATUS CADASTRO
     private bool stsCodOperador { get; set; }
@@ -30,9 +30,9 @@ public partial class CadOperador
     private bool stsChkSenha { get; set; }
     private bool stsChkAdmin { get; set; }
     private bool stsChkInativo { get; set; }
-    private bool stsBtnNovo { get; set; }
-    private bool stsBtnEditar { get; set; }
-    private bool stsBtnExcluir { get; set; }
+    private bool stsBtnNovo { get; set; } = true;
+    private bool stsBtnEditar { get; set; } = true;
+    private bool stsBtnExcluir { get; set; } = true;
     private bool stsBtnCancelar { get; set; }
     private bool stsBtnSalvar { get; set; }
 
@@ -84,7 +84,12 @@ public partial class CadOperador
         {
             OperadorLogado = await session.GetSessaoOperador();
 
-            OperadorLogadoTelas = await session.GetSessaoTelas();
+            var OperadorLogadoTelas = await session.GetSessaoTelas();
+
+            if( OperadorLogadoTelas is not null)
+            {
+                OperadorLogadoTela = OperadorLogadoTelas.First(t => t.nome.Equals("Operador"));
+            }
         }
         catch (Exception ex)
         {
@@ -94,15 +99,13 @@ public partial class CadOperador
 
     private async Task validarAcesso()
     {
-        if (OperadorLogado == null || OperadorLogadoTelas.Count() == 0)
+        if (OperadorLogado == null || OperadorLogadoTela is null)
         {
             NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
         }
         else
         {
-            var tela = OperadorLogadoTelas.FirstOrDefault(t => t.nome.Equals("Operador"));
-
-            if (tela is not null && tela.ativo == false)
+            if (OperadorLogadoTela is not null && OperadorLogadoTela.ativo == false)
             {
                 NavigationManager.NavigateTo("/");
             }
@@ -196,9 +199,20 @@ public partial class CadOperador
             stsChkSenha = true;
             stsChkAdmin = true;
             stsChkInativo = true;
-            stsBtnNovo = false;
-            stsBtnEditar = false;
-            stsBtnExcluir = false;
+
+            if (OperadorLogadoTela.novo || OperadorLogado.admin)
+            {
+                stsBtnNovo = false;
+            }
+            if (OperadorLogadoTela.editar || OperadorLogado.admin)
+            {
+                stsBtnEditar = false;
+            }
+            if (OperadorLogadoTela.excluir || OperadorLogado.admin)
+            {
+                stsBtnExcluir = false;
+
+            }
             stsBtnCancelar = true;
             stsBtnSalvar = true;
 
