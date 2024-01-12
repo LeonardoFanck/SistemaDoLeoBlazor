@@ -17,7 +17,8 @@ namespace SistemaDoLeoBlazor.API.Mapping
                 formaPgtoNome = pedido.formaPgto.nome,
                 desconto = pedido.desconto,
                 total = pedido.total,
-                valor = pedido.valor
+                valor = pedido.valor,
+                tipoOperacao = pedido.tipoOperacao
             };
         }
 
@@ -31,7 +32,8 @@ namespace SistemaDoLeoBlazor.API.Mapping
                 formaPgtoId = pedido.formaPgtoId,
                 desconto = pedido.desconto,
                 total = pedido.total,
-                valor = pedido.valor
+                valor = pedido.valor,
+                tipoOperacao = pedido.tipoOperacao
             };
         }
 
@@ -50,7 +52,8 @@ namespace SistemaDoLeoBlazor.API.Mapping
                         formaPgtoNome = pedido.formaPgto.nome,
                         desconto = pedido.desconto,
                         total = pedido.total,
-                        valor = pedido.valor
+                        valor = pedido.valor,
+                        tipoOperacao = pedido.tipoOperacao
                     });
         }
 

@@ -17,5 +17,6 @@ namespace SistemaDoLeoBlazor.MODELS.PedidoDTO
         public decimal valor { get; set; }
         public decimal desconto { get; set; }
         public decimal total { get; set; }
+        public string? tipoOperacao { get; set; }
     }
 }

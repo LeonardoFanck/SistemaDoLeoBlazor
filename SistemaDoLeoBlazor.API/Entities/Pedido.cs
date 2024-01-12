@@ -15,6 +15,7 @@ namespace SistemaDoLeoBlazor.API.Entities
         public required decimal desconto { get; set; } = decimal.Zero;
         [Column(TypeName = "decimal(10, 2)")]
         public required decimal total { get; set; } = decimal.Zero;
+        public required string tipoOperacao { get; set; } = string.Empty;
 
         public Cliente? cliente { get; set; }
         public FormaPgto? formaPgto { get; set; }

@@ -137,7 +137,8 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
                 desconto = pedidoDTO.desconto,
                 formaPgtoId = pedidoDTO.formaPgtoId,
                 total = pedidoDTO.total,
-                valor = pedidoDTO.valor
+                valor = pedidoDTO.valor,
+                tipoOperacao = pedidoDTO.tipoOperacao
             };
 
             var resultado = _context.Pedido.AddAsync(pedido);

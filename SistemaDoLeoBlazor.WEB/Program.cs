@@ -7,6 +7,7 @@ using SistemaDoLeoBlazor.WEB.Services.CLienteService;
 using SistemaDoLeoBlazor.WEB.Services.FormaPgtoService;
 using SistemaDoLeoBlazor.WEB.Services.OperadorLocalStorageService;
 using SistemaDoLeoBlazor.WEB.Services.OperadorService.OperadorService;
+using SistemaDoLeoBlazor.WEB.Services.PedidoService;
 using SistemaDoLeoBlazor.WEB.Services.ProdutoService;
 using SistemaDoLeoBlazor.WEB.Services.ProximoRegistroService;
 using SistemaDoLeoBlazor.WEB.Toaster;
@@ -30,6 +31,7 @@ builder.Services.AddScoped<ICategoriaService, CategoriaService>();
 builder.Services.AddScoped<IFormaPgtoService, FormaPgtoService>();
 builder.Services.AddScoped<IProdutoService, ProdutoService>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
+builder.Services.AddScoped<IPedidoService, PedidoService>();
 builder.Services.AddBlazoredSessionStorage();
 
 await builder.Build().RunAsync();
