@@ -1,4 +1,6 @@
-﻿@using SistemaDoLeoBlazor.MODELS.ProdutoDTO;
+﻿@using SistemaDoLeoBlazor.MODELS.ProdutoDTO
+@using SistemaDoLeoBlazor.MODELS.PedidoDTO
+@inject IProdutoService produtoService
 
 @if(produto is null)
 {
@@ -7,10 +9,10 @@
 else
 {
     <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">@operacao Produto</h4>
+                    <h4 class="modal-title">@operacaoItem Produto</h4>
                     <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
                 </div>
                 <div class="modal-body">
@@ -19,13 +21,14 @@ else
                             <div class="row">
                                 <div class="col-md-6" style="width: 154.281px;">
                                     <input class="form-control form-control-user" type="number" placeholder="Cod" required="" style="width: 141px;"
-                                           name="Cod">
+                                           name="Cod" disabled="@stsCodProd" @bind-value="@produto.produtoId" @bind-value:event="oninput" 
+                                           @onkeydown="OnKeyDownTxtID">
                                 </div>
                                 <div class="col-md-6" style="width: 115.328px;">
                                     <button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button>
                                 </div>
                                 <div class="col">
-                                    <input class="form-control" type="text">
+                                    <input class="form-control" type="text" disabled="@stsNome" @bind="@produto.produtoNome">
                                 </div>
                             </div>
                             <div class="row" style="margin-top: 24px;">
@@ -33,7 +36,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Valor</h4>
-                                            <input class="form-control" type="number">
+                                            <input class="form-control" type="number" @bind-value="@produto.valor" @bind-value:event="oninput">
                                         </div>
                                     </div>
                                 </div>
@@ -41,7 +44,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Quantidade</h4>
-                                            <input class="form-control" type="number">
+                                            <input class="form-control" type="number" @bind-value="@produto.quantidade" @bind-value:event="oninput">
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +52,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Desconto</h4>
-                                            <input class="form-control" type="number">
+                                            <input class="form-control" type="number" @bind-value="@produto.desconto" @bind-value:event="oninput">
                                         </div>
                                     </div>
                                 </div>
@@ -57,7 +60,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Total</h4>
-                                            <input class="form-control" type="number">
+                                            <input class="form-control" type="number" @bind-value="@produto.total" @bind-value:event="oninput">
                                         </div>
                                     </div>
                                 </div>
@@ -67,7 +70,7 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ModalCancel">Cancelar</button>
-                    <button type="button" class="btn btn-primary" @onclick="ModalOk">Confirmar</button>
+                    <button type="button" class="btn btn-primary" @onclick="salvar">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -75,13 +78,72 @@ else
 }
 
 @code {
-    [Parameter] public ProdutoDTO? produto { get; set; }
-    [Parameter] public string? operacao { get; set; }
-    public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public PedidoItemDTO? produto { get; set; }
+    [Parameter] public PedidoDTO? pedido { get; set; }
+    [Parameter] public string? operacaoItem { get; set; }
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
 
-    protected override Task OnInitializedAsync()
+    private bool stsCodProd { get; set; }
+    private bool stsNome { get; set; } = true;
+    private bool stsTotal { get; set; } = true;
+
+
+    private async void OnKeyDownTxtID(KeyboardEventArgs e)
     {
-        
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            await getProduto(produto.produtoId);
+            StateHasChanged();
+        }
+    }
+
+    private async Task getProduto(int id)
+    {
+        try
+        {
+            var prod = await produtoService.GetById(id);
+
+            if (pedido.tipoOperacao.Equals("Venda"))
+            {
+                produto = new PedidoItemDTO
+                {
+                    pedidoId = pedido.id,
+                    produtoId = prod.id,
+                    produtoNome = prod.nome,
+                    desconto = 0,
+                    quantidade = 1,
+                    valor = prod.preco,
+                    total = prod.preco
+                };
+            }
+            else
+            {
+                produto = new PedidoItemDTO
+                {
+                    pedidoId = pedido.id,
+                    produtoId = prod.id,
+                    produtoNome = prod.nome,
+                    desconto = decimal.Zero,
+                    quantidade = 1,
+                    valor = prod.custo,
+                    total = prod.custo
+                };
+            }
+        }
+        catch(HttpRequestException ex)
+        {
+            if(ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                produto.produtoNome = "[PRODUTO NÃO LOCALIZADO]";
+            }
+        }
+    }
+
+    private async Task salvar()
+    {
+
+
+        await ModalOk();
     }
 
     private Task ModalCancel()

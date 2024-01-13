@@ -157,7 +157,7 @@ else
                                             <!-- Start: Novo -->
                                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-4" type="button"
                                                     style="height: 39px;background: rgb(74,170,15);border-radius: 60px;" tabindex="-1"
-                                                    disabled="@stsBtnNovoItem">
+                                                    disabled="@stsBtnNovoItem" @onclick="(() => OpenAddProdutoDialog(addProduto))">
                                                 Novo
                                             </button><!-- End: Novo -->
                                         </div><!-- End: Novo -->
@@ -246,5 +246,10 @@ else
     @if (DeleteDialogOpen)
     {
         <ConfirmModal Titulo="Exlusão de Pedido" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
+    }
+
+    @if (produtoDialogOpen)
+    {
+        <AddProduto operacaoItem="@tipoOperacaoProd" pedido="@pedido" produto="@item" OnClose="@OnAddProdutoDialogClose"></AddProduto>
     }
 }

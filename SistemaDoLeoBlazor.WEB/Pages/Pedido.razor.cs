@@ -58,6 +58,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
 
+        // ADD PRODUTO
+        private bool produtoDialogOpen { get; set; }
+        private string tipoOperacaoProd { get; set; }
+        private string addProduto { get; set; } = "Adicionar";
+        private string editProduto { get; set; } = "Alterar";
+        private PedidoItemDTO item { get; set; }
+
         // TOAST
         private string toastTitulo { get; set; } = "Pedido";
 
@@ -520,6 +527,52 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
             DeleteDialogOpen = true;
             StateHasChanged();
+        }
+
+        private void OpenAddProdutoDialog(string tipo)
+        {
+            tipoOperacaoProd = tipo;
+
+            if (tipoOperacaoProd.Equals("Adicionar"))
+            {
+                item = new PedidoItemDTO
+                {
+                    desconto = decimal.Zero,
+                    pedidoId = 0,
+                    produtoId = 0,
+                    produtoNome = "",
+                    quantidade = 0,
+                    id = 0,
+                    total = decimal.Zero,
+                    valor = decimal.Zero
+                };
+            }
+
+            produtoDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private async void OnAddProdutoDialogClose(bool accepted)
+        {
+            try
+            {
+                if (accepted)
+                {
+                   // MENSAGEM DE SUCESSO
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Deuy tudo certo!", MessageColour.Success, 8));
+                }
+
+                produtoDialogOpen = false;
+                StateHasChanged();
+            }
+            catch (HttpRequestException ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
+            }
+            catch (Exception ex)
+            {
+                _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
+            }
         }
     }
 }
