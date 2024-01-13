@@ -1,0 +1,96 @@
+﻿@using SistemaDoLeoBlazor.MODELS.ProdutoDTO;
+
+@if(produto is null)
+{
+    <LoadingComponent />
+}
+else
+{
+    <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@operacao Produto</h4>
+                    <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6" style="width: 154.281px;">
+                                    <input class="form-control form-control-user" type="number" placeholder="Cod" required="" style="width: 141px;"
+                                           name="Cod">
+                                </div>
+                                <div class="col-md-6" style="width: 115.328px;">
+                                    <button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button>
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="text">
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top: 24px;">
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Valor</h4>
+                                            <input class="form-control" type="number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-xxl-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Quantidade</h4>
+                                            <input class="form-control" type="number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Desconto</h4>
+                                            <input class="form-control" type="number">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Total</h4>
+                                            <input class="form-control" type="number">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ModalCancel">Cancelar</button>
+                    <button type="button" class="btn btn-primary" @onclick="ModalOk">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public ProdutoDTO? produto { get; set; }
+    [Parameter] public string? operacao { get; set; }
+    public EventCallback<bool> OnClose { get; set; }
+
+    protected override Task OnInitializedAsync()
+    {
+        
+    }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private Task ModalOk()
+    {
+        return OnClose.InvokeAsync(true);
+    }
+}

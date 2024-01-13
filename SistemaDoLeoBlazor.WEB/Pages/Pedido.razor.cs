@@ -17,6 +17,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private PedidoDTO? pedido { get; set; }
         private PedidoDTO? pedidoAtual { get; set; }
+        private IEnumerable<PedidoItemDTO>? itens { get; set; }
 
         // OPERADOR LOGADO NO MOMENTO
         private OperadorDTO? operadorLogado { get; set; }
@@ -61,8 +62,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private string toastTitulo { get; set; } = "Pedido";
 
         // TIPO OPERAÇÃO
-        private bool chkVenda { get; set; }
-        private bool chkCompra { get; set; } 
+        private string tipoVenda { get; } = "Venda";
+        private string tipoCompra { get; } = "Compra";
 
         protected async override Task OnInitializedAsync()
         {
@@ -105,20 +106,6 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             catch (Exception ex)
             {
                 _toasterService.AddToast(Toast.NewToast("ERRO", $"Ocorreu um erro: {ex.Message}", MessageColour.Danger, 8));
-            }
-        }
-
-        private void validarTipoOperacao()
-        {
-            if (pedido.tipoOperacao.Equals("Venda"))
-            {
-                chkVenda = true;
-                //chkCompra = false;
-            }
-            else
-            {
-                chkCompra = true;
-                //chkVenda = false;
             }
         }
 
@@ -178,8 +165,6 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     tipoOperacao = pedidoAtual.tipoOperacao
                 };
 
-                validarTipoOperacao();
-
                 StateHasChanged();
             }
             catch (HttpRequestException ex)
@@ -225,7 +210,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 await pegarProximoRegistro();
 
-                // LIMPA OS VALORES DO OPERADOR
+                // LIMPA OS VALORES DO REGISTRO
                 pedido.id = nextRegistro.pedido;
                 pedido.clienteId = 0;
                 pedido.clienteNome = string.Empty;
@@ -235,6 +220,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 pedido.desconto = decimal.Zero;
                 pedido.total = decimal.Zero;
                 pedido.valor = decimal.Zero;
+                pedido.tipoOperacao = tipoVenda;
 
                 StateHasChanged();
             }
@@ -246,7 +232,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
                 stsCodPedido = true;
                 stsBtnPesquisaPedido = true;
-                stsTipoOperacao = false;
+                stsTipoOperacao = true;
                 stsData = false;
                 stsCliente = false;
                 stsBtnPesquisaCliente = false;
@@ -373,6 +359,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 pedido.desconto = pedidoAtual.desconto;
                 pedido.total = pedidoAtual.total;
                 pedido.valor = pedidoAtual.valor;
+                pedido.tipoOperacao = pedidoAtual.tipoOperacao;
             }
             else
             {
@@ -385,6 +372,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 pedido.desconto = decimal.Zero;
                 pedido.total = decimal.Zero;
                 pedido.valor = decimal.Zero;
+                pedido.tipoOperacao = tipoVenda;
             }
         }
 
@@ -398,14 +386,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async Task validarCampos()
         {
-            if (chkVenda)
-            {
-                pedido.tipoOperacao = "Venda";
-            }
-            else
-            {
-                pedido.tipoOperacao = "Compra";
-            }
+            
 
             if(pedido.clienteId == 0)
             {
@@ -413,6 +394,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
             else
             {
+                await getCliente();
+
                 if(pedido.clienteNome.Equals("[CLIENTE NÃO LOCALIZADO]") || pedido.clienteNome.Equals(""))
                 {
                     throw new FormatException("Cliente inválido");
@@ -425,6 +408,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
             else
             {
+                await getFormaPgto();
+
                 if (pedido.formaPgtoNome.Equals("[FORMA DE PAGAMENTO NÃO LOCALIZADA]") || pedido.formaPgtoNome.Equals(""))
                 {
                     throw new FormatException("Forma de Pagamento inválida");
@@ -458,7 +443,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 }
                 catch (FormatException ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Erro ao cadastrar: {ex.Message}", MessageColour.Warning, 8));
                 }
                 catch (Exception ex)
                 {
@@ -483,11 +468,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 }
                 catch (HttpRequestException ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao alterar: {ex.Message}", MessageColour.Danger, 8));
+                }
+                catch (FormatException ex)
+                {
+                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Erro ao alterar: {ex.Message}", MessageColour.Warning, 8));
                 }
                 catch (Exception ex)
                 {
-                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
+                    _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao alterar: {ex.Message}", MessageColour.Danger, 8));
                 }
             }
 

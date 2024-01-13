@@ -44,13 +44,13 @@ else
                                     <div class="card-body" style="height: 106.7969px;">
                                         <h4 class="card-title">Tipo Operação</h4>
                                         <div class="form-check form-check-inline" style="margin-top: 9px;">
-                                            <input class="form-check-input" type="radio" id="formCheck-1" name="teste" checked="" disabled="@stsTipoOperacao"
-                                                   @bind="@chkVenda">
+                                            <input class="form-check-input" type="radio" id="formCheck-1" name="teste" checked="@(pedido.tipoOperacao.Equals("Venda"))" 
+                                            disabled="@stsTipoOperacao" @onchange="@(() => pedido.tipoOperacao = @tipoVenda)">
                                             <label class="form-check-label" for="formCheck">Venda</label>
                                         </div>
                                         <div class="form-check form-check-inline" style="margin-top: 9px;">
-                                            <input class="form-check-input" type="radio" id="formCheck-2" name="teste" disabled="@stsTipoOperacao"
-                                                   @bind="@chkCompra">
+                                            <input class="form-check-input" type="radio" id="formCheck-2" name="teste" checked="@(pedido.tipoOperacao.Equals("Compra"))" 
+                                            disabled="@stsTipoOperacao" @onchange="@(() => pedido.tipoOperacao = @tipoVenda)">
                                             <label class="form-check-label" for="formCheck">Compra</label>
                                         </div>
                                     </div>
@@ -120,25 +120,29 @@ else
                         <div class="col-md-3" style="height: 45px;">
                             <!-- Start: Novo -->
                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn" type="button" 
-                                    style="height: 39px;background: rgb(74,170,15);" disabled="@stsBtnNovo" @onclick="(() => validaStatus(CADASTRAR))">Novo</button><!-- End: Novo -->
+                                    style="height: 39px;background: rgb(74,170,15);" disabled="@stsBtnNovo" tabindex="-1"
+                                    @onclick="(() => validaStatus(CADASTRAR))">Novo</button><!-- End: Novo -->
                         </div><!-- End: Novo -->
                         <!-- Start: Editar -->
                         <div class="col-md-3" style="height: 45px;">
                             <!-- Start: Editar -->
                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-1" type="button" 
-                                    style="height: 39px;background: rgb(0,100,200);" disabled="@stsBtnEditar" @onclick="(() => validaStatus(EDITAR))">Editar</button><!-- End: Editar -->
+                                    style="height: 39px;background: rgb(0,100,200);" disabled="@stsBtnEditar" tabindex="-1"
+                                    @onclick="(() => validaStatus(EDITAR))">Editar</button><!-- End: Editar -->
                         </div><!-- End: Editar -->
                         <!-- Start: Excluir -->
                         <div class="col-md-3" style="height: 45px;">
                             <!-- Start: Excluir -->
                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-2" type="button" 
-                                    style="height: 39px;background: rgb(203,30,19);" disabled="@stsBtnExcluir" @onclick="(() => OpenDeleteDialog())">Excluir</button><!-- End: Excluir -->
+                                    style="height: 39px;background: rgb(203,30,19);" disabled="@stsBtnExcluir" tabindex="-1"
+                                    @onclick="(() => OpenDeleteDialog())">Excluir</button><!-- End: Excluir -->
                         </div><!-- End: Excluir -->
                         <!-- Start: Cancelar -->
                         <div class="col-md-3" style="height: 45px;">
                             <!-- Start: Cancelar -->
                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-3" type="button" 
-                                    style="height: 39px;background: rgb(228,185,34);" disabled="@stsBtnCancelar" @onclick="(() => validaStatus(VISUALIZAR))">Cancelar</button><!-- End: Cancelar -->
+                                    style="height: 39px;background: rgb(228,185,34);" disabled="@stsBtnCancelar" tabindex="-1"
+                                    @onclick="(() => validaStatus(VISUALIZAR))">Cancelar</button><!-- End: Cancelar -->
                         </div><!-- End: Cancelar -->
                     </div><!-- End: Botões -->
                     <hr><!-- Start: crud-Table -->
@@ -147,27 +151,37 @@ else
                             <div class="card shadow">
                                 <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
                                     <h5 class="display-6 text-nowrap text-capitalize mb-0">Itens</h5>
-                                </div><!-- Start: Botões -->
-                                <div class="row" style="margin-top: 13px;margin-bottom: -13px;">
-                                    <!-- Start: Novo -->
-                                    <div class="col-md-3" style="height: 45px;width: 119px;margin-left: 248px;">
+                                    <div class="row" style="margin-top: 5px;margin-bottom: 0px;">
                                         <!-- Start: Novo -->
-                                        <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-4" type="button" 
-                                        style="height: 39px;background: rgb(74,170,15);border-radius: 60px;" disabled="@stsBtnNovoItem">Novo</button><!-- End: Novo -->
-                                    </div><!-- End: Novo -->
-                                    <!-- Start: Editar -->
-                                    <div class="col-md-3" style="height: 45px;width: 133px;">
+                                        <div class="col-md-3" style="height: 45px;width: 119px;margin-left: 248px;">
+                                            <!-- Start: Novo -->
+                                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-4" type="button"
+                                                    style="height: 39px;background: rgb(74,170,15);border-radius: 60px;" tabindex="-1"
+                                                    disabled="@stsBtnNovoItem">
+                                                Novo
+                                            </button><!-- End: Novo -->
+                                        </div><!-- End: Novo -->
                                         <!-- Start: Editar -->
-                                        <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-5" type="button" 
-                                        style="height: 39px;background: rgb(0,100,200);border-radius: 60px;" disabled="@stsBtnEditarItem">Editar</button><!-- End: Editar -->
-                                    </div><!-- End: Editar -->
-                                    <!-- Start: Excluir -->
-                                    <div class="col-md-3" style="height: 45px;width: 133px;">
+                                        <div class="col-md-3" style="height: 45px;width: 133px;">
+                                            <!-- Start: Editar -->
+                                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-5" type="button"
+                                                    style="height: 39px;background: rgb(0,100,200);border-radius: 60px;" tabindex="-1"
+                                                    disabled="@stsBtnEditarItem">
+                                                Editar
+                                            </button><!-- End: Editar -->
+                                        </div><!-- End: Editar -->
                                         <!-- Start: Excluir -->
-                                        <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-6" type="button" 
-                                        style="height: 39px;background: rgb(203,30,19);border-radius: 60px;" disabled="@stsBtnExcluirItem">Excluir</button><!-- End: Excluir -->
-                                    </div><!-- End: Excluir -->
-                                </div><!-- End: Botões -->
+                                        <div class="col-md-3" style="height: 45px;width: 133px;">
+                                            <!-- Start: Excluir -->
+                                            <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-6" type="button"
+                                                    style="height: 39px;background: rgb(203,30,19);border-radius: 60px;" tabindex="-1"
+                                                    disabled="@stsBtnExcluirItem">
+                                                Excluir
+                                            </button><!-- End: Excluir -->
+                                        </div><!-- End: Excluir -->
+                                    </div><!-- End: Botões -->
+                                </div><!-- Start: Botões -->
+                                
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-striped table-hover">
@@ -188,18 +202,32 @@ else
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td class="text-truncate" style="max-width: 200px;width: 80.5px;">00</td><!-- Start: Ativo -->
-                                                    <td class="text-center" style="width: 179px;text-align: left;">Teste</td><!-- End: Ativo -->
-                                                    <!-- Start: Editar -->
-                                                    <td class="text-center" style="width: 75px;">aa</td><!-- End: Editar -->
-                                                    <!-- Start: Excluir -->
-                                                    <td class="text-center" style="width: 55px;">ss</td><!-- End: Excluir -->
-                                                    <!-- Start: Novo -->
-                                                    <td class="text-center" style="width: 64px;">dd</td><!-- End: Novo -->
-                                                    <!-- Start: Novo -->
-                                                    <td class="text-center" style="width: 114px;">ff</td><!-- End: Novo -->
-                                                </tr>
+                                                @if(itens is not null)
+                                                {
+                                                    @foreach(var item in itens)
+                                                    {
+                                                        <tr>
+                                                            <td id="codProduto" class="text-truncate" style="max-width: 200px;width: 80.5px;">
+                                                                @item.produtoId
+                                                            </td>
+                                                            <td id="nome" class="text-center" style="width: 179px;text-align: left;">
+                                                                @item.produtoNome
+                                                            </td>
+                                                            <td id="valor" class="text-center" style="width: 75px;">
+                                                                @item.valor
+                                                            </td>
+                                                            <td id="quantidade" class="text-center" style="width: 55px;">
+                                                                @item.quantidade
+                                                            </td>
+                                                            <td id="desconto" class="text-center" style="width: 64px;">
+                                                                @item.desconto%
+                                                            </td>
+                                                            <td id="total" class="text-center" style="width: 114px;">
+                                                                @item.total
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                }
                                             </tbody>
                                         </table>
                                     </div>
