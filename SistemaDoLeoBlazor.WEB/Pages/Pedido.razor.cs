@@ -90,7 +90,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             else
             {
                 // PEGA AS INFORMAÇÕES DO ULTIMO OPERADOR
-                getRegistro(ultimoId);
+                await getRegistro(ultimoId);
 
                 // ALTERA O STATUS
                 validaStatus(VISUALIZAR);
@@ -152,7 +152,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
-        private async void getRegistro(int id)
+        private async Task getRegistro(int id)
         {
             try
             {
@@ -172,6 +172,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     tipoOperacao = pedidoAtual.tipoOperacao
                 };
 
+                await getItens(id);
+
                 StateHasChanged();
             }
             catch (HttpRequestException ex)
@@ -185,6 +187,16 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     // RENDERIZA NOVAMENTE O COMPONENTE
                     StateHasChanged();
                 }
+            }
+        }
+
+        private async Task getItens(int id)
+        {
+            try {
+                itens = await pedidoService.GetAllItens(id);
+            }
+            catch(Exception ex) {
+                _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Erro: {ex.Message}", MessageColour.Danger, 8));
             }
         }
 
@@ -383,11 +395,11 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
-        private void OnKeyDownTxtID(KeyboardEventArgs e)
+        private async void OnKeyDownTxtID(KeyboardEventArgs e)
         {
             if (e.Code == "Enter" || e.Code == "NumpadEnter")
             {
-                getRegistro(pedido.id);
+                await getRegistro(pedido.id);
             }
         }
 
@@ -466,7 +478,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
 
                     // BUSCA AS NOVA INFORMAÇÕES
-                    getRegistro(pedido.id);
+                    await getRegistro(pedido.id);
 
                     // ALTERA O STATUS
                     validaStatus(VISUALIZAR);
@@ -507,7 +519,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 var ultimoId = await getLastRegistro();
 
                 // BUSCA AS INFORMAÇÕES DO ULTIMO REGISTRO
-                getRegistro(ultimoId);
+                await getRegistro(ultimoId);
             }
             catch (HttpRequestException ex)
             {
@@ -556,6 +568,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 if (accepted)
                 {
+                    await getItens(pedido.id);
+
                    // MENSAGEM DE SUCESSO
                     _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Deuy tudo certo!", MessageColour.Success, 8));
                 }

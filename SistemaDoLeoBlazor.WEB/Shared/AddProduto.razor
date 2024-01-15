@@ -1,6 +1,7 @@
 ﻿@using SistemaDoLeoBlazor.MODELS.ProdutoDTO
 @using SistemaDoLeoBlazor.MODELS.PedidoDTO
 @inject IProdutoService produtoService
+@inject IPedidoService pedidoService
 
 @if(produto is null)
 {
@@ -15,6 +16,14 @@ else
                     <h4 class="modal-title">@operacaoItem Produto</h4>
                     <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
                 </div>
+
+                @if (erro != string.Empty)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        @erro
+                    </div>
+                }
+
                 <div class="modal-body">
                     <div class="card">
                         <div class="card-body">
@@ -22,7 +31,7 @@ else
                                 <div class="col-md-6" style="width: 154.281px;">
                                     <input class="form-control form-control-user" type="number" placeholder="Cod" required="" style="width: 141px;"
                                            name="Cod" disabled="@stsCodProd" @bind-value="@produto.produtoId" @bind-value:event="oninput" 
-                                           @onkeydown="OnKeyDownTxtID">
+                                           @onkeydown="OnKeyDownTxtID" @onblur="recalcularValores">
                                 </div>
                                 <div class="col-md-6" style="width: 115.328px;">
                                     <button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button>
@@ -36,7 +45,8 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Valor</h4>
-                                            <input class="form-control" type="number" @bind-value="@produto.valor" @bind-value:event="oninput">
+                                            <input class="form-control" type="number" @bind-value="@produto.valor" @bind-value:event="oninput"
+                                                   @onblur="recalcularValores">
                                         </div>
                                     </div>
                                 </div>
@@ -44,7 +54,8 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Quantidade</h4>
-                                            <input class="form-control" type="number" @bind-value="@produto.quantidade" @bind-value:event="oninput">
+                                            <input class="form-control" type="number" @bind-value="@produto.quantidade" @bind-value:event="oninput"
+                                                   @onblur="recalcularValores">
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +63,8 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Desconto</h4>
-                                            <input class="form-control" type="number" @bind-value="@produto.desconto" @bind-value:event="oninput">
+                                            <input class="form-control" type="number" @bind-value="@produto.desconto" @bind-value:event="oninput"
+                                                   @onblur="recalcularValores">
                                         </div>
                                     </div>
                                 </div>
@@ -60,7 +72,8 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Total</h4>
-                                            <input class="form-control" type="number" @bind-value="@produto.total" @bind-value:event="oninput">
+                                            <input class="form-control" type="number" disabled="@stsTotal" 
+                                                   @bind-value="@produto.total" @bind-value:event="oninput">
                                         </div>
                                     </div>
                                 </div>
@@ -69,7 +82,7 @@ else
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ModalCancel">Cancelar</button>
+                    <button type="button" class="btn btn-secondary" tabindex="-1" data-bs-dismiss="modal" @onclick="ModalCancel">Cancelar</button>
                     <button type="button" class="btn btn-primary" @onclick="finalizaOperacao">Confirmar</button>
                 </div>
             </div>
@@ -86,6 +99,8 @@ else
     private bool stsCodProd { get; set; }
     private bool stsNome { get; set; } = true;
     private bool stsTotal { get; set; } = true;
+
+    private string erro { get; set; } = string.Empty;
 
 
     private async void OnKeyDownTxtID(KeyboardEventArgs e)
@@ -135,22 +150,82 @@ else
             if(ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
                 produto.produtoNome = "[PRODUTO NÃO LOCALIZADO]";
+                produto.desconto = decimal.Zero;
+                produto.quantidade = 0;
+                produto.valor = decimal.Zero;
+                produto.total = decimal.Zero;
             }
         }
     }
 
+    private async Task recalcularValores()
+    {
+        var valor = produto.valor;
+        var quantidade = produto.quantidade;
+        var desconto = produto.desconto / 100;
+
+        var total = (valor * quantidade) - ((valor * quantidade) * desconto);
+
+        produto.total = total;
+    }
+
+    private async Task salvarProduto()
+    {
+        await pedidoService.InsertItem(produto);
+    }
+
+    private async Task alterarProduto()
+    {
+        await pedidoService.UpdateItem(produto);
+    }
+
     private async Task finalizaOperacao()
     {
-        if (operacaoItem.Equals("Adicionar"))
+        try
         {
+            await validarCampos();
+            await recalcularValores();
 
+            if (operacaoItem.Equals("Adicionar"))
+            {
+                await salvarProduto();
+            }
+            else
+            {
+                await alterarProduto();
+            }
+
+            await ModalOk();
         }
-        else
+        catch(FormatException ex)
         {
-            
-        }
+            erro = ex.Message;
+            StateHasChanged();
 
-        await ModalOk();
+            await Task.Delay(10000);
+            erro = string.Empty;
+
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            erro = ex.Message;
+        }
+    }
+
+    private async Task validaProduto(int id)
+    {
+        try
+        {
+            var prod = await produtoService.GetById(id);
+        }
+        catch (HttpRequestException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                produto.produtoNome = "[PRODUTO NÃO LOCALIZADO]";
+            }
+        }
     }
 
     private async Task validarCampos()
@@ -161,12 +236,17 @@ else
         }
         else
         {
-            await getProduto(produto.produtoId);
+            await validaProduto(produto.produtoId);
 
             if (produto.produtoNome.Equals("[PRODUTO NÃO LOCALIZADO]") || produto.produtoNome.Equals(""))
             {
                 throw new FormatException("Produto inválido");
             }
+        }
+
+        if (produto.quantidade == 0)
+        {
+            throw new FormatException("Campo quantidade não pode ser 0");
         }
     }
 
