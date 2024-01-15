@@ -70,7 +70,7 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ModalCancel">Cancelar</button>
-                    <button type="button" class="btn btn-primary" @onclick="salvar">Confirmar</button>
+                    <button type="button" class="btn btn-primary" @onclick="finalizaOperacao">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -139,11 +139,35 @@ else
         }
     }
 
-    private async Task salvar()
+    private async Task finalizaOperacao()
     {
+        if (operacaoItem.Equals("Adicionar"))
+        {
 
+        }
+        else
+        {
+            
+        }
 
         await ModalOk();
+    }
+
+    private async Task validarCampos()
+    {
+        if (produto.produtoId == 0)
+        {
+            throw new FormatException("Campo Cod Produto não pode estar vazio");
+        }
+        else
+        {
+            await getProduto(produto.produtoId);
+
+            if (produto.produtoNome.Equals("[PRODUTO NÃO LOCALIZADO]") || produto.produtoNome.Equals(""))
+            {
+                throw new FormatException("Produto inválido");
+            }
+        }
     }
 
     private Task ModalCancel()

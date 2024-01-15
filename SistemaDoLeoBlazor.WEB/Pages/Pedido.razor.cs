@@ -393,8 +393,6 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async Task validarCampos()
         {
-            
-
             if(pedido.clienteId == 0)
             {
                 throw new FormatException("Campo Cliente não pode estar vazio");
