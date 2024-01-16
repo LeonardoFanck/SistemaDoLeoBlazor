@@ -71,13 +71,15 @@
     // OPERADOR LOGADO NO MOMENTO
     private OperadorDTO? OperadorLogado { get; set; }
     private IEnumerable<OperadorTelaDTO>? OperadorLogadoTelas { get; set; }
+    private bool atualizar { get; set; } = true;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    protected override async Task OnInitializedAsync()
     {
         OperadorLogado = await session.GetSessaoOperador();
 

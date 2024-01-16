@@ -26,15 +26,6 @@ Welcome to your new app.
     <button class="btn btn-primary" @onclick="ApagarDados">Apagar Sessão</button>
 </div>
 
-@if(operador is not null)
-{
-    <p>ID: @operador.id</p>
-    <p>Nome: @operador.nome</p>
-    <p>Senha: @operador.senha</p>
-    <p>Admin: @operador.admin</p>
-    <p>Inativo: @operador.inativo</p>
-}
-
 @if(telas is not null)
 {
     foreach(var tela in telas)
@@ -54,19 +45,42 @@ Welcome to your new app.
 
 @code {
     [Inject] private ToasterService? _toasterService { get; set; }
+    [Inject] private NavigationManager? NavigationManager { get; set; }
     private ToasterService toasterService => _toasterService!;
-    private OperadorDTO operador { get; set; }
+    private OperadorDTO operadorLogado { get; set; }
     private IEnumerable<OperadorTelaDTO> telas {get;set;}
 
     private void AddToast(string titulo, string mensagem)
     => toasterService.AddToast(Toast.NewToast(titulo, mensagem, MessageColour.Danger, 10));
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        //await IniciarSessao();
+        await getOperadorSession();
+        await validarAcesso();
     }
 
-    private async void IniciarSessao()
+    private async Task getOperadorSession()
+    {
+        try
+        {
+            operadorLogado = await service.GetSessaoOperador();
+        }
+        catch (Exception ex)
+        {
+            _toasterService.AddToast(Toast.NewToast("ERRO", $"Ocorreu um erro: {ex.Message}", MessageColour.Danger, 8));
+        }
+    }
+
+    private async Task validarAcesso()
+    {
+        if (operadorLogado == null)
+        {
+            NavigationManager.NavigateTo("/login"); // ALTERAR PARA TELA DE LOGIN
+        }
+    }
+
+    private async Task IniciarSessao()
     {
         await service.SetSessao(1);
 
@@ -75,11 +89,13 @@ Welcome to your new app.
 
     private async void PegarDadosSessao()
     {
-        operador = await service.GetSessaoOperador();
-        telas = await service.GetSessaoTelas();
+        // operador = await service.GetSessaoOperador();
+        // telas = await service.GetSessaoTelas();
 
         AddToast("Sessão", "Sessão Get com sucesso");
     }
+
+
 
     private async void ApagarDados()
     {

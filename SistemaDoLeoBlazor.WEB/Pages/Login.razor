@@ -1,0 +1,160 @@
+﻿@page "/login"
+@inject IOperadorService operadorService
+@inject IOperadorLocalService session
+
+<div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+    <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;width: 520.656px;">
+        <div class="p-5">
+            <div class="text-center">
+                <h4 class="text-dark mb-4" style="font-size: 44px;">Sistema do Leo 3.0</h4>
+                <h4 class="text-dark mb-4" style="font-size: 30px;">Login</h4>
+            </div>
+
+            @if (@erro != string.Empty)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @erro
+                </div>
+            }
+
+            <form class="user" @onsubmit="acessaSistema">
+                <div style="margin-bottom: 15px;">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Operador:</h4>
+                            <input class="form-control" type="number" required="" name="txtOperador" 
+                                   placeholder="Informe seu Operador" @bind-value="@operador.id" @bind-value:event="oninput"
+                                   @onblur="validarOperador">
+                            @if (operador.nome != string.Empty)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    @operador.nome
+                                </div>
+                            }
+                            <h4 class="card-title" style="margin-top: 15px;">Senha:</h4>
+                            <input class="form-control" type="password" required="" maxlength="20" name="txtSenha" 
+                                   placeholder="Infome sua Senha" @bind-value="@operador.senha" @bind-value:event="oninput"
+                                   @onblur=validaOperadorInformado>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-4" style="margin-left: 283px;">
+                        <button class="btn btn-primary" type="submit" style="height: 53px;width: 119.3594px;font-size: 20px;"
+                        >Acessar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Inject] private NavigationManager? NavigationManager { get; set; }
+
+    private OperadorDTO operador { get; set; }
+    private OperadorDTO operadorGet { get; set; }
+    private string erro { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        operador = new OperadorDTO
+        {
+            id = 0,
+            senha = "",
+            nome = string.Empty,
+            admin = false,
+            inativo = false
+        };
+    }
+
+    private async void validarOperador()
+    {
+        try
+        {
+            await getOperador();
+
+            if (operadorGet is not null)
+            {
+                operador.nome = operadorGet.nome;
+            }
+        }
+        catch (FormatException ex)
+        {
+            erro = ex.Message;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task validaOperadorInformado()
+    {
+        if(operadorGet is null)
+        {
+            erro = "Necessário informar um Operador!";
+            StateHasChanged();
+        }
+    }
+
+    private async Task validaSenha()
+    {
+        if (operadorGet is not null)
+        {
+            if (!operador.senha.Equals(operadorGet.senha))
+            {
+                throw new FormatException("Senha Inválida!");
+            }
+        }
+        else
+        {
+            throw new FormatException("Necessário informar um Operador!");
+        }
+    }
+
+    private async Task setSessionStorage()
+    {
+        await session.SetSessao(operador.id);
+    }
+
+    private async Task acessaSistema()
+    {
+        try
+        {
+            await validaOperadorInformado();
+
+            await validaSenha();
+
+            await setSessionStorage();
+
+            await Task.Delay(1500);
+
+            NavigationManager.NavigateTo("/", true);
+        }
+        catch (FormatException ex)
+        {
+            erro = ex.Message;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task getOperador()
+    {
+        try
+        {
+            erro = string.Empty;
+
+            operadorGet = await operadorService.GetOperadorById(operador.id);
+        }
+        catch (HttpRequestException ex)
+        {
+            if(ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                operadorGet = null;
+                operador.nome = string.Empty;
+                throw new FormatException("Operador não Cadastrado");
+            }
+        }
+    }
+}

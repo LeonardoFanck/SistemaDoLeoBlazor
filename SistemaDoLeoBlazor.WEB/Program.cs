@@ -2,6 +2,7 @@ using Blazored.SessionStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SistemaDoLeoBlazor.WEB;
+using SistemaDoLeoBlazor.WEB.Pages;
 using SistemaDoLeoBlazor.WEB.Services.CategoriaService;
 using SistemaDoLeoBlazor.WEB.Services.CLienteService;
 using SistemaDoLeoBlazor.WEB.Services.FormaPgtoService;
