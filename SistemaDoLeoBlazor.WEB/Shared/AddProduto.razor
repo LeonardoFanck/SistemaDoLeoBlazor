@@ -34,7 +34,7 @@ else
                                            @onkeydown="OnKeyDownTxtID" @onblur="recalcularValores">
                                 </div>
                                 <div class="col-md-6" style="width: 115.328px;">
-                                    <button class="btn btn-primary" type="button" tabindex="-1">Pesquisar</button>
+                                    <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa">Pesquisar</button>
                                 </div>
                                 <div class="col">
                                     <input class="form-control" type="text" disabled="@stsNome" @bind="@produto.produtoNome">
@@ -97,11 +97,20 @@ else
     [Parameter] public EventCallback<bool> OnClose { get; set; }
 
     private bool stsCodProd { get; set; }
+    private bool stsBtnPesquisa { get; set; }
     private bool stsNome { get; set; } = true;
     private bool stsTotal { get; set; } = true;
 
     private string erro { get; set; } = string.Empty;
 
+    protected override async Task OnInitializedAsync()
+    {
+        if (operacaoItem.Equals("Alterar"))
+        {
+            stsCodProd = true;
+            stsBtnPesquisa = true;
+        }
+    }
 
     private async void OnKeyDownTxtID(KeyboardEventArgs e)
     {

@@ -30,6 +30,7 @@ namespace SistemaDoLeoBlazor.API.Repositories.ProximoRegistroRepository
                 registro.categoria = proximoRegistroDTO.categoria;
                 registro.operador = proximoRegistroDTO.operador;
                 registro.formaPgto = proximoRegistroDTO.formaPgto;
+                registro.pedido = proximoRegistroDTO.pedido;
 
                 await _context.SaveChangesAsync();
             }

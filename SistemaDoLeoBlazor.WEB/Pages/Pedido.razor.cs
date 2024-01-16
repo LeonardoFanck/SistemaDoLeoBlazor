@@ -4,9 +4,9 @@ using SistemaDoLeoBlazor.MODELS.OperadorDTOs;
 using SistemaDoLeoBlazor.MODELS.PedidoDTO;
 using SistemaDoLeoBlazor.MODELS.ProximoRegistroDTO;
 using SistemaDoLeoBlazor.WEB.Toaster;
-using SistemaDoLeoBlazor.MODELS.PedidoDTO;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
+using SistemaDoLeoBlazor.WEB.Services.ProdutoService;
 
 namespace SistemaDoLeoBlazor.WEB.Pages
 {
@@ -57,13 +57,16 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         // VALIDAÇÃO DELETE
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
+        private int selecaoDelete { get; set; } = 0;
+        private int PEDIDO = 1;
+        private int ITEM = 2;
 
         // ADD PRODUTO
         private bool produtoDialogOpen { get; set; }
         private string tipoOperacaoProd { get; set; }
         private string addProduto { get; set; } = "Adicionar";
         private string editProduto { get; set; } = "Alterar";
-        private PedidoItemDTO item { get; set; }
+        private PedidoItemDTO itemSelecionado { get; set; }
 
         // TOAST
         private string toastTitulo { get; set; } = "Pedido";
@@ -193,6 +196,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private async Task getItens(int id)
         {
             try {
+                itemSelecionado = null;
+
                 itens = await pedidoService.GetAllItens(id);
             }
             catch(Exception ex) {
@@ -240,6 +245,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 pedido.total = decimal.Zero;
                 pedido.valor = decimal.Zero;
                 pedido.tipoOperacao = tipoVenda;
+
+                // LIMPA A LISTA DE ITENS
+                itens = null;
 
                 StateHasChanged();
             }
@@ -365,7 +373,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
-        private void resetaRegistro()
+        private async void resetaRegistro()
         {
             if (pedidoAtual is not null)
             {
@@ -379,10 +387,14 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 pedido.total = pedidoAtual.total;
                 pedido.valor = pedidoAtual.valor;
                 pedido.tipoOperacao = pedidoAtual.tipoOperacao;
+
+                await getItens(pedidoAtual.id);
+
+                StateHasChanged();
             }
             else
             {
-                pedido.id = nextRegistro.pedido;
+                pedido.id = 1;
                 pedido.clienteId = 0;
                 pedido.clienteNome = string.Empty;
                 pedido.formaPgtoId = 0;
@@ -451,6 +463,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     // ATUALIZA O ULTIMO REGISTRO CADASTRADO
                     await registroService.PatchProximoRegistro(nextRegistro);
 
+                    await getRegistro(pedidoAtual.id);
+
                     // ALTERA O STATUS
                     validaStatus(EDITAR);
                 }
@@ -506,20 +520,30 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 if (accepted)
                 {
-                    await pedidoService.Delete(pedido.id);
+                    if (selecaoDelete == PEDIDO)
+                    {
+                        await pedidoService.Delete(pedido.id);
 
-                    // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
+                        // MENSAGEM DE SUCESSO
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro deletado com sucesso!", MessageColour.Success, 8));
+
+                        var id = await getLastRegistro();
+
+                        await getRegistro(id);
+                    }
+                    else if (selecaoDelete == ITEM)
+                    {
+                        await pedidoService.DeleteItem(itemSelecionado.id);
+
+                        // MENSAGEM DE SUCESSO
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Item deletado com sucesso!", MessageColour.Success, 8));
+
+                        await getItens(pedido.id);
+                    }
                 }
 
                 DeleteDialogOpen = false;
                 StateHasChanged();
-
-                // PEGA O ID DO ULTIMO REGISTRO
-                var ultimoId = await getLastRegistro();
-
-                // BUSCA AS INFORMAÇÕES DO ULTIMO REGISTRO
-                await getRegistro(ultimoId);
             }
             catch (HttpRequestException ex)
             {
@@ -531,9 +555,18 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
-        private void OpenDeleteDialog()
+        private void OpenDeleteDialog(int selecao)
         {
-            mensagem = $"Deseja realmente excluir o Pedido {pedido.id} ?";
+            if(selecao == PEDIDO)
+            {
+                selecaoDelete = selecao;
+                mensagem = $"Deseja realmente excluir o Pedido {pedido.id} ?";
+            }
+            else if(selecao == ITEM)
+            {
+                selecaoDelete = selecao;
+                mensagem = $"Deseja relamente excluir o Produto {itemSelecionado.produtoId} - {itemSelecionado.produtoNome} ?";
+            }
 
             DeleteDialogOpen = true;
             StateHasChanged();
@@ -543,23 +576,57 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             tipoOperacaoProd = tipo;
 
-            if (tipoOperacaoProd.Equals("Adicionar"))
-            {
-                item = new PedidoItemDTO
-                {
-                    desconto = decimal.Zero,
-                    pedidoId = 0,
-                    produtoId = 0,
-                    produtoNome = "",
-                    quantidade = 0,
-                    id = 0,
-                    total = decimal.Zero,
-                    valor = decimal.Zero
-                };
-            }
-
             produtoDialogOpen = true;
             StateHasChanged();
+        }
+
+        private void selectItem(PedidoItemDTO item)
+        {
+            if (status.Equals(EDITAR))
+            {
+                itemSelecionado = item;
+            }
+        }
+
+        private void adicionarItem()
+        {
+            itemSelecionado = new PedidoItemDTO
+            {
+                desconto = decimal.Zero,
+                pedidoId = 0,
+                produtoId = 0,
+                produtoNome = "",
+                quantidade = 0,
+                id = 0,
+                total = decimal.Zero,
+                valor = decimal.Zero
+            };
+
+            OpenAddProdutoDialog(addProduto);
+        }
+
+        private void editarItem()
+        {
+            if (itemSelecionado is null)
+            {
+                _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Necessário selecionar um Item!", MessageColour.Warning, 8));
+            }
+            else
+            {
+                OpenAddProdutoDialog(editProduto);
+            }
+        }
+
+        private void deletarItem()
+        {
+            if (itemSelecionado is null)
+            {
+                _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Necessário selecionar um Item!", MessageColour.Warning, 8));
+            }
+            else
+            {
+                OpenDeleteDialog(ITEM);
+            }
         }
 
         private async void OnAddProdutoDialogClose(bool accepted)
@@ -570,9 +637,20 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 {
                     await getItens(pedido.id);
 
-                   // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Deuy tudo certo!", MessageColour.Success, 8));
+                    if (tipoOperacaoProd.Equals(addProduto))
+                    {
+                        // MENSAGEM DE SUCESSO
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Produto Adicionado com sucesso!", MessageColour.Success, 8));
+                    }
+                    else
+                    {
+                        // MENSAGEM DE SUCESSO
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Produto Alterado com sucesso!", MessageColour.Success, 8));
+                    }
                 }
+                
+                // RESETA O ITEM SELECIONADO
+                itemSelecionado = null;
 
                 produtoDialogOpen = false;
                 StateHasChanged();
