@@ -61,12 +61,16 @@
     {
         operador = new OperadorDTO
         {
-            id = 0,
-            senha = "",
+            id = 1,
+            senha = "5555",
             nome = string.Empty,
             admin = false,
             inativo = false
         };
+
+        operadorGet = operador;
+
+        await acessaSistema();
     }
 
     private async void validarOperador()

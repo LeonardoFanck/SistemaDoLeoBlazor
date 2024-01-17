@@ -77,6 +77,23 @@ else
                                         </div>
                                     </div>
                                 </div>
+                                @*Estoque*@
+                                <div class="col-md-6" style="margin-top: 10px;">
+                                    <div class="card" style="height:97px; background-color:lightgray">
+                                        <div class="card-body">
+                                            <h4 class="card-title">Estoque + Novo Estoque</h4>
+                                            @if (pedido.tipoOperacao.Equals("Venda"))
+                                            {
+                                                <p style="font-size: 23px; margin-left: 20px;">@estoque - @produto.quantidade = @(@estoque - @produto.quantidade)</p>
+                                            }
+                                            else
+                                            {
+                                                <p style="font-size: 23px; margin-left: 20px;">@estoque + @produto.quantidade = @(@estoque + @produto.quantidade)</p>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -102,6 +119,7 @@ else
     private bool stsTotal { get; set; } = true;
 
     private string erro { get; set; } = string.Empty;
+    private long estoque { get; set; } = 0;
 
     protected override async Task OnInitializedAsync()
     {
@@ -153,6 +171,8 @@ else
                     total = prod.custo
                 };
             }
+
+            estoque = prod.estoque;
         }
         catch(HttpRequestException ex)
         {
@@ -165,6 +185,11 @@ else
                 produto.total = decimal.Zero;
             }
         }
+    }
+
+    private async Task getEstoque(int id)
+    {
+        
     }
 
     private async Task recalcularValores()

@@ -22,6 +22,9 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
             {
                 _context.Remove(item);
                 await _context.SaveChangesAsync();
+
+                // ATUALIZA O ESTOQUE DOS ITENS
+                await _context.Database.ExecuteSqlRawAsync("atualizaEstoque {0}", item.produtoId);
             }
 
             return item;
@@ -29,6 +32,8 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
 
         public async Task<Pedido> DeletePedido(int id)
         {
+            List<PedidoItem> itensDeletados = new List<PedidoItem>();
+
             var pedido = await _context.Pedido.FindAsync(id);
 
             if (pedido is not null)
@@ -40,11 +45,27 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
                     foreach(var item in itens)
                     {
                         _context.Remove(item);
+
+                        // SALVA OS PRODUTOS QUE DEVEM SER RECONTADOS OS ESTOQUES
+                        if(!itensDeletados.Any(i => i.produtoId == item.produtoId))
+                        {
+                            itensDeletados.Add(item);
+                        }
                     }
                 }
 
                 _context.Remove(pedido);
                 await _context.SaveChangesAsync();
+
+                // RECONTA OS ESTOQUES
+                if (itensDeletados.Count() != 0)
+                {
+                    foreach (var item in itensDeletados)
+                    {
+                        // ATUALIZA O ESTOQUE DOS ITENS
+                        await _context.Database.ExecuteSqlRawAsync("atualizaEstoque {0}", item.produtoId);
+                    }
+                }
             }
 
             return pedido;
@@ -87,6 +108,9 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
                 item.desconto = itemDto.desconto;
 
                 await _context.SaveChangesAsync();
+
+                // ATUALIZA O ESTOQUE DOS ITENS
+                await _context.Database.ExecuteSqlRawAsync("atualizaEstoque {0}", item.produtoId);
             }
 
             return item;
@@ -124,7 +148,12 @@ namespace SistemaDoLeoBlazor.API.Repositories.PedidoRepository
             };
 
             var resultado = _context.PedidoItem.AddAsync(item);
+
             await _context.SaveChangesAsync();
+
+            // ATUALIZA O ESTOQUE DOS ITENS
+            await _context.Database.ExecuteSqlRawAsync("atualizaEstoque {0}", item.produtoId);
+
             return resultado.Result.Entity;
         }
 
