@@ -24,7 +24,7 @@
                             <h4 class="card-title">Operador:</h4>
                             <input class="form-control" type="number" required="" name="txtOperador" 
                                    placeholder="Informe seu Operador" @bind-value="@operador.id" @bind-value:event="oninput"
-                                   @onblur="validarOperador">
+                                   @onblur="acessaSistema">
                             @if (operador.nome != string.Empty)
                             {
                                 <div class="alert alert-success" role="alert">
@@ -34,7 +34,7 @@
                             <h4 class="card-title" style="margin-top: 15px;">Senha:</h4>
                             <input class="form-control" type="password" required="" maxlength="20" name="txtSenha" 
                                    placeholder="Infome sua Senha" @bind-value="@operador.senha" @bind-value:event="oninput"
-                                   @onblur=validaOperadorInformado>
+                                   @onblur=acessaSistema>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
         await acessaSistema();
     }
 
-    private async void validarOperador()
+    private async Task validarOperador()
     {
         try
         {
@@ -81,12 +81,19 @@
 
             if (operadorGet is not null)
             {
-                operador.nome = operadorGet.nome;
+                if(operadorGet.inativo)
+                {
+                    throw new FormatException("Operador Inativo");
+                }
+                else
+                {
+                    operador.nome = operadorGet.nome;
+                }
             }
         }
         catch (FormatException ex)
         {
-            erro = ex.Message;
+            throw;
         }
 
         StateHasChanged();
@@ -96,15 +103,21 @@
     {
         if(operadorGet is null)
         {
-            erro = "Necessário informar um Operador!";
-            StateHasChanged();
+            throw new Exception("Necessário informar um Operador!");
         }
+
+        StateHasChanged();
     }
 
     private async Task validaSenha()
     {
         if (operadorGet is not null)
         {
+            if (operador.senha.Equals(""))
+            {
+                throw new FormatException("");
+            }
+
             if (!operador.senha.Equals(operadorGet.senha))
             {
                 throw new FormatException("Senha Inválida!");
@@ -125,6 +138,8 @@
     {
         try
         {
+            await validarOperador();
+
             await validaOperadorInformado();
 
             await validaSenha();
