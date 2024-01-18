@@ -7,6 +7,8 @@ using SistemaDoLeoBlazor.WEB.Toaster;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Drawing;
 using SistemaDoLeoBlazor.WEB.Services.ProdutoService;
+using SistemaDoLeoBlazor.MODELS.ClienteDTO;
+using SistemaDoLeoBlazor.MODELS.FormaPgtoDTO;
 
 namespace SistemaDoLeoBlazor.WEB.Pages
 {
@@ -67,6 +69,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private string addProduto { get; set; } = "Adicionar";
         private string editProduto { get; set; } = "Alterar";
         private PedidoItemDTO itemSelecionado { get; set; }
+
+        // CLIENTE e PGTO
+        private ClienteDTO cliente { get; set; }
+        private FormaPgtoDTO pgto { get; set; }
 
         // TOAST
         private string toastTitulo { get; set; } = "Pedido";
@@ -328,9 +334,21 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                var cliente = await clienteService.GetById(pedido.clienteId);
+                cliente = await clienteService.GetById(pedido.clienteId);
 
-                pedido.clienteNome = cliente.nome;
+                if(cliente.inativo)
+                {
+                    pedido.clienteNome = "[Cliente Inativo]";
+                }
+                else if(pedido.tipoOperacao.Equals(tipoVenda) && cliente.tipoCliente == false 
+                    || pedido.tipoOperacao.Equals(tipoCompra) && cliente.tipoFornecedor == false)
+                {
+                    pedido.clienteNome = $"[Tipo inválido para a Operação {pedido.tipoOperacao}]";
+                }
+                else
+                {
+                    pedido.clienteNome = cliente.nome;
+                }
             }
             catch (HttpRequestException ex)
             {
@@ -345,9 +363,16 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             try
             {
-                var pgto = await pgtoService.GetById(pedido.formaPgtoId);
+                pgto = await pgtoService.GetById(pedido.formaPgtoId);
 
-                pedido.formaPgtoNome = pgto.nome;
+                if (pgto.inativo)
+                {
+                    pedido.formaPgtoNome = "[Forma de Pagamento Inativa]";
+                }
+                else
+                {
+                    pedido.formaPgtoNome = pgto.nome;
+                }
             }
             catch (HttpRequestException ex)
             {
@@ -425,7 +450,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 await getCliente();
 
-                if(pedido.clienteNome.Equals("[CLIENTE NÃO LOCALIZADO]") || pedido.clienteNome.Equals(""))
+                if(!pedido.clienteNome.Equals(cliente.nome) || pedido.clienteNome.Equals(""))
                 {
                     throw new FormatException("Cliente inválido");
                 }
@@ -439,7 +464,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 await getFormaPgto();
 
-                if (pedido.formaPgtoNome.Equals("[FORMA DE PAGAMENTO NÃO LOCALIZADA]") || pedido.formaPgtoNome.Equals(""))
+                if (!pedido.formaPgtoNome.Equals(pgto.nome) || pedido.formaPgtoNome.Equals(""))
                 {
                     throw new FormatException("Forma de Pagamento inválida");
                 }
@@ -485,6 +510,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 try
                 {
+                    await validarCampos();
+
                     // ATUALIZA O OPERADOR
                     await pedidoService.Update(pedido);
 
