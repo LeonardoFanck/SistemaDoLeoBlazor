@@ -1,4 +1,7 @@
-﻿<div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+﻿@inject IClienteService clienteService
+@inject IOperadorService operadorService
+
+<div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
     <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
         <div class="card shadow">
             <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
@@ -47,3 +50,101 @@
         </div>
     </div>
 </div>
+
+@code{
+    [Parameter] public EventCallback<int> idReturn { get; set; }
+    [Parameter] public tipoConsultas tipo { get; set; }
+
+    private string querry { get; set; } = string.Empty;
+    private string filtro { get; set; } = "teste";
+    private List<OperadorDTO>? listaOperador { get;set; }
+    private List<OperadorDTO>? listaOperadorResultado { get;set; }
+
+    public enum tipoConsultas
+    {
+        operador,
+        cliente,
+        produto,
+        formaPgto,
+        categoria,
+        pedido
+    }
+
+    private class resultadoConsulta
+    {
+        private string largura;
+        private string textAlign;
+        private object resultado;
+
+        public resultadoConsulta(string largura, string textAlign, object resultado)
+        {
+            this.largura = largura;
+            this.textAlign = textAlign;
+            this.resultado = resultado;
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await verificaConsulta(tipo);
+
+        await filtrarResultados(filtro, querry);
+    }
+
+    private async Task verificaConsulta(tipoConsultas tipo)
+    {
+        switch (tipo)
+        {
+            case tipoConsultas.operador:
+                await getOperadores();
+            break;
+            // case tipoConsultas.cliente:
+            //     getClientes();
+            // break;
+            // case tipoConsultas.produto:
+            //     getProdutos();
+            // break;
+            // case tipoConsultas.formaPgto:
+            //     getFormaPgto();
+            // break;
+            // case tipoConsultas.categoria:
+            //     getCategoria();
+            // break;
+            // case tipoConsultas.pedido:
+            //     getPedidos();
+            // break;
+        }
+    }
+
+    private async Task filtrarResultados(string filtro, string querry){
+
+        switch (tipo)
+        {
+            case tipoConsultas.operador:
+                switch (filtro)
+                {
+                    case "Codigo":
+                        listaOperadorResultado = listaOperador.Where(o => o.id.Equals(querry)).ToList();
+                    break;
+                }
+            break;
+        }
+    }
+
+    private async Task getOperadores(){
+        try
+        {
+            var operadores = await operadorService.GetAllOperadores();
+
+            listaOperador = operadores.ToList();
+        }
+        catch (Exception ex)
+        {
+    
+            throw;
+        }
+    }
+
+
+
+}
