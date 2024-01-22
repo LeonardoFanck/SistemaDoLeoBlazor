@@ -59,6 +59,9 @@ public partial class CadOperador
     private bool DeleteDialogOpen {get; set; }
     private string mensagem = "";
 
+    // VALIDAÇÃO PESQUISA
+    private bool pesquisaDialogOpen { get; set; }
+
     // PROXIMO REGISTRO
     private ProximoRegistroDTO? registro { get; set; }
 
@@ -440,6 +443,16 @@ public partial class CadOperador
         }
     }
 
+    private async void onPesquisaDialogClose(int id)
+    {
+        if(id != -1)
+        {
+            getOperador(id);
+        }
+
+        pesquisaDialogOpen = false;
+    }
+
     private async void OnDeleteDialogClose(bool accepted)
     {
         try
@@ -477,6 +490,12 @@ public partial class CadOperador
         mensagem = $"Deseja realmente excluir o Operador {Operador.id} - {Operador.nome}";
 
         DeleteDialogOpen = true;
+        StateHasChanged();
+    }
+    
+    private void openPesquisaDialog()
+    {
+        pesquisaDialogOpen = true;
         StateHasChanged();
     }
 }

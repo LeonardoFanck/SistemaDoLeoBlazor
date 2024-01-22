@@ -680,6 +680,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 itemSelecionado = null;
 
                 produtoDialogOpen = false;
+
                 StateHasChanged();
             }
             catch (HttpRequestException ex)

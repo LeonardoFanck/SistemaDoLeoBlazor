@@ -1,50 +1,124 @@
 ﻿@inject IClienteService clienteService
 @inject IOperadorService operadorService
+@inject IProdutoService produtoService
+@inject IFormaPgtoService pgtoService
+@inject IPedidoService pedidoService
+@inject ICategoriaService categoriaService
 
-<div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
-    <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
-        <div class="card shadow">
-            <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
-                <h5 class="display-6 text-nowrap text-capitalize mb-0">Consulta</h5>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Busca</h4>
-                    <div class="row" style="margin-top: 10px;">
-                        <div class="col-md-6" style="width: 154.703px;">
-                            <select style="margin-top: 3px;">
-                                <option value="12" selected="">Teste</option>
-                            </select>
+<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog-lg">
+        <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
+            <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
+                <div class="card shadow">
+                    <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
+                        <h5 class="display-6 text-nowrap text-capitalize mb-0">Consulta - @tipo</h5>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Busca</h4>
+                            <div class="row" style="margin-top: 10px;">
+                                <div class="col-md-6" style="width: 154.703px;">
+                                    <select style="margin-top: 3px;" @bind="@filtro">
+                                        @foreach(var filto in filtros)
+                                        {
+                                            <option value="@filto">@filto</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="search" style="border-style: solid;width: 386px;" placeholder="Busca" autofocus
+                                           @bind-value="querry" @bind-value:after="filtraResultados" @ref="foco">
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6"><input type="search" style="border-style: solid;width: 386px;" placeholder="Busca"></div>
+                    </div>
+                    <hr>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover">
+                                @switch(tipo){
+                                    case tipoConsultas.operador:
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80.5px;">Codigo</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Nome</th>
+                                                <th class="text-center" style="width: 75px;">Admin</th>
+                                                <th class="text-center" style="width: 55px;">Inativo</th
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(listaOperadorResultado is not null)
+                                            {
+                                                @foreach(var operador in listaOperadorResultado)
+                                                {
+                                                    @if(id == operador.id)
+                                                    {
+                                                        <tr style="border: 2px solid red" @onclick="(() => returnOk())">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
+                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
+                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr @onclick="(() => id = operador.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
+                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
+                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                        </tr>   
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    break;
+                                    case tipoConsultas.cliente:
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80.5px;">Codigo</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Nome</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Documento</th>
+                                                <th class="text-center" style="width: 75px;">Cidade</th>
+                                                <th class="text-center" style="width: 55px;">Inativo</th
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(listaClienteResultado is not null)
+                                            {
+                                                @foreach(var cliente in listaClienteResultado)
+                                                {
+                                                    @if(id == cliente.id)
+                                                    {
+                                                        <tr style="border: 2px solid red" @onclick="(() => returnOk())">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
+                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
+                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr @onclick="(() => id = operador.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
+                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
+                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                        </tr>   
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    break;
+                                }
+
+                            </table>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <hr>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-striped table-hover">
-                        <thead>
-                            <tr>
-                                <th style="width: 80.5px;">Cod</th>
-                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Produto</th>
-                                <th class="text-center" style="width: 75px;">Valor</th>
-                                <th class="text-center" style="width: 55px;">Qntd</th>
-                                <th class="text-center" style="width: 64px;">Desc %</th>
-                                <th class="text-center" style="width: 114px;">Total</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-truncate" style="max-width: 200px;width: 80.5px;">00</td>
-                                <td class="text-center" style="width: 179px;text-align: left;">Teste</td>
-                                <td class="text-center" style="width: 75px;"></td>
-                                <td class="text-center" style="width: 55px;"></td>
-                                <td class="text-center" style="width: 64px;"></td>
-                                <td class="text-center" style="width: 114px;"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="(() => returnCancel())">Cancelar</button>
+                    <button type="button" class="btn btn-primary" @onclick="(() => validaId())">Confirmar</button>
                 </div>
             </div>
         </div>
@@ -56,9 +130,22 @@
     [Parameter] public tipoConsultas tipo { get; set; }
 
     private string querry { get; set; } = string.Empty;
-    private string filtro { get; set; } = "teste";
+    private List<Enum> filtros = new List<Enum>();
+    private filtrosGerais filtro { get; set; }
     private List<OperadorDTO>? listaOperador { get;set; }
     private List<OperadorDTO>? listaOperadorResultado { get;set; }
+    private List<ClienteDTO>? listaCliente { get;set; }
+    private List<ClienteDTO>? listaClienteResultado { get;set; }
+    private List<ProdutoDTO>? listaProduto { get;set; }
+    private List<ProdutoDTO>? listaProdutoResultado { get;set; }
+    private List<FormaPgtoDTO>? listaFormaPgto { get;set; }
+    private List<FormaPgtoDTO>? listaFormaPgtoResultado { get;set; }
+    private List<CategoriaDTO>? listaCategoria { get;set; }
+    private List<CategoriaDTO>? listaCategoriaResultado { get;set; }
+    private List<PedidoDTO>? listaPedido { get;set; }
+    private List<PedidoDTO>? listaPedidoResultado { get;set; }
+    private ElementReference foco { get; set; }
+    private int id { get; set; }
 
     public enum tipoConsultas
     {
@@ -70,25 +157,28 @@
         pedido
     }
 
-    private class resultadoConsulta
+    public enum filtrosGerais
     {
-        private string largura;
-        private string textAlign;
-        private object resultado;
-
-        public resultadoConsulta(string largura, string textAlign, object resultado)
-        {
-            this.largura = largura;
-            this.textAlign = textAlign;
-            this.resultado = resultado;
-        }
+        id,
+        nome,
+        documento,
+        cidade,
+        cliente,
+        formaPgto,
+        valor,
+        total,
+        preco,
+        custo,
+        estoque
     }
 
     protected override async Task OnInitializedAsync()
     {
         await verificaConsulta(tipo);
 
-        await filtrarResultados(filtro, querry);
+        await selecionaOperador(querry);
+
+        await foco.FocusAsync();
     }
 
     private async Task verificaConsulta(tipoConsultas tipo)
@@ -96,39 +186,184 @@
         switch (tipo)
         {
             case tipoConsultas.operador:
+                filtros.Add(filtrosGerais.id);
+                filtros.Add(filtrosGerais.nome);
+
+                filtro = filtrosGerais.nome;
+
                 await getOperadores();
             break;
-            // case tipoConsultas.cliente:
-            //     getClientes();
-            // break;
-            // case tipoConsultas.produto:
-            //     getProdutos();
-            // break;
-            // case tipoConsultas.formaPgto:
-            //     getFormaPgto();
-            // break;
-            // case tipoConsultas.categoria:
-            //     getCategoria();
-            // break;
-            // case tipoConsultas.pedido:
-            //     getPedidos();
-            // break;
+            case tipoConsultas.cliente:
+                filtros.Add(filtrosGerais.id);
+                filtros.Add(filtrosGerais.nome);
+                filtros.Add(filtrosGerais.cidade);
+
+                filtro = filtrosGerais.nome;
+
+                await getClientes();
+            break;
+            case tipoConsultas.produto:
+                filtros.Add(filtrosGerais.id);
+                filtros.Add(filtrosGerais.nome);
+                filtros.Add(filtrosGerais.preco);
+                filtros.Add(filtrosGerais.custo);
+                filtros.Add(filtrosGerais.estoque);
+
+                filtro = filtrosGerais.nome;
+
+                await getProdutos();
+            break;
+            case tipoConsultas.formaPgto:
+                filtros.Add(filtrosGerais.id);
+                filtros.Add(filtrosGerais.nome);
+
+                filtro = filtrosGerais.nome;
+
+                await getFormaPgto();
+            break;
+            case tipoConsultas.categoria:
+                filtros.Add(filtrosGerais.id);
+                filtros.Add(filtrosGerais.nome);
+
+                filtro = filtrosGerais.nome;
+
+                await getCategoria();
+            break;
+            case tipoConsultas.pedido:
+                filtros.Add(filtrosGerais.id);
+                filtros.Add(filtrosGerais.valor);
+                filtros.Add(filtrosGerais.cliente);
+                filtros.Add(filtrosGerais.formaPgto);
+                filtros.Add(filtrosGerais.total);
+
+                filtro = filtrosGerais.nome;
+
+                await getPedidos();
+            break;
         }
     }
 
-    private async Task filtrarResultados(string filtro, string querry){
-
+    private async Task filtraResultados(){
         switch (tipo)
         {
             case tipoConsultas.operador:
-                switch (filtro)
-                {
-                    case "Codigo":
-                        listaOperadorResultado = listaOperador.Where(o => o.id.Equals(querry)).ToList();
-                    break;
-                }
+                selecionaOperador(querry);
+            break;
+            case tipoConsultas.cliente:
+                
             break;
         }
+    }
+
+    private async Task selecionaOperador(string querry)
+    {
+        switch (filtro)
+        {
+            case filtrosGerais.id:
+                listaOperadorResultado = listaOperador.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
+                break;
+            case filtrosGerais.nome:
+                listaOperadorResultado = listaOperador.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
+                break;
+        }
+
+        StateHasChanged();
+    }
+    
+    private async Task selecionaCliente(string querry)
+    {
+        switch (filtro)
+        {
+            case filtrosGerais.id:
+                listaClienteResultado = listaCliente.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.nome:
+                listaClienteResultado = listaCliente.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.cidade:
+                listaClienteResultado = listaCliente.Where(o => o.cidade.ToLower().Contains(querry.ToLower())).ToList();
+            break;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task selecionaProduto(string querry)
+    {
+        switch (filtro)
+        {
+            case filtrosGerais.id:
+                listaProdutoResultado = listaProduto.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.nome:
+                listaProdutoResultado = listaProduto.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.preco:
+                listaProdutoResultado = listaProduto.Where(o => o.preco.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.custo:
+                listaProdutoResultado = listaProduto.Where(o => o.custo.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.estoque:
+                listaProdutoResultado = listaProduto.Where(o => o.estoque.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+        }
+
+        StateHasChanged();
+    }
+    
+    private async Task selecionaFormaPgto(string querry)
+    {
+        switch (filtro)
+        {
+            case filtrosGerais.id:
+                listaFormaPgtoResultado = listaFormaPgto.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.nome:
+                listaFormaPgtoResultado = listaFormaPgto.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
+            break;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task selecionaCategoria(string querry)
+    {
+        switch (filtro)
+        {
+            case filtrosGerais.id:
+                listaCategoriaResultado = listaCategoria.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.nome:
+                listaCategoriaResultado = listaCategoria.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
+            break;
+        }
+
+        StateHasChanged();
+    }
+
+    private async Task selecionaPedido(string querry)
+    {
+        switch (filtro)
+        {
+            case filtrosGerais.id:
+                listaPedidoResultado = listaPedido.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.nome:
+                listaPedidoResultado = listaPedido.Where(o => o.clienteNome.ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.preco:
+                listaPedidoResultado = listaPedido.Where(o => o.formaPgtoNome.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.custo:
+                listaPedidoResultado = listaPedido.Where(o => o.valor.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+            case filtrosGerais.estoque:
+                listaPedidoResultado = listaPedido.Where(o => o.total.ToString().ToLower().Contains(querry.ToLower())).ToList();
+            break;
+        }
+
+        StateHasChanged();
     }
 
     private async Task getOperadores(){
@@ -140,11 +375,98 @@
         }
         catch (Exception ex)
         {
+
+            throw;
+        }
+    }
     
+    private async Task getClientes(){
+        try
+        {
+            var clientes = await clienteService.GetAll();
+
+            listaCliente = clientes.ToList();
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+    
+    private async Task getProdutos(){
+        try
+        {
+            var resultado = await produtoService.GetAll();
+
+            listaProduto = resultado.ToList();
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+    
+    private async Task getFormaPgto(){
+        try
+        {
+            var resultado = await pgtoService.GetAll();
+
+            listaFormaPgto = resultado.ToList();
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+    
+    private async Task getCategoria(){
+        try
+        {
+            var resultado = await categoriaService.GetAll();
+
+            listaCategoria = resultado.ToList();
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+    }
+    
+    private async Task getPedidos(){
+        try
+        {
+            var resultado = await pedidoService.GetAll();
+
+            listaPedido = resultado.ToList();
+        }
+        catch (Exception ex)
+        {
+
             throw;
         }
     }
 
+    private async Task validaId()
+    {
+        if(id != 0)
+        {
+            returnOk();
+        }
+    }
 
+    private Task returnOk()
+    {
+        return idReturn.InvokeAsync(id);
+    }
 
+    private Task returnCancel()
+    {
+        id = -1;
+
+        return idReturn.InvokeAsync(id);
+    }
 }

@@ -30,7 +30,8 @@ else if (Operador is not null)
                                                    name="Cod Operador" disabled="@stsCodOperador" @bind-value="@Operador.id" @bind-value:event="oninput" @onkeydown="OnKeyDownTxtID">
                                         </div>
                                         <div class="col-md-6">
-                                            <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsPesquisa">Pesquisar</button>
+                                            <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsPesquisa"
+                                                    @onclick="openPesquisaDialog">Pesquisar</button>
                                         </div>
                                     </div>
                                 </div><!-- End: 1 Row 2 Columns -->
@@ -187,5 +188,10 @@ else if (Operador is not null)
     @if (DeleteDialogOpen)
     {
         <ConfirmModal Titulo="Exlusão de Operador" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
+    }
+
+    @if (pesquisaDialogOpen)
+    {
+        <Consulta tipo="Consulta.tipoConsultas.operador" idReturn="@onPesquisaDialogClose"></Consulta>
     }
 }
