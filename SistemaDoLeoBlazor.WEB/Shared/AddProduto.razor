@@ -34,7 +34,8 @@ else
                                            @onkeydown="OnKeyDownTxtID" @onblur="recalcularValores">
                                 </div>
                                 <div class="col-md-6" style="width: 115.328px;">
-                                    <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa">Pesquisar</button>
+                                    <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa"
+                                            @onclick="(() => openPesquisaDialog())">Pesquisar</button>
                                 </div>
                                 <div class="col">
                                     <input class="form-control" type="text" disabled="@stsNome" @bind="@produto.produtoNome">
@@ -105,6 +106,11 @@ else
             </div>
         </div>
     </div>
+
+    @if (pesquisaDialogOpen)
+    {
+        <Consulta tipo="Consulta.tipoConsultas.produto" inativos="pesquisaInativos" idReturn="@onPesquisaDialogClose"></Consulta>
+    }
 }
 
 @code {
@@ -120,6 +126,10 @@ else
 
     private string erro { get; set; } = string.Empty;
     private long estoque { get; set; } = 0;
+
+    // PESQUISA
+    private bool pesquisaDialogOpen { get; set; }
+    private bool pesquisaInativos { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -189,7 +199,7 @@ else
 
     private async Task getEstoque(int id)
     {
-        
+
     }
 
     private async Task recalcularValores()
@@ -292,5 +302,24 @@ else
     private Task ModalOk()
     {
         return OnClose.InvokeAsync(true);
+    }
+
+    private void openPesquisaDialog()
+    {
+        pesquisaInativos = false;
+        pesquisaDialogOpen = true;
+        StateHasChanged();
+    }
+
+    private async void onPesquisaDialogClose(int id)
+    {
+        if (id != -1)
+        {
+            await getProduto(id);
+        }
+
+        pesquisaDialogOpen = false;
+
+        StateHasChanged();
     }
 }

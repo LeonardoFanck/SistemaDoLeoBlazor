@@ -46,6 +46,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
 
+        // VALIDAÇÃO PESQUISA
+        private bool pesquisaDialogOpen { get; set; }
+        private bool pesquisaInativos { get; set; }
+
         protected async override Task OnInitializedAsync()
         {
             // VERIFICA A SESSÃO DO OPERADOR LOGADO
@@ -370,5 +374,23 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             DeleteDialogOpen = true;
             StateHasChanged();
         }
+
+        private void openPesquisaDialog()
+        {
+            pesquisaInativos = true;
+            pesquisaDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private async void onPesquisaDialogClose(int id)
+        {
+            if (id != -1)
+            {
+                getRegistro(id);
+            }
+
+            pesquisaDialogOpen = false;
+        }
+
     }
 }

@@ -59,6 +59,16 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         // VALIDAÇÃO DELETE
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
+
+        // VALIDAÇÃO PESQUISA
+        private bool pesquisaDialogOpen { get; set; }
+        private bool pesquisaInativos { get; set; }
+        private int tipoPesquisa { get; set; }
+        private readonly int pesquisaPedido = 0;
+        private readonly int pesquisaCliente = 1;
+        private readonly int pesquisaPgto = 2;
+
+
         private int selecaoDelete { get; set; } = 0;
         private int PEDIDO = 1;
         private int ITEM = 2;
@@ -80,6 +90,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         // TIPO OPERAÇÃO
         private string tipoVenda { get; } = "Venda";
         private string tipoCompra { get; } = "Compra";
+
+        private string tipoCliente { get; set; }
 
         protected async override Task OnInitializedAsync()
         {
@@ -691,6 +703,64 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
             }
+        }
+
+        private void openPesquisaDialog()
+        {
+            tipoPesquisa = pesquisaPedido;
+            pesquisaInativos = true;
+            pesquisaDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private void openPesquisaDialogCliente()
+        {
+            if (pedido.tipoOperacao.Equals(tipoVenda))
+            {
+                tipoCliente = "Cliente";
+            }
+            else
+            {
+                tipoCliente = "Fornecedor";
+            }
+
+            tipoPesquisa = pesquisaCliente;
+            pesquisaInativos = false;
+            pesquisaDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private void openPesquisaDialogPgto()
+        {
+            tipoPesquisa = pesquisaPgto;
+            pesquisaInativos = false;
+            pesquisaDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private async void onPesquisaDialogClose(int id)
+        {
+            if (id != -1)
+            {
+                if(tipoPesquisa == pesquisaPedido)
+                {
+                    await getRegistro(id);
+                }
+                else if(tipoPesquisa == pesquisaCliente)
+                {
+                    pedido.clienteId = id;
+                    await getCliente();
+                }
+                else if(tipoPesquisa == pesquisaPgto)
+                {
+                    pedido.formaPgtoId = id;
+                    await getFormaPgto();
+                }
+            }
+
+            pesquisaDialogOpen = false;
+
+            StateHasChanged();
         }
     }
 }

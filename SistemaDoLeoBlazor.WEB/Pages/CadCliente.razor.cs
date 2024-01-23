@@ -59,6 +59,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
 
+        private bool pesquisaDialogOpen { get; set; }
+        private bool pesquisaInativos { get; set; }
+
         // TITULO TOAST
         private string toastTitulo { get; set; } = "Cliente";
 
@@ -556,6 +559,16 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             StateHasChanged();
         }
 
+        private async void onPesquisaDialogClose(int id)
+        {
+            if (id != -1)
+            {
+                getRegistro(id);
+            }
+
+            pesquisaDialogOpen = false;
+        }
+
         private async void OnDeleteDialogClose(bool accepted)
         {
             try
@@ -592,6 +605,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             mensagem = $"Deseja realmente excluir a cliente {cliente.id} - {cliente.nome} ?";
 
             DeleteDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private void openPesquisaDialog()
+        {
+            pesquisaInativos = true;
+            pesquisaDialogOpen = true;
             StateHasChanged();
         }
     }

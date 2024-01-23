@@ -61,6 +61,7 @@ public partial class CadOperador
 
     // VALIDAÇÃO PESQUISA
     private bool pesquisaDialogOpen { get; set; }
+    private bool pesquisaInativos { get; set; }
 
     // PROXIMO REGISTRO
     private ProximoRegistroDTO? registro { get; set; }
@@ -443,16 +444,6 @@ public partial class CadOperador
         }
     }
 
-    private async void onPesquisaDialogClose(int id)
-    {
-        if(id != -1)
-        {
-            getOperador(id);
-        }
-
-        pesquisaDialogOpen = false;
-    }
-
     private async void OnDeleteDialogClose(bool accepted)
     {
         try
@@ -495,7 +486,18 @@ public partial class CadOperador
     
     private void openPesquisaDialog()
     {
+        pesquisaInativos = true;
         pesquisaDialogOpen = true;
         StateHasChanged();
+    }
+
+    private async void onPesquisaDialogClose(int id)
+    {
+        if (id != -1)
+        {
+            getOperador(id);
+        }
+
+        pesquisaDialogOpen = false;
     }
 }

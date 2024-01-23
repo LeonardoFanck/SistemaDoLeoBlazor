@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <None Remove="Pages\CadOperador.html" />
+    <None Remove="Shared\Consulta.html" />
   </ItemGroup>
 
   <ItemGroup>

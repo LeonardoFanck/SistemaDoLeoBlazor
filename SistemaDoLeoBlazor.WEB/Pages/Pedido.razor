@@ -33,7 +33,7 @@ else
                                                 </div>
                                             <div class="col-md-6" style="width: 101.641px;">
                                                 <button class="btn btn-primary" type="button" style="transform-style: preserve-3d;" tabindex="-1"
-                                                        disabled="@stsBtnPesquisaPedido">Pesquisa</button>
+                                                        disabled="@stsBtnPesquisaPedido" @onclick="(() => openPesquisaDialog())">Pesquisa</button>
                                             </div>
                                         </div>
                                     </div>
@@ -79,7 +79,7 @@ else
                                         </div>
                                         <div class="col-md-4" style="width: 115.188px;">
                                             <button class="btn btn-primary" type="button" style="margin-left: 0px;" tabindex="-1" disabled="@stsBtnPesquisaCliente"
-                                                    >Pesquisa</button>
+                                                    @onclick="(() => openPesquisaDialogCliente())">Pesquisa</button>
                                         </div>
                                         <div class="col-md-4" style="width: 434.188px;">
                                             <input class="form-control form-control-user" type="text" id="email" name="Cliente" maxlength="50" 
@@ -103,7 +103,7 @@ else
                                         </div>
                                         <div class="col-md-4" style="width: 115.188px;">
                                             <button class="btn btn-primary" type="button" style="margin-left: 0px;" tabindex="-1" 
-                                                    disabled="@stsBtnPesquisaFormaPgto">Pesquisa</button>
+                                                    disabled="@stsBtnPesquisaFormaPgto" @onclick="(() => openPesquisaDialogPgto())">Pesquisa</button>
                                         </div>
                                         <div class="col-md-4" style="width: 434.188px;">
                                             <input class="form-control form-control-user" type="text" id="email-2" name="Forma PGTO" maxlength="50" 
@@ -277,5 +277,21 @@ else
     @if (produtoDialogOpen)
     {
         <AddProduto operacaoItem="@tipoOperacaoProd" pedido="@pedido" produto="@itemSelecionado" OnClose="@OnAddProdutoDialogClose"></AddProduto>
+    }
+
+    @if (pesquisaDialogOpen)
+    {
+        @if(tipoPesquisa == pesquisaPedido)
+        {
+            <Consulta tipo="Consulta.tipoConsultas.pedido" inativos="pesquisaInativos" idReturn="@onPesquisaDialogClose"></Consulta>
+        }
+        else if(tipoPesquisa == pesquisaCliente)
+        {
+            <Consulta tipo="Consulta.tipoConsultas.cliente" inativos="pesquisaInativos" tipoCliente="@tipoCliente" idReturn="@onPesquisaDialogClose"></Consulta>
+        }
+        else if(tipoPesquisa == pesquisaPgto)
+        {
+            <Consulta tipo="Consulta.tipoConsultas.formaPgto" inativos="pesquisaInativos" idReturn="@onPesquisaDialogClose"></Consulta>
+        }
     }
 }

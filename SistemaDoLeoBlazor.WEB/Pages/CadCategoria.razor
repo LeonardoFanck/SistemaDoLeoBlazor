@@ -30,7 +30,8 @@ else
                                                        @bind-value="@categoria.id" @bind-value:event="oninput">
                                             </div>
                                             <div class="col-md-6">
-                                                <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa">Pesquisar</button>
+                                                <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa"
+                                                        @onclick="(() => openPesquisaDialog())">Pesquisar</button>
                                             </div>
                                         </div>
                                     </div>
@@ -99,5 +100,10 @@ else
     @if (DeleteDialogOpen)
     {
         <ConfirmModal Titulo="Exlusão de Categoria" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
+    }
+
+    @if (pesquisaDialogOpen)
+    {
+        <Consulta tipo="Consulta.tipoConsultas.categoria" inativos="pesquisaInativos" idReturn="@onPesquisaDialogClose"></Consulta>
     }
 }

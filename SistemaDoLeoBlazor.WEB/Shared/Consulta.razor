@@ -56,8 +56,20 @@
                                                         <tr style="border: 2px solid red" @onclick="(() => returnOk())">
                                                             <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
                                                             <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
-                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
-                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                            @if(operador.admin){
+                                                                <td class="text-center" style="width: 75px;">Admin</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 75px;">Padrão</td>
+                                                            }
+                                                            @if(operador.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
                                                         </tr>
                                                     }
                                                     else
@@ -65,8 +77,20 @@
                                                         <tr @onclick="(() => id = operador.id)">
                                                             <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
                                                             <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
-                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
-                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                            @if(operador.admin){
+                                                                <td class="text-center" style="width: 75px;">Admin</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 75px;">Padrão</td>
+                                                            }
+                                                            @if(operador.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
                                                         </tr>   
                                                     }
                                                 }
@@ -91,19 +115,216 @@
                                                     @if(id == cliente.id)
                                                     {
                                                         <tr style="border: 2px solid red" @onclick="(() => returnOk())">
-                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
-                                                            <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
-                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
-                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@cliente.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@cliente.nome</td>
+                                                            <td class="text-center" style="width: 75px;">@cliente.documento</td>
+                                                            <td class="text-center" style="width: 55px;">@cliente.cidade</td>
+                                                            @if(cliente.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
                                                         </tr>
                                                     }
                                                     else
                                                     {
-                                                        <tr @onclick="(() => id = operador.id)">
-                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@operador.id</td>
-                                                            <td class="text-center" style="width: 179px;text-align: left;">@operador.nome</td>
-                                                            <td class="text-center" style="width: 75px;">@operador.admin</td>
-                                                            <td class="text-center" style="width: 55px;">@operador.inativo</td>
+                                                        <tr @onclick="(() => id = cliente.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@cliente.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@cliente.nome</td>
+                                                            <td class="text-center" style="width: 75px;">@cliente.documento</td>
+                                                            <td class="text-center" style="width: 55px;">@cliente.cidade</td>
+                                                            @if(cliente.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>   
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    break;
+                                    case tipoConsultas.produto:
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80.5px;">Codigo</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Nome</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 119px;">Preço</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 119px;">Custo</th>
+                                                <th class="text-center" style="width: 75px;">Estoque</th>
+                                                <th class="text-center" style="width: 55px;">Inativo</th
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(listaProdutoResultado is not null)
+                                            {
+                                                @foreach(var produto in listaProdutoResultado)
+                                                {
+                                                    @if(id == produto.id)
+                                                    {
+                                                        <tr style="border: 2px solid red" @onclick="(() => returnOk())">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@produto.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@produto.nome</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@produto.preco</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@produto.custo</td>
+                                                            <td class="text-center" style="width: 75px;">@produto.estoque</td>
+                                                            @if(produto.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr @onclick="(() => id = produto.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@produto.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@produto.nome</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@produto.preco</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@produto.custo</td>
+                                                            <td class="text-center" style="width: 75px;">@produto.estoque</td>
+                                                            @if(produto.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>   
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    break;
+                                    case tipoConsultas.formaPgto:
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80.5px;">Codigo</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Nome</th>
+                                                <th class="text-center" style="width: 55px;">Inativo</th
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(listaFormaPgtoResultado is not null)
+                                            {
+                                                @foreach(var pgto in listaFormaPgtoResultado)
+                                                {
+                                                    @if(id == pgto.id)
+                                                    {
+                                                        <tr style="border: 2px solid red" @onclick="(() => returnOk())">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@pgto.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@pgto.nome</td>
+                                                            @if(pgto.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr @onclick="(() => id = pgto.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@pgto.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@pgto.nome</td>
+                                                            @if(pgto.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>   
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    break;
+                                    case tipoConsultas.categoria:
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80.5px;">Codigo</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Nome</th>
+                                                <th class="text-center" style="width: 55px;">Inativo</th
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(listaCategoriaResultado is not null)
+                                            {
+                                                @foreach(var categoria in listaCategoriaResultado)
+                                                {
+                                                    @if(id == categoria.id)
+                                                    {
+                                                        <tr style="border: 2px solid red" @onclick="(() => returnOk())">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@categoria.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@categoria.nome</td>
+                                                            @if(categoria.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr @onclick="(() => id = categoria.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@categoria.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@categoria.nome</td>
+                                                            @if(categoria.inativo){
+                                                                <td class="text-center" style="width: 55px;">Inativo</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="width: 55px;">Ativo</td>
+                                                            }
+                                                        </tr>   
+                                                    }
+                                                }
+                                            }
+                                        </tbody>
+                                    break;
+                                    case tipoConsultas.pedido:
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 80.5px;">Codigo</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Cliente</th>
+                                                <th class="justify-content-xxl-start align-items-xxl-center text-center" style="width: 179px;">Forma Pgto</th>
+                                                <th class="text-center" style="width: 75px;">Total</th>
+                                                <th class="text-center" style="width: 55px;">Tipo</th
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if(listaPedidoResultado is not null)
+                                            {
+                                                @foreach(var pedido in listaPedidoResultado)
+                                                {
+                                                    @if(id == pedido.id)
+                                                    {
+                                                        <tr style="border: 2px solid red" @onclick="(() => returnOk())">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@pedido.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@pedido.clienteNome</td>
+                                                            <td class="text-center" style="width: 75px;">@pedido.formaPgtoNome</td>
+                                                            <td class="text-center" style="width: 55px;">@pedido.total</td>
+                                                            <td class="text-center" style="width: 55px;">@pedido.tipoOperacao</td>
+                                                        </tr>
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr @onclick="(() => id = pedido.id)">
+                                                            <td class="text-truncate" style="max-width: 200px;width: 80.5px;">@pedido.id</td>
+                                                            <td class="text-center" style="width: 179px;text-align: left;">@pedido.clienteNome</td>
+                                                            <td class="text-center" style="width: 75px;">@pedido.formaPgtoNome</td>
+                                                            <td class="text-center" style="width: 55px;">@pedido.total</td>
+                                                            <td class="text-center" style="width: 55px;">@pedido.tipoOperacao</td>
                                                         </tr>   
                                                     }
                                                 }
@@ -128,6 +349,8 @@
 @code{
     [Parameter] public EventCallback<int> idReturn { get; set; }
     [Parameter] public tipoConsultas tipo { get; set; }
+    [Parameter] public bool inativos { get; set; }
+    [Parameter] public string tipoCliente { get; set; }
 
     private string querry { get; set; } = string.Empty;
     private List<Enum> filtros = new List<Enum>();
@@ -165,8 +388,8 @@
         cidade,
         cliente,
         formaPgto,
-        valor,
         total,
+        tipo,
         preco,
         custo,
         estoque
@@ -175,8 +398,6 @@
     protected override async Task OnInitializedAsync()
     {
         await verificaConsulta(tipo);
-
-        await selecionaOperador(querry);
 
         await foco.FocusAsync();
     }
@@ -192,16 +413,21 @@
                 filtro = filtrosGerais.nome;
 
                 await getOperadores();
-            break;
+
+                await selecionaOperador(querry);
+                break;
             case tipoConsultas.cliente:
                 filtros.Add(filtrosGerais.id);
                 filtros.Add(filtrosGerais.nome);
+                filtros.Add(filtrosGerais.documento);
                 filtros.Add(filtrosGerais.cidade);
 
                 filtro = filtrosGerais.nome;
 
                 await getClientes();
-            break;
+
+                await selecionaCliente(querry);
+                break;
             case tipoConsultas.produto:
                 filtros.Add(filtrosGerais.id);
                 filtros.Add(filtrosGerais.nome);
@@ -212,7 +438,9 @@
                 filtro = filtrosGerais.nome;
 
                 await getProdutos();
-            break;
+
+                await selecionaProduto(querry);
+                break;
             case tipoConsultas.formaPgto:
                 filtros.Add(filtrosGerais.id);
                 filtros.Add(filtrosGerais.nome);
@@ -220,7 +448,9 @@
                 filtro = filtrosGerais.nome;
 
                 await getFormaPgto();
-            break;
+
+                await selecionaFormaPgto(querry);
+                break;
             case tipoConsultas.categoria:
                 filtros.Add(filtrosGerais.id);
                 filtros.Add(filtrosGerais.nome);
@@ -228,18 +458,22 @@
                 filtro = filtrosGerais.nome;
 
                 await getCategoria();
-            break;
+
+                await selecionaCategoria(querry);
+                break;
             case tipoConsultas.pedido:
                 filtros.Add(filtrosGerais.id);
-                filtros.Add(filtrosGerais.valor);
                 filtros.Add(filtrosGerais.cliente);
                 filtros.Add(filtrosGerais.formaPgto);
                 filtros.Add(filtrosGerais.total);
+                filtros.Add(filtrosGerais.tipo);
 
-                filtro = filtrosGerais.nome;
+                filtro = filtrosGerais.cliente;
 
                 await getPedidos();
-            break;
+
+                await selecionaPedido(querry);
+                break;
         }
     }
 
@@ -247,11 +481,23 @@
         switch (tipo)
         {
             case tipoConsultas.operador:
-                selecionaOperador(querry);
-            break;
+                await selecionaOperador(querry);
+                break;
             case tipoConsultas.cliente:
-                
-            break;
+                await selecionaCliente(querry);
+                break;
+            case tipoConsultas.produto:
+                await selecionaProduto(querry);
+                break;
+            case tipoConsultas.formaPgto:
+                await selecionaFormaPgto(querry);
+                break;
+            case tipoConsultas.categoria:
+                await selecionaCategoria(querry);
+                break;
+            case tipoConsultas.pedido:
+                await selecionaPedido(querry);
+                break;
         }
     }
 
@@ -269,20 +515,23 @@
 
         StateHasChanged();
     }
-    
+
     private async Task selecionaCliente(string querry)
     {
         switch (filtro)
         {
             case filtrosGerais.id:
                 listaClienteResultado = listaCliente.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.nome:
                 listaClienteResultado = listaCliente.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
+            case filtrosGerais.documento:
+                listaClienteResultado = listaCliente.Where(o => o.documento.ToLower().Contains(querry.ToLower())).ToList();
+                break;
             case filtrosGerais.cidade:
                 listaClienteResultado = listaCliente.Where(o => o.cidade.ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
         }
 
         StateHasChanged();
@@ -294,34 +543,34 @@
         {
             case filtrosGerais.id:
                 listaProdutoResultado = listaProduto.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.nome:
                 listaProdutoResultado = listaProduto.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.preco:
                 listaProdutoResultado = listaProduto.Where(o => o.preco.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.custo:
                 listaProdutoResultado = listaProduto.Where(o => o.custo.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.estoque:
                 listaProdutoResultado = listaProduto.Where(o => o.estoque.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
         }
 
         StateHasChanged();
     }
-    
+
     private async Task selecionaFormaPgto(string querry)
     {
         switch (filtro)
         {
             case filtrosGerais.id:
                 listaFormaPgtoResultado = listaFormaPgto.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.nome:
                 listaFormaPgtoResultado = listaFormaPgto.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
         }
 
         StateHasChanged();
@@ -333,10 +582,10 @@
         {
             case filtrosGerais.id:
                 listaCategoriaResultado = listaCategoria.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
             case filtrosGerais.nome:
                 listaCategoriaResultado = listaCategoria.Where(o => o.nome.ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
         }
 
         StateHasChanged();
@@ -348,19 +597,19 @@
         {
             case filtrosGerais.id:
                 listaPedidoResultado = listaPedido.Where(o => o.id.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
-            case filtrosGerais.nome:
+                break;
+            case filtrosGerais.cliente:
                 listaPedidoResultado = listaPedido.Where(o => o.clienteNome.ToLower().Contains(querry.ToLower())).ToList();
-            break;
-            case filtrosGerais.preco:
+                break;
+            case filtrosGerais.formaPgto:
                 listaPedidoResultado = listaPedido.Where(o => o.formaPgtoNome.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
-            case filtrosGerais.custo:
-                listaPedidoResultado = listaPedido.Where(o => o.valor.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
-            case filtrosGerais.estoque:
+                break;
+            case filtrosGerais.total:
                 listaPedidoResultado = listaPedido.Where(o => o.total.ToString().ToLower().Contains(querry.ToLower())).ToList();
-            break;
+                break;
+            case filtrosGerais.tipo:
+                listaPedidoResultado = listaPedido.Where(o => o.tipoOperacao.ToString().ToLower().Contains(querry.ToLower())).ToList();
+                break;
         }
 
         StateHasChanged();
@@ -379,13 +628,27 @@
             throw;
         }
     }
-    
+
     private async Task getClientes(){
         try
         {
             var clientes = await clienteService.GetAll();
 
-            listaCliente = clientes.ToList();
+            if (inativos)
+            {
+                listaCliente = clientes.ToList();
+            }
+            else
+            {
+                if (tipoCliente.Equals("Cliente"))
+                {
+                    listaCliente = clientes.Where(c => c.inativo == false && c.tipoCliente == true).ToList();
+                }
+                else if (tipoCliente.Equals("Fornecedor"))
+                {
+                    listaCliente = clientes.Where(c => c.inativo == false && c.tipoFornecedor == true).ToList();
+                }
+            }
         }
         catch (Exception ex)
         {
@@ -399,7 +662,14 @@
         {
             var resultado = await produtoService.GetAll();
 
-            listaProduto = resultado.ToList();
+            if (inativos)
+            {
+                listaProduto = resultado.ToList();
+            }
+            else
+            {
+                listaProduto = resultado.Where(p => p.inativo == false).ToList();
+            }
         }
         catch (Exception ex)
         {
@@ -413,7 +683,14 @@
         {
             var resultado = await pgtoService.GetAll();
 
-            listaFormaPgto = resultado.ToList();
+            if (inativos)
+            {
+                listaFormaPgto = resultado.ToList();
+            }
+            else
+            {
+                listaFormaPgto = resultado.Where(c => c.inativo == false).ToList();
+            }
         }
         catch (Exception ex)
         {

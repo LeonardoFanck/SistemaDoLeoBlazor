@@ -34,7 +34,8 @@ else
                                                            @onkeydown="OnKeyDownTxtID">
                                                 </div>
                                                 <div class="col-md-6 col-xxl-6" style="width: 118.25px;margin-left: 13px;">
-                                                    <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa">Pesquisar</button>
+                                                    <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa"
+                                                            @onclick="(() => openPesquisaDialog())">Pesquisar</button>
                                                 </div>
                                             </div>
                                         </div><!-- End: 1 Row 2 Columns -->
@@ -168,5 +169,10 @@ else
     @if (DeleteDialogOpen)
     {
         <ConfirmModal Titulo="Exlusão de Categoria" Texto="@mensagem" OnClose="@OnDeleteDialogClose"></ConfirmModal>
+    }
+
+    @if (pesquisaDialogOpen)
+    {
+        <Consulta tipo="Consulta.tipoConsultas.produto" inativos="pesquisaInativos" idReturn="@onPesquisaDialogClose"></Consulta>
     }
 }
