@@ -8,16 +8,12 @@
 
   <ItemGroup>
     <Compile Remove="wwwroot\bootstrap\**" />
-    <Compile Remove="wwwroot\js\**" />
     <Compile Remove="wwwroot\resources\**" />
     <Content Remove="wwwroot\bootstrap\**" />
-    <Content Remove="wwwroot\js\**" />
     <Content Remove="wwwroot\resources\**" />
     <EmbeddedResource Remove="wwwroot\bootstrap\**" />
-    <EmbeddedResource Remove="wwwroot\js\**" />
     <EmbeddedResource Remove="wwwroot\resources\**" />
     <None Remove="wwwroot\bootstrap\**" />
-    <None Remove="wwwroot\js\**" />
     <None Remove="wwwroot\resources\**" />
   </ItemGroup>
 
@@ -47,12 +43,16 @@
 
   <ItemGroup>
     <PackageReference Include="Blazored.SessionStorage" Version="2.4.0" />
+    <PackageReference Include="iTextSharp.LGPLv2.Core" Version="3.4.15" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.10" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SistemaDoLeoBlazor.MODELS\SistemaDoLeoBlazor.MODELS.csproj" />
   </ItemGroup>
+
 
 </Project>

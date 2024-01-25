@@ -4,6 +4,7 @@
 @inject IProximoRegistroService registroService
 @inject IClienteService clienteService
 @inject IFormaPgtoService pgtoService
+@inject IJSRuntime js
 
 @if(pedido is null)
 {
@@ -11,6 +12,8 @@
 }
 else
 {
+    <button type="button" class="btn btn-success" @onclick="@(p => OpenNewTab("report.pdf"))"> PDF </button>
+
     <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
         <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
             <div class="p-5">

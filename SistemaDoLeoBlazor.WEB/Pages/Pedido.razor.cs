@@ -9,6 +9,10 @@ using System.Drawing;
 using SistemaDoLeoBlazor.WEB.Services.ProdutoService;
 using SistemaDoLeoBlazor.MODELS.ClienteDTO;
 using SistemaDoLeoBlazor.MODELS.FormaPgtoDTO;
+using SistemaDoLeoBlazor.WEB.Relatorios;
+using Microsoft.JSInterop;
+using System;
+using iTextSharp.text.rtf.document;
 
 namespace SistemaDoLeoBlazor.WEB.Pages
 {
@@ -93,6 +97,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private string tipoCliente { get; set; }
 
+
+        private void OpenNewTab(string filename)
+        {
+            var pdf = new PDFGenerator();
+            pdf.gerarPedidoPDF(js, filename, pedido, itens.ToList());
+        }
+
         protected async override Task OnInitializedAsync()
         {
             // VERIFICA A SESSÃO DO OPERADOR LOGADO
@@ -116,6 +127,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 // ALTERA O STATUS
                 validaStatus(VISUALIZAR);
             }
+
+            StateHasChanged();
         }
 
         private async Task getOperadorSession()
