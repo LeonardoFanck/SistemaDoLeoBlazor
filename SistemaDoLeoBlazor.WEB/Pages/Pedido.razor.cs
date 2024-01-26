@@ -54,6 +54,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool stsBtnEditarItem { get; set; } = true;
         private bool stsBtnExcluirItem { get; set; } = true;
         private bool stsBtnAttValor { get; set; } = true;
+        private bool stsBtnPdf { get; set; }
 
         // STATUS
         private int status;
@@ -158,13 +159,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             if (operadorLogado == null || operadorLogadoTela is null)
             {
-                NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
+                NavigationManager.NavigateTo("/Login", true); // ALTERAR PARA TELA DE LOGIN
             }
             else
             {
                 if (operadorLogadoTela is not null && operadorLogadoTela.ativo == false)
                 {
-                    NavigationManager.NavigateTo("/");
+                    NavigationManager.NavigateTo("/", true);
                 }
             }
         }
@@ -270,6 +271,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnEditarItem = true;
                 stsBtnExcluirItem = true;
                 stsBtnAttValor = true;
+                stsBtnPdf = true;
 
                 await pegarProximoRegistro();
 
@@ -318,6 +320,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnEditarItem = false;
                 stsBtnExcluirItem = false;
                 stsBtnAttValor = false;
+                stsBtnPdf = true;
 
                 // RESTAURA AS INFORMAÇÕES DA CATEGORIA
                 resetaRegistro();
@@ -347,6 +350,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnEditarItem = true;
                 stsBtnExcluirItem = true;
                 stsBtnAttValor = true;
+                stsBtnPdf = false;
 
                 if (operadorLogadoTela.novo || operadorLogado.admin)
                 {

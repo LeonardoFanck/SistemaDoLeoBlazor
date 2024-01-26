@@ -117,13 +117,13 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         {
             if (operadorLogado == null || operadorLogadoTela is null)
             {
-                NavigationManager.NavigateTo("/"); // ALTERAR PARA TELA DE LOGIN
+                NavigationManager.NavigateTo("/Login", true); // ALTERAR PARA TELA DE LOGIN
             }
             else
             {
                 if (operadorLogadoTela is not null && operadorLogadoTela.ativo == false)
                 {
-                    NavigationManager.NavigateTo("/");
+                    NavigationManager.NavigateTo("/", true);
                 }
             }
         }
