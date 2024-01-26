@@ -283,6 +283,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 getRegistro(formaPgto.id);
             }
+            else if (e.Code == "F4")
+            {
+                openPesquisaDialog();
+            }
         }
 
         private async void salvarCadastro()

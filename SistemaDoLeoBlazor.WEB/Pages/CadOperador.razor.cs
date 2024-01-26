@@ -278,6 +278,10 @@ public partial class CadOperador
         {
             getOperador(Operador.id);
         }
+        else if (e.Code == "F4")
+        {
+            openPesquisaDialog();
+        }
     }
 
     private async Task<int> getLastOperador()

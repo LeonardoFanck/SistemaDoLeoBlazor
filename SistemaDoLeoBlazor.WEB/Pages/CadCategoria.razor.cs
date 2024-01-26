@@ -272,11 +272,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
-        private void OnKeyDownTxtID(KeyboardEventArgs e)
+        private async void OnKeyDownTxtID(KeyboardEventArgs e)
         {
             if (e.Code == "Enter" || e.Code == "NumpadEnter")
             {
                 getRegistro(categoria.id);
+            }
+            else if(e.Code == "F4")
+            {
+                openPesquisaDialog();
             }
         }
 

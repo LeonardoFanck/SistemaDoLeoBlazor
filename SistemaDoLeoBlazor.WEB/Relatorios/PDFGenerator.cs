@@ -24,7 +24,7 @@ namespace SistemaDoLeoBlazor.WEB.Relatorios
             var memoryStream = new MemoryStream();
             float margeLeft = 1.5f;
             float margeRight = 1.5f;
-            float margeTop = 1.0f;
+            float margeTop = 2.0f;
             float margeBottom = 1.0f;
 
             Document pdf = new Document(
@@ -53,6 +53,7 @@ namespace SistemaDoLeoBlazor.WEB.Relatorios
                 Alignment = Element.ALIGN_CENTER,
                 Border = Rectangle.NO_BORDER
             };
+
             pdf.Header = header;
 
             // CRIANDO RODA PE
@@ -62,8 +63,8 @@ namespace SistemaDoLeoBlazor.WEB.Relatorios
             HeaderFooter footer = new HeaderFooter(new Phrase(labelFooter), true)
             {
                 BackgroundColor = new BaseColor(120, 3, 120),
-                Alignment = Element.ALIGN_RIGHT,
-                Border = Rectangle.NO_BORDER,
+                Alignment = Element.ALIGN_CENTER,
+                Border = Rectangle.NO_BORDER
             };
             pdf.Footer = footer;
 
@@ -84,10 +85,18 @@ namespace SistemaDoLeoBlazor.WEB.Relatorios
             infoTable.AddCell(new PdfPCell(new Phrase($"{pedido.id}", new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -30f });
             infoTable.AddCell(new PdfPCell(new Phrase("Valor:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f });
             infoTable.AddCell(new PdfPCell(new Phrase($"R$ {pedido.valor}", new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -20f });
-            infoTable.AddCell(new PdfPCell(new Phrase("Cliente:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f, PaddingTop = 7f });
-            infoTable.AddCell(new PdfPCell(new Phrase(pedido.clienteNome, new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -30f, PaddingTop = 8f });
+            if (pedido.tipoOperacao.Equals("Venda"))
+            {
+                infoTable.AddCell(new PdfPCell(new Phrase("Cliente:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f, PaddingTop = 7f });
+                infoTable.AddCell(new PdfPCell(new Phrase(pedido.clienteNome, new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -30f, PaddingTop = 8f });
+            }
+            else
+            {
+                infoTable.AddCell(new PdfPCell(new Phrase("Fornecedor:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f, PaddingTop = 7f });
+                infoTable.AddCell(new PdfPCell(new Phrase(pedido.clienteNome, new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -10f, PaddingTop = 8f });
+            }
             infoTable.AddCell(new PdfPCell(new Phrase("Desconto:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f, PaddingTop = 7f });
-            infoTable.AddCell(new PdfPCell(new Phrase($"{pedido.desconto}%", new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -15f, PaddingTop = 7f });
+            infoTable.AddCell(new PdfPCell(new Phrase($"{pedido.desconto}%", new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -21f, PaddingTop = 7f });
             infoTable.AddCell(new PdfPCell(new Phrase("Forma de Pagamento:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f, PaddingTop = 7f });
             infoTable.AddCell(new PdfPCell(new Phrase(pedido.formaPgtoNome, new Font(Font.HELVETICA, tamanho))) { Border = PdfPCell.NO_BORDER, PaddingLeft = -10f, PaddingTop = 9f });
             infoTable.AddCell(new PdfPCell(new Phrase("Total:", new Font(Font.HELVETICA, tamanho, Font.BOLD))) { Border = PdfPCell.NO_BORDER, PaddingLeft = 40f, PaddingTop = 7f });

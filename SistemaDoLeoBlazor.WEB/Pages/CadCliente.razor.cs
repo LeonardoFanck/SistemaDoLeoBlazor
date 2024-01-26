@@ -466,6 +466,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 getRegistro(cliente.id);
             }
+            else if (e.Code == "F4")
+            {
+                openPesquisaDialog();
+            }
         }
 
         private async Task validarCampos()

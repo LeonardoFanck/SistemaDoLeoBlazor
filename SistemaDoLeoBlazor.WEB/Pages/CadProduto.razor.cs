@@ -357,6 +357,10 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 getRegistro(produto.id);
             }
+            else if (e.Code == "F4")
+            {
+                openPesquisaDialog();
+            }
         }
 
         private void alterarCategoria(ChangeEventArgs e)

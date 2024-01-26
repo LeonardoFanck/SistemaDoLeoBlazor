@@ -40,6 +40,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool stsFormaPgto { get; set; }
         private bool stsBtnPesquisaFormaPgto { get; set; }
         private bool stsFormaPgtoNome { get; set; } = true;
+        private bool stsValor { get; set; } 
+        private bool stsDesconto { get; set; }
+        private bool stsTotal { get; set; } = true;
 
         private bool stsBtnNovo { get; set; } = true;
         private bool stsBtnEditar { get; set; } = true;
@@ -50,6 +53,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool stsBtnNovoItem { get; set; } = true;
         private bool stsBtnEditarItem { get; set; } = true;
         private bool stsBtnExcluirItem { get; set; } = true;
+        private bool stsBtnAttValor { get; set; } = true;
 
         // STATUS
         private int status;
@@ -252,6 +256,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnPesquisaCliente = false;
                 stsFormaPgto = false;
                 stsBtnPesquisaFormaPgto = false;
+                stsValor = true;
+                stsDesconto = true;
+                stsTotal = true;
 
                 stsBtnNovo = true;
                 stsBtnEditar = true;
@@ -262,6 +269,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnNovoItem = true;
                 stsBtnEditarItem = true;
                 stsBtnExcluirItem = true;
+                stsBtnAttValor = true;
 
                 await pegarProximoRegistro();
 
@@ -296,6 +304,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnPesquisaCliente = false;
                 stsFormaPgto = false;
                 stsBtnPesquisaFormaPgto = false;
+                stsValor = false;
+                stsDesconto = false;
+                stsTotal = false;
 
                 stsBtnNovo = true;
                 stsBtnEditar = true;
@@ -306,6 +317,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnNovoItem = false;
                 stsBtnEditarItem = false;
                 stsBtnExcluirItem = false;
+                stsBtnAttValor = false;
 
                 // RESTAURA AS INFORMAÇÕES DA CATEGORIA
                 resetaRegistro();
@@ -324,6 +336,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnPesquisaCliente = true;
                 stsFormaPgto = true;
                 stsBtnPesquisaFormaPgto = true;
+                stsValor = true;
+                stsDesconto = true;
+                stsTotal = true;
 
                 stsBtnCancelar = true;
                 stsBtnSalvar = true;
@@ -331,6 +346,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                 stsBtnNovoItem = true;
                 stsBtnEditarItem = true;
                 stsBtnExcluirItem = true;
+                stsBtnAttValor = true;
 
                 if (operadorLogadoTela.novo || operadorLogado.admin)
                 {
@@ -457,11 +473,38 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
         }
 
+        private void resetarValorPedido()
+        {
+            pedido.valor = itens.Sum(i => i.total);
+
+            _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Valor do Pedido Atualizado", MessageColour.Info, 8));
+        }
+
         private async void OnKeyDownTxtID(KeyboardEventArgs e)
         {
             if (e.Code == "Enter" || e.Code == "NumpadEnter")
             {
                 await getRegistro(pedido.id);
+            }
+            else if(e.Code == "F4")
+            {
+                openPesquisaDialog();
+            }
+        }
+        
+        private async void OnKeyDownTxtCliente(KeyboardEventArgs e)
+        {
+            if(e.Code == "F4")
+            {
+                openPesquisaDialogCliente();
+            }
+        }
+        
+        private async void OnKeyDownTxtPgto(KeyboardEventArgs e)
+        {
+            if(e.Code == "F4")
+            {
+                openPesquisaDialogPgto();
             }
         }
 
@@ -498,6 +541,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
 
         private async void salvarCadastro()
         {
+            await recalcularValores();
+
             if (status == CADASTRAR)
             {
                 try
@@ -507,8 +552,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     // ADD OPERADOR
                     pedidoAtual = await pedidoService.Insert(pedido);
 
-                    // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Realizado com sucesso!", MessageColour.Success, 8));
+                        // MENSAGEM DE SUCESSO
+                    if(pedido.valor != itens.Sum(i => i.total))
+                    {
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Realizado com Valor do Pedido diferente do Total de Itens", MessageColour.Warning, 8));
+                    }
+                    else
+                    {
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Realizado com sucesso!", MessageColour.Success, 8));
+                    }
 
                     // ATUALIZA O ULTIMO REGISTRO CADASTRADO
                     await registroService.PatchProximoRegistro(nextRegistro);
@@ -541,7 +593,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     await pedidoService.Update(pedido);
 
                     // MENSAGEM DE SUCESSO
-                    _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
+                    if (pedido.valor != itens.Sum(i => i.total))
+                    {
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Atualizado com Valor do Pedido diferente do Total de Itens", MessageColour.Warning, 8));
+                    }
+                    else
+                    {
+                        _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro atualizado com sucesso!", MessageColour.Success, 8));
+                    }
+                    
 
                     // BUSCA AS NOVA INFORMAÇÕES
                     await getRegistro(pedido.id);
@@ -564,6 +624,26 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             }
 
             StateHasChanged();
+        }
+
+        private async Task recalcularValores()
+        {
+            var valor = pedido.valor;
+
+            if (pedido.desconto > 100)
+            {
+                pedido.desconto = 100;
+            }
+            else if(pedido.desconto < 0)
+            {
+                pedido.desconto = 0;
+            }
+
+            var desconto = pedido.desconto / 100;
+
+            var total = valor - (valor * desconto);
+
+            pedido.total = total;
         }
 
         private async void OnDeleteDialogClose(bool accepted)
@@ -657,6 +737,15 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             OpenAddProdutoDialog(addProduto);
         }
 
+        private async Task atualizaTotalPedido()
+        {
+            var total = itens.Sum(i => i.total);
+
+            pedido.valor = total;
+
+            await recalcularValores();
+        }
+
         private void editarItem()
         {
             if (itemSelecionado is null)
@@ -699,6 +788,8 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                         // MENSAGEM DE SUCESSO
                         _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Produto Alterado com sucesso!", MessageColour.Success, 8));
                     }
+
+                    await atualizaTotalPedido();
                 }
                 
                 // RESETA O ITEM SELECIONADO

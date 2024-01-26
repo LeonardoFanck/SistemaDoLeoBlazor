@@ -30,8 +30,8 @@ else
                             <div class="row">
                                 <div class="col-md-6" style="width: 154.281px;">
                                     <input class="form-control form-control-user" type="number" placeholder="Cod" required="" style="width: 141px;"
-                                           name="Cod" disabled="@stsCodProd" @bind-value="@produto.produtoId" @bind-value:event="oninput" 
-                                           @onkeydown="OnKeyDownTxtID" @onblur="recalcularValores">
+                                           name="Cod" disabled="@stsCodProd" @bind-value="@produto.produtoId" @bind-value:event="oninput"
+                                           @onblur="validaBuscaProduto">
                                 </div>
                                 <div class="col-md-6" style="width: 115.328px;">
                                     <button class="btn btn-primary" type="button" tabindex="-1" disabled="@stsBtnPesquisa"
@@ -46,7 +46,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Valor</h4>
-                                            <input class="form-control" type="number" @bind-value="@produto.valor" @bind-value:event="oninput"
+                                            <input class="form-control" type="number" step=".01" @bind-value="@produto.valor" @bind-value:event="oninput"
                                                    @onblur="recalcularValores">
                                         </div>
                                     </div>
@@ -64,7 +64,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Desconto</h4>
-                                            <input class="form-control" type="number" @bind-value="@produto.desconto" @bind-value:event="oninput"
+                                            <input class="form-control" type="number" step=".01" @bind-value="@produto.desconto" @bind-value:event="oninput"
                                                    @onblur="recalcularValores">
                                         </div>
                                     </div>
@@ -73,7 +73,7 @@ else
                                     <div class="card">
                                         <div class="card-body">
                                             <h4 class="card-title">Total</h4>
-                                            <input class="form-control" type="number" disabled="@stsTotal" 
+                                            <input class="form-control" type="number" step=".01" disabled="@stsTotal" 
                                                    @bind-value="@produto.total" @bind-value:event="oninput">
                                         </div>
                                     </div>
@@ -119,6 +119,8 @@ else
     [Parameter] public string? operacaoItem { get; set; }
     [Parameter] public EventCallback<bool> OnClose { get; set; }
 
+    private int idProdutoAtual { get; set; }
+
     private bool stsCodProd { get; set; }
     private bool stsBtnPesquisa { get; set; }
     private bool stsNome { get; set; } = true;
@@ -140,9 +142,9 @@ else
         }
     }
 
-    private async void OnKeyDownTxtID(KeyboardEventArgs e)
+    private async void validaBuscaProduto()
     {
-        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        if (idProdutoAtual != produto.produtoId)
         {
             await getProduto(produto.produtoId);
             StateHasChanged();
@@ -154,6 +156,8 @@ else
         try
         {
             var prod = await produtoService.GetById(id);
+
+            idProdutoAtual = prod.id;
 
             if (pedido.tipoOperacao.Equals("Venda"))
             {
@@ -197,15 +201,20 @@ else
         }
     }
 
-    private async Task getEstoque(int id)
-    {
-
-    }
-
     private async Task recalcularValores()
     {
         var valor = produto.valor;
         var quantidade = produto.quantidade;
+
+        if (produto.desconto > 100)
+        {
+            produto.desconto = 100;
+        }
+        else if (pedido.desconto < 0)
+        {
+            pedido.desconto = 0;
+        }
+
         var desconto = produto.desconto / 100;
 
         var total = (valor * quantidade) - ((valor * quantidade) * desconto);

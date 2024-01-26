@@ -8,7 +8,7 @@
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog-lg">
         <div class="row d-flex d-xl-flex justify-content-center justify-content-xl-center">
-            <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;">
+            <div class="col-sm-12 col-lg-10 col-xl-9 col-xxl-7 bg-white shadow-lg" style="border-radius: 5px;margin-top: 60px;" @onkeydown="KeyDown">
                 <div class="card shadow">
                     <div class="card-header d-flex flex-wrap justify-content-center align-items-center justify-content-sm-between gap-3">
                         <h5 class="display-6 text-nowrap text-capitalize mb-0">Consulta - @tipo</h5>
@@ -34,7 +34,7 @@
                     </div>
                     <hr>
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="max-height: 500px; overflow-y: auto;">
                             <table class="table table-striped table-hover">
                                 @switch(tipo){
                                     case tipoConsultas.operador:
@@ -498,6 +498,14 @@
             case tipoConsultas.pedido:
                 await selecionaPedido(querry);
                 break;
+        }
+    }
+
+    private async void KeyDown(KeyboardEventArgs e)
+    {
+        if (e.Code == "Escape")
+        {
+            await returnCancel();
         }
     }
 
