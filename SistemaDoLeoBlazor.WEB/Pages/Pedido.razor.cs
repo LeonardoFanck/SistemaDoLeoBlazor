@@ -558,7 +558,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
                     pedidoAtual = await pedidoService.Insert(pedido);
 
                         // MENSAGEM DE SUCESSO
-                    if(pedido.valor != itens.Sum(i => i.total))
+                    if(itens is not null && pedido.valor != itens.Sum(i => i.total))
                     {
                         _toasterService.AddToast(Toast.NewToast(toastTitulo, $"Cadastro Realizado com Valor do Pedido diferente do Total de Itens", MessageColour.Warning, 8));
                     }

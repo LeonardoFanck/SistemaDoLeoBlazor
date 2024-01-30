@@ -379,7 +379,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 try
                 {
-                    produto.categoriaId = categoriaId;
+                    //produto.categoriaId = categoriaId;
 
                     // ADD OPERADOR
                     produtoAtual = await produtoService.Insert(produto);

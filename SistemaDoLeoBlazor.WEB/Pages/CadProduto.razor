@@ -105,8 +105,8 @@ else
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title">Valor</h4>
-                                        <input class="form-control form-control-user" type="number" placeholder="Valor" style="width: 141px;" name="Valor" 
-                                               required="" disabled="@stsPreco" @bind="@produto.preco">
+                                        <input class="form-control form-control-user" type="number" placeholder="Valor" style="width: 141px;" name="Valor"
+                                               required="" step=".01" disabled="@stsPreco" @bind="@produto.preco">
                                     </div>
                                 </div>
                             </div>
@@ -114,8 +114,8 @@ else
                                 <div class="card">
                                     <div class="card-body">
                                         <h4 class="card-title">Custo</h4>
-                                        <input class="form-control form-control-user" type="number" placeholder="Custo" style="width: 141px;" name="Custo" 
-                                               required="" disabled="@stsCusto" @bind="produto.custo">
+                                        <input class="form-control form-control-user" type="number" placeholder="Custo" style="width: 141px;" name="Custo"
+                                               required="" step=".01" disabled="@stsCusto" @bind="produto.custo">
                                     </div>
                                 </div>
                             </div>

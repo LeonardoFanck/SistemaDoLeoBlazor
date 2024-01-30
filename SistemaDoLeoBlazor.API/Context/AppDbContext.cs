@@ -136,7 +136,7 @@ namespace SistemaDoLeoBlazor.API.Context
                 categoria = 0,
                 cliente = 0,
                 formaPgto = 0,
-                operador = 0,
+                operador = 1,
                 pedido = 0,
                 produto = 0,
             });
