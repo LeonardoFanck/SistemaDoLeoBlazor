@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SistemaDoLeoBlazor.API.Context;
 
@@ -11,9 +12,11 @@ using SistemaDoLeoBlazor.API.Context;
 namespace SistemaDoLeoBlazor.API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240130193537_atualizacao3")]
+    partial class atualizacao3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,68 +209,6 @@ namespace SistemaDoLeoBlazor.API.Migrations
                     b.HasIndex("telaId");
 
                     b.ToTable("OperadorTela");
-
-                    b.HasData(
-                        new
-                        {
-                            id = 1,
-                            ativo = true,
-                            editar = true,
-                            excluir = true,
-                            novo = true,
-                            operadorId = 1,
-                            telaId = 1
-                        },
-                        new
-                        {
-                            id = 2,
-                            ativo = true,
-                            editar = true,
-                            excluir = true,
-                            novo = true,
-                            operadorId = 1,
-                            telaId = 2
-                        },
-                        new
-                        {
-                            id = 3,
-                            ativo = true,
-                            editar = true,
-                            excluir = true,
-                            novo = true,
-                            operadorId = 1,
-                            telaId = 3
-                        },
-                        new
-                        {
-                            id = 4,
-                            ativo = true,
-                            editar = true,
-                            excluir = true,
-                            novo = true,
-                            operadorId = 1,
-                            telaId = 4
-                        },
-                        new
-                        {
-                            id = 5,
-                            ativo = true,
-                            editar = true,
-                            excluir = true,
-                            novo = true,
-                            operadorId = 1,
-                            telaId = 5
-                        },
-                        new
-                        {
-                            id = 6,
-                            ativo = true,
-                            editar = true,
-                            excluir = true,
-                            novo = true,
-                            operadorId = 1,
-                            telaId = 6
-                        });
                 });
 
             modelBuilder.Entity("SistemaDoLeoBlazor.API.Entities.Pedido", b =>

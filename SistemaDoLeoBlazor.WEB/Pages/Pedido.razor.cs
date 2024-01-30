@@ -121,6 +121,7 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             if (ultimoId == -1)
             {
                 pedido = new PedidoDTO();
+                pedido.tipoOperacao = tipoVenda;
 
                 validaStatus(CADASTRAR);
             }

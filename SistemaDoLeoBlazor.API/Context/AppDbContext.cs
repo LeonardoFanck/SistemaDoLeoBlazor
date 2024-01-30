@@ -61,6 +61,74 @@ namespace SistemaDoLeoBlazor.API.Context
                 nome = "Produto"
             });
 
+            // telas operador
+
+            modelBuilder.Entity<OperadorTela>().HasData(new OperadorTela
+            {
+                id = 1,
+                operadorId = 1,
+                ativo = true,
+                editar = true,
+                excluir = true,
+                novo = true,
+                telaId = 1
+            });
+
+            modelBuilder.Entity<OperadorTela>().HasData(new OperadorTela
+            {
+                id = 2,
+                operadorId = 1,
+                ativo = true,
+                editar = true,
+                excluir = true,
+                novo = true,
+                telaId = 2
+            });
+
+            modelBuilder.Entity<OperadorTela>().HasData(new OperadorTela
+            {
+                id = 3,
+                operadorId = 1,
+                ativo = true,
+                editar = true,
+                excluir = true,
+                novo = true,
+                telaId = 3
+            });
+
+            modelBuilder.Entity<OperadorTela>().HasData(new OperadorTela
+            {
+                id = 4,
+                operadorId = 1,
+                ativo = true,
+                editar = true,
+                excluir = true,
+                novo = true,
+                telaId = 4
+            });
+
+            modelBuilder.Entity<OperadorTela>().HasData(new OperadorTela
+            {
+                id = 5,
+                operadorId = 1,
+                ativo = true,
+                editar = true,
+                excluir = true,
+                novo = true,
+                telaId = 5
+            });
+
+            modelBuilder.Entity<OperadorTela>().HasData(new OperadorTela
+            {
+                id = 6,
+                operadorId = 1,
+                ativo = true,
+                editar = true,
+                excluir = true,
+                novo = true,
+                telaId = 6
+            });
+
             // PROXIMO REGISTRO
             modelBuilder.Entity<ProximoRegistro>().HasData(new ProximoRegistro
             {

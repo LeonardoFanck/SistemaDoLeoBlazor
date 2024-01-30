@@ -19,8 +19,10 @@
                             {
                                 <a style="color:red;">@erro</a>
                             }
-                            <input class="form-control" type="number" required="" name="txtOperador" 
+                            
+                            <input class="form-control" type="number" required="" name="txtOperador"
                                    placeholder="Informe seu Operador" @bind-value="@operador.id" @bind-value:event="oninput" autofocus="@true">
+                            
                             @if (operador.nome != string.Empty)
                             {
                                 <div class="alert alert-success" role="alert">
