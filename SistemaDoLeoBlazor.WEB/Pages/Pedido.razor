@@ -196,7 +196,7 @@ else
                                     <h5 class="display-6 text-nowrap text-capitalize mb-0">Itens</h5>
                                     <div class="row" style="margin-top: 5px;margin-bottom: 0px;">
                                         <!--Start: Atualizar Total Pedido-->
-                                        <div class="col-md-3" style="height: 45px;width: 119px;">
+                                        <div class="col-md-3" style="height: 45px;width: 115px;">
                                             <!-- Start: Atualizar Total Pedido -->
                                             <button class="btn btn-primary " data-bss-hover-animate="pulse" type="button"
                                                     style="height: 39px;background: rgb(74,170,15);" tabindex="-1" title="Restaura o valor do Pedido para o Total dos Itens"
@@ -206,12 +206,17 @@ else
                                         </div><!-- End: Atualizar Total Pedido -->
 
                                         <!--Start: Impressão Pedido-->
-                                        <div class="col-md-3" style="height: 45px;width: 119px;">
+                                        <div class="col-md-3" style="height: 45px;width: 75px;">
                                             <button type="button" tabindex="-1" class="btn btn-success" disabled="@stsBtnPdf" @onclick="@(p => OpenNewTab("report.pdf"))"> PDF </button>
                                         </div><!-- End: Impressão Pedido -->
 
+                                        <!--Start: Impressão Pedido-->
+                                        <div class="col-md-3" style="height: 45px;width: 100px;">
+                                            <button type="button" tabindex="-1" class="btn btn-secondary" disabled="@stsBtnPdf" @onclick="@(() => OpenRelatorioDialog())"> Relatório </button>
+                                        </div><!-- End: Impressão Pedido -->
+
                                         <!-- Start: Novo -->
-                                        <div class="col-md-3" style="height: 45px;width: 119px;margin-left: 118px;">
+                                        <div class="col-md-3" style="height: 45px;width: 119px;margin-left: 90px;">
                                             <!-- Start: Novo -->
                                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-4" type="button"
                                                     style="height: 39px;background: rgb(74,170,15);border-radius: 60px;" tabindex="-1"
@@ -220,7 +225,7 @@ else
                                             </button><!-- End: Novo -->
                                         </div><!-- End: Novo -->
                                         <!-- Start: Editar -->
-                                        <div class="col-md-3" style="height: 45px;width: 133px;">
+                                        <div class="col-md-3" style="height: 45px;width: 119px;">
                                             <!-- Start: Editar -->
                                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-5" type="button"
                                                     style="height: 39px;background: rgb(0,100,200);border-radius: 60px;" tabindex="-1"
@@ -229,7 +234,7 @@ else
                                             </button><!-- End: Editar -->
                                         </div><!-- End: Editar -->
                                         <!-- Start: Excluir -->
-                                        <div class="col-md-3" style="height: 45px;width: 133px;">
+                                        <div class="col-md-3" style="height: 45px;width: 119px;">
                                             <!-- Start: Excluir -->
                                             <button class="btn btn-primary d-block btn-user w-100" data-bss-hover-animate="pulse" id="submitBtn-6" type="button"
                                                     style="height: 39px;background: rgb(203,30,19);border-radius: 60px;" tabindex="-1"
@@ -351,5 +356,10 @@ else
         {
             <Consulta tipo="Consulta.tipoConsultas.formaPgto" inativos="pesquisaInativos" idReturn="@onPesquisaDialogClose"></Consulta>
         }
+    }
+
+    @if (RelatorioDialogOpen)
+    {
+        <RelatorioModal js="@js" OnClose="@OnRelatorioDialogClose"></RelatorioModal>
     }
 }

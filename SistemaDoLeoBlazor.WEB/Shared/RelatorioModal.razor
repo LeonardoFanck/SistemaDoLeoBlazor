@@ -1,0 +1,152 @@
+﻿@inject IPedidoService service
+
+<div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Relatório de Pedidos</h4>
+                <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+            </div>
+
+            @if (erro != string.Empty)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @erro
+                </div>
+            }
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-body" style="height: 118.7969px; width:120%">
+                                <h6 class="card-title" style="font-weight: bold;">Tipo Operação</h6>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="formCheck-1" name="teste" required="" checked="@(tipoOperacao.Equals("Venda"))"
+                                           disabled="@false" @onchange="@(() => tipoOperacao = @tipoVenda)">
+                                    <label class="form-check-label" for="formCheck">Venda</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" id="formCheck-2" name="teste" required="" checked="@(tipoOperacao.Equals("Compra"))"
+                                           disabled="@false" @onchange="@(() => tipoOperacao = @tipoCompra)">
+                                    <label class="form-check-label" for="formCheck">Compra</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4" style="margin-top: 25px">
+                        <h6 class="card-title" style="font-weight: bold;">Data Inicial</h6>
+                        <input type="date" @bind-value="@dtInicio" @bind-value:event="oninput" />
+                    </div>
+                    <div class="col-md-4" style="margin-top: 25px">
+                        <h6 class="card-title" style="font-weight: bold;">Data Final</h6>
+                        <input type="date" @bind-value="@dtFinal" @bind-value:event="oninput" />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @onclick="ModalCancel">Fechar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @onclick="pesquisar">Pesquisar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+    [Parameter] public IJSRuntime js { get; set; }
+
+    private DateTime dtInicio { get; set; }
+    private DateTime dtFinal { get; set; }
+    private string tipoOperacao { get; set; } = "";
+    private string erro { get; set; } = string.Empty;
+    private List<PedidoDTO> pedidos { get; set; }
+
+    private string tipoVenda { get; } = "Venda";
+    private string tipoCompra { get; } = "Compra";
+
+    protected override async Task OnInitializedAsync()
+    {
+        tipoOperacao = tipoVenda;
+
+        dtFinal = DateTime.Today;
+        dtInicio = DateTime.Today;
+    }
+
+    private Task ModalCancel()
+    {
+        return OnClose.InvokeAsync(false);
+    }
+
+    private async Task pesquisar()
+    {
+        var teste = await validaCampos();
+
+        if (teste)
+        {
+            var retorno = await getPedidos();
+
+            if (retorno)
+            {
+                OpenNewTab("relatorio.pdf");
+            }
+            else
+            {
+                erro = "Nenhum Pedido Localizado";
+            }
+        }
+    }
+
+    private async Task<bool> validaCampos()
+    {
+        if(dtInicio > dtFinal)
+        {
+            erro = "Data Inicial não pode ser maior que a data Final";
+            return false;
+        }
+
+        return true;
+    }
+
+    private async Task<bool> getPedidos()
+    {
+        var pedidosSelect = await service.GetAll();
+
+        if (pedidosSelect.Count() == 0)
+        {
+            return false;
+        }
+
+        if (tipoOperacao.Equals(tipoVenda))
+        {
+            pedidos = new List<PedidoDTO>(pedidosSelect.Where(p => p.data >= dtInicio)
+                             .Where(p => p.data <= dtFinal)
+                             .Where(p => p.tipoOperacao.Equals(tipoVenda)).ToList());
+
+            if(pedidos.Count() == 0)
+            {
+                return false;
+            }
+            return true;
+        }
+        else
+        {
+            pedidos = new List<PedidoDTO>(pedidosSelect.Where(p => p.data >= dtInicio)
+                 .Where(p => p.data <= dtFinal)
+                 .Where(p => p.tipoOperacao.Equals(tipoCompra)).ToList());
+
+            if (pedidos.Count() == 0)
+            {
+                return false;
+            }
+
+            return true;
+        }
+    }
+
+    private void OpenNewTab(string filename)
+    {
+        var pdf = new PDFGenerator();
+        pdf.gerarRelatorioPedidos(js, filename, pedidos, tipoOperacao);
+    }
+}

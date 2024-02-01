@@ -69,6 +69,9 @@ namespace SistemaDoLeoBlazor.WEB.Pages
         private bool DeleteDialogOpen { get; set; }
         private string mensagem = "";
 
+        // RELATORIO
+        private bool RelatorioDialogOpen { get; set; }
+
         // VALIDAÇÃO PESQUISA
         private bool pesquisaDialogOpen { get; set; }
         private bool pesquisaInativos { get; set; }
@@ -690,6 +693,18 @@ namespace SistemaDoLeoBlazor.WEB.Pages
             {
                 _toasterService.AddToast(Toast.NewToast("Erro", $"Erro ao cadastrar: {ex.Message}", MessageColour.Danger, 8));
             }
+        }
+
+        private void OpenRelatorioDialog()
+        {
+            RelatorioDialogOpen = true;
+            StateHasChanged();
+        }
+
+        private async void OnRelatorioDialogClose(bool accepted)
+        {
+            RelatorioDialogOpen = false;
+            StateHasChanged();
         }
 
         private void OpenDeleteDialog(int selecao)

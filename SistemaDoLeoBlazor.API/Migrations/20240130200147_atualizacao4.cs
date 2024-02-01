@@ -24,6 +24,30 @@ namespace SistemaDoLeoBlazor.API.Migrations
                     { 5, true, true, true, true, 1, 5 },
                     { 6, true, true, true, true, 1, 6 }
                 });
+
+            var command = @"create procedure teste(
+	                            @id int)
+                            as
+                            begin
+	
+	                            declare @venda bigint;
+	                            declare @compra bigint;
+	                            declare @total bigint;
+
+	                            select @venda = ISNULL(SUM(PedidoItem.quantidade), 0) FROM PedidoItem
+	                            join Pedido on PedidoItem.pedidoId = Pedido.id
+	                            where PedidoItem.produtoId = @id and Pedido.tipoOperacao like 'Venda';
+
+	                            select @compra = ISNULL(SUM(PedidoItem.quantidade), 0) FROM PedidoItem
+	                            join Pedido on PedidoItem.pedidoId = Pedido.id
+	                            where PedidoItem.produtoId = @id and Pedido.tipoOperacao like 'Compra';
+
+	                            set @total = @compra - @venda;
+
+	                            update Produto set estoque = @total where id = @id;
+                            end";
+
+            migrationBuilder.Sql(command);
         }
 
         /// <inheritdoc />

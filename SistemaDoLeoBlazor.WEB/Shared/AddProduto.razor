@@ -159,6 +159,11 @@ else
 
             idProdutoAtual = prod.id;
 
+            if (prod.inativo)
+            {
+                throw new FormatException();
+            }
+
             if (pedido.tipoOperacao.Equals("Venda"))
             {
                 produto = new PedidoItemDTO
@@ -192,12 +197,21 @@ else
         {
             if(ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {
+                idProdutoAtual = id;
                 produto.produtoNome = "[PRODUTO NÃO LOCALIZADO]";
                 produto.desconto = decimal.Zero;
                 produto.quantidade = 0;
                 produto.valor = decimal.Zero;
                 produto.total = decimal.Zero;
             }
+        }
+        catch (FormatException)
+        {
+            produto.produtoNome = "[PRODUTO INATIVO]";
+            produto.desconto = decimal.Zero;
+            produto.quantidade = 0;
+            produto.valor = decimal.Zero;
+            produto.total = decimal.Zero;
         }
     }
 
@@ -271,6 +285,11 @@ else
         try
         {
             var prod = await produtoService.GetById(id);
+
+            if (prod.inativo)
+            {
+                produto.produtoNome = "[PRODUTO INATIVO]";
+            }
         }
         catch (HttpRequestException ex)
         {
@@ -294,6 +313,11 @@ else
             if (produto.produtoNome.Equals("[PRODUTO NÃO LOCALIZADO]") || produto.produtoNome.Equals(""))
             {
                 throw new FormatException("Produto inválido");
+            }
+
+            if (produto.produtoNome.Equals("[PRODUTO INATIVO]"))
+            {
+                throw new FormatException("Produto inativo");
             }
         }
 
